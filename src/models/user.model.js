@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { isDepartmentRequired } from "#validations/mongo/department.js";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -6,14 +7,18 @@ const UserSchema = new mongoose.Schema(
     lastName: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
-    role: { type: String, enum: ["user", "advocate", "admin", "super-admin"], default: "user" },
+    phoneNumber: { type: String, required: false },
+    role: { type: String, enum: ["user", "manager", "admin"], default: "admin" },
     status: { type: String, enum: ["active", "inactive"], default: "active" },
+    department: { 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
+      required: isDepartmentRequired,
+    },
+    
     isDeleted: { type: Boolean, default: false },
     otp: { type: String },
     otpExpiresAt: { type: Date },
-    
-    
   },
   { timestamps: true }
 );

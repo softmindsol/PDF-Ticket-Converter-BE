@@ -26,12 +26,18 @@ class ApiError extends Error {
 export default ApiError;
 
 class ApiResponse {
-  constructor(code, data, message = "Success") {
+  constructor(res, code, data = null, message = "Success") {
     this.code = code;
     this.data = data;
     this.message = message;
     this.success = code < 400;
-   
+
+    // ✅ automatically send response
+    res.status(this.code).json({
+      success: this.success,
+      message: this.message,
+      data: this.data,
+    });
   }
 }
 

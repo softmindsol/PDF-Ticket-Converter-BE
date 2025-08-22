@@ -4,6 +4,7 @@ import pick from '#utils/pick.utils.js';
 import ApiError from '#utils/api.utils.js';
 
 const validate = (schema) => (req, res, next) => {
+  console.log("🚀 ~ validate ~ req.body:", req.body)
   const validSchema = pick(schema, ['params', 'query', 'body', 'file']);
     
   const object = pick(req, Object.keys(validSchema));
