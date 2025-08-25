@@ -15,7 +15,6 @@ const UserSchema = new mongoose.Schema(
       ref: "Department",
       required: isDepartmentRequired,
     },
-    
     isDeleted: { type: Boolean, default: false },
     otp: { type: String },
     otpExpiresAt: { type: Date },
