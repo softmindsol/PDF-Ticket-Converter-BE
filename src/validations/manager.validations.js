@@ -51,18 +51,7 @@ const managerValidation = {
           "string.min": "Last name must be at least 3 characters long",
           "string.max": "Last name cannot be longer than 30 characters",
           "any.required": "Last name is required",
-        }),
-        
-      department: Joi.string()
-        .hex() 
-        .length(24) 
-        .required()
-        .messages({
-          "string.base": "Department ID must be a string",
-          "string.hex": "Department ID must be a valid MongoDB ObjectId",
-          "string.length": "Department ID must be 24 characters long",
-          "any.required": "Department is required",
-        }),
+        })
     }),
   },
 };

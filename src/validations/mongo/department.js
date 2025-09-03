@@ -10,6 +10,6 @@ export async function isManager(userId) {
 }
 
 export function isDepartmentRequired() {
-    return this.role !== "admin";
+    return this.role === "user";
   }
   

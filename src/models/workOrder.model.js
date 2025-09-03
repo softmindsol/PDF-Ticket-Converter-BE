@@ -1,0 +1,82 @@
+import mongoose from "mongoose";
+
+const materialSchema = new mongoose.Schema({
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  unitCost: {
+    type: Number,
+    required: true,
+  },
+  totalCost: {
+    type: Number,
+    required: true,
+  },
+});
+
+const serviceTicketSchema = new mongoose.Schema(
+  {
+    customerName: {
+      type: String,
+      required: true,
+    },
+    emailAddress: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
+
+    jobNumber: {
+      type: String,
+      required: true,
+      unique: true, 
+    },
+    technicianName: {
+      type: String,
+      required: true,
+    },
+    contactNumber: {
+      type: String,
+      required: true,
+    },
+    paymentMethod: {
+      type: String,
+      required: true,
+    },
+
+    materialList: [materialSchema], 
+
+    date: {
+      type: Date,
+      required: true,
+    },
+
+    customerSignature: {
+      type: String, 
+    },
+
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer",
+      required: true,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const ServiceTicket = mongoose.model("ServiceTicket", serviceTicketSchema);
+
+export default ServiceTicket;

@@ -1,11 +1,10 @@
-import departmentModel from "#models/department.model.js";
 import userModel from "#models/user.model.js";
 import { hashPassword } from "#utils/auth.utils.js";
 import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 
 const createManager = asyncHandler(async (req, res) => {
-  const { username, password, firstName, lastName, department } = req.body;
+  const { username, password, firstName, lastName } = req.body;
 
   const existingUser = await userModel.findOne({ username });
   if (existingUser) {
@@ -16,14 +15,7 @@ const createManager = asyncHandler(async (req, res) => {
     );
   }
 
-  const departmentExists = await departmentModel.findById(department);
-  if (!departmentExists) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      "The specified department does not exist",
-      [{ department: "Department not found" }]
-    );
-  }
+
 
   const hashedPassword = await hashPassword(password);
 
@@ -32,7 +24,6 @@ const createManager = asyncHandler(async (req, res) => {
     password: hashedPassword,
     firstName,
     lastName,
-    department,
     role: "manager", 
   });
 
