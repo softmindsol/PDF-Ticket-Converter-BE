@@ -1,49 +1,161 @@
-import { boolean } from "joi";
 import mongoose from "mongoose";
+
 const UnderGroundTestSchema = new mongoose.Schema({
     // Property Details
-    Property Name
-    Date
-    Property Address
-    // Plans 
-    Accepted by approving authorities (names)
-    Address
-    Installation conforms to accepted plans: (yes ,no)
-    Equipment used is approved. If no, explain deviations:  (yes, no)
-    explain
+    propertyDetails: {
+        propertyName: {
+            type: String,
+            required: true
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        },
+        propertyAddress: {
+            type: String,
+            required: true
+        }
+    },
+
+    // Plans
+    plans: {
+        acceptedByApprovingAuthorities: [String],
+        address: String,
+        installationConformsToAcceptedPlans: {
+            type: Boolean,
+            default: false
+        },
+        equipmentUsedIsApproved: {
+            type: Boolean,
+            default: false
+        },
+        deviationsExplanation: String
+    },
+
     // Instructions
-    Has person in charge of fire equipment been 
-instructed as to location of control valves and 
-care and maintenance of this new equipment? If
-no, explain. (yes no)
-explain
-Have copies of appropriate instructions and care 
-and maintenance charts been left on premises?
-If no, explain.  (yes no)
- explain
+    instructions: {
+        personInChargeInstructed: {
+            type: Boolean,
+            default: false
+        },
+        instructionExplanation: String,
+        instructionsAndCareChartsLeft: {
+            type: Boolean,
+            default: false
+        },
+        chartsExplanation: String
+    },
 
+    suppliesBuildingsNames: [String],
 
- Supplies buildings names
-//  Underground Pipes and Joints
-Pipe types and class
-Type joint
+    // Underground Pipes and Joints
+    undergroundPipesAndJoints: {
+        pipeTypesAndClass: String,
+        typeJoint: String,
+        pipeStandard: String,
+        pipeStandardConform: {
+            type: Boolean,
+            default: false
+        },
+        fittingStandard: String,
+        fittingStandardConform: {
+            type: Boolean,
+            default: false
+        },
+        fittingStandardExplanation: String,
+        jointsStandard: String,
+        jointsStandardConform: {
+            type: Boolean,
+            default: false
+        },
+        jointsStandardExplanation: String
+    },
 
-pipestandard
- pipestandardConform (yes no)
- fittingstandard 
-fittingstandardconform (yes no )
-explain
- jointsstandard 
- jointsstandardconform (yes no )
- explain
- 
+    // Flushing Tests
+    flushingTests: {
+        undergroundPipingStandard: String,
+        undergroundPipingStandardConform: {
+            type: Boolean,
+            default: false
+        },
+        undergroundPipingStandardExplanation: String,
+        flushingFlowObtained: {
+            type: String,
+            enum: ['Public water', 'Tank or reservoir', 'Fire pump']
+        },
+        openingType: {
+            type: String,
+            enum: ['Y connection to flange and spigot', 'Open pipe']
+        }
+    },
 
+    // Hydrostatic Test
+    hydrostaticTest: {
+        testedAtPSI: Number,
+        testedHours: Number,
+        jointsCovered: {
+            type: Boolean,
+            default: false
+        }
+    },
 
-},
-{
+    // Leakage Test
+    leakageTest: {
+        leakeageGallons: Number,
+        leakageHours: Number,
+        allowableLeakageGallons: Number,
+        allowableLeakageHours: Number,
+        forwardFlowTestPerformed: {
+            type: Boolean,
+            default: false
+        }
+    },
 
-})
+    // Hydrants & Control Valves
+    hydrantsAndControlValves: {
+        numberOfHydrants: Number,
+        hydrantMakeAndType: String,
+        allOperateSatisfactorily: {
+            type: Boolean,
+            default: false
+        },
+        waterControlValvesLeftWideOpen: {
+            type: Boolean,
+            default: false
+        },
+        valvesNotOpenExplanation: String,
+        hoseThreadsInterchangeable: {
+            type: Boolean,
+            default: false
+        }
+    },
 
-const ServiceTicket = mongoose.model("UnderGroundTest", UnderGroundTestSchema);
+    // Remarks
+    remarks: {
+        dateLeftInService: Date,
+        nameOfInstallingContractor: String
+    },
 
-export default ServiceTicket
+    // Signatures (Tests witnessed by)
+    signatures: {
+        forPropertyOwner: {
+            signed: String, // Can store a name or a path to a digital signature
+            title: String,
+            date: Date
+        },
+        forInstallingContractor: {
+            signed: String,
+            title: String,
+            date: Date
+        }
+    },
+
+    additionalNotes: String
+
+}, {
+    timestamps: true // Adds createdAt and updatedAt timestamps
+});
+
+const UnderGroundTest = mongoose.model("UnderGroundTest", UnderGroundTestSchema);
+
+export default UnderGroundTest;
