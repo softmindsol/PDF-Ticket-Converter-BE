@@ -6,6 +6,19 @@ const DepartmentSchema = new mongoose.Schema(
     name: { type: String, required: true },
     status: { type: String, enum: ["active", "inactive"], default: "active" },
     isDeleted: { type: Boolean, default: false },
+    doc: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+
+    allowedForms: {
+      type: [String],
+      enum: ["AboveGround", "serviceTicket", "underGround", "workOrder"],
+      default: [],
+    },
+
     manager: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

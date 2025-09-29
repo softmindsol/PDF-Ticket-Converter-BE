@@ -1,63 +1,225 @@
 import mongoose from "mongoose";
 
+const { Schema, model } = mongoose;
+
+const sprinklerSchema = new Schema({
+  make: String,
+  model: String,
+  yearOfMfg: Number,
+  orificeSize: String,
+  quantity: Number,
+  tempRating: String,
+}); 
+
+const alarmDeviceSchema = new Schema({
+  type: String,
+  make: String,
+  model: String,
+  maxOperationTime: {
+    min: Number,
+    sec: Number,
+  },
+});
+
+const dryPipeOperatingTestSchema = new Schema({
+  dryValve: {
+    make: String,
+    model: String,
+    serialNumber: String,
+  },
+  qodValve: {
+    make: String,
+    model: String,
+    serialNumber: String,
+  },
+  timeToTripWithoutQOD: {
+    min: Number,
+    sec: Number,
+  },
+  timeToTripWithQOD: {
+    min: Number,
+    sec: Number,
+  },
+  waterPressureWithoutQOD: Number, // psi
+  waterPressureWithQOD: Number, // psi
+  airPressureWithoutQOD: Number, // psi
+  airPressureWithQOD: Number, // psi
+  tripPointAirPressureWithoutQOD: Number, // psi
+  tripPointAirPressureWithQOD: Number, // psi
+  timeWaterReachedOutletWithoutQOD: {
+    min: Number,
+    sec: Number,
+  },
+  timeWaterReachedOutletWithQOD: {
+    min: Number,
+    sec: Number,
+  },
+  alarmOperatedProperlyWithoutQOD: Boolean,
+  alarmOperatedProperlyWithQOD: Boolean,
+});
+
+const delugePreActionValveSchema = new Schema({
+    operation: {
+        type: String,
+        enum: ['pneumatic', 'electric', 'hydraulic']
+    },
+    isPipingSupervised: Boolean,
+    isDetectingMediaSupervised: Boolean,
+    operatesFromManualOrRemote: Boolean,
+    isAccessibleForTesting: Boolean,
+    explanation: String,
+    make: String,
+    model: String,
+    doesSupervisionLossAlarmOperate: Boolean,
+    doesValveReleaseOperate: Boolean,
+    maxTimeToOperateRelease: {
+        min: Number,
+        sec: Number,
+    }
+});
+
+const pressureReducingValveTestSchema = new Schema({
+    locationAndFloor: String,
+    makeAndModel: String,
+    setting: String,
+    staticPressure: {
+        inlet: Number, // psi
+        outlet: Number, // psi
+    },
+    residualPressure: {
+        inlet: Number, // psi
+        outlet: Number, // psi
+    },
+    flowRate: Number, // gpm
+});
+
+const signatureSchema = new Schema({
+    signature: String, // Can store image URL or digital signature data
+    name: String,
+    title: String,
+    date: Date,
+});
 
 
-const aboveGroundTestSchema = new mongoose.Schema(
-{
-  
-  // Property Details
-  Property Name
-  Date
-  Property Address
-  New installation? (yes no)
-  Modification? If yes, complete applicable portions of the form. (yes no)
+const aboveGroundTestSchema = new Schema(
+  {
+    // Section 1: Property Details
+    propertyDetails: {
+      propertyName: { type: String, required: true },
+      date: { type: Date, default: Date.now },
+      propertyAddress: String,
+      isNewInstallation: Boolean,
+      isModification: Boolean,
+    },
 
-  // Plans & Instructions
-  // Plans
-  Accepted by approving authorities (names)
-  Address
-  Installation conforms to accepted plans:
-  Equipment used is approved. If no, explain deviations
-  explain
-  Has person in charge of fire equipment been instructed as to location of control valves and care and maintenance of this new equipment? If no, explain.
-explain
-// Have copies of the following been left on the premises?
-System components instructions (yes no)
-Care and maintenance instructions (yes no)
-NFPA 25 (yes no)
+    // Section 2: Plans & Instructions
+    plansAndInstructions: {
+      plans: {
+        acceptedByAuthorities: [String],
+        address: String,
+        conformsToAcceptedPlans: Boolean,
+        equipmentIsApproved: Boolean,
+        deviationsExplanation: String,
+      },
+      instructions: {
+        isPersonInChargeInstructed: Boolean,
+        instructionExplanation: String,
+        hasSystemComponentsInstructions: Boolean,
+        hasCareAndMaintenanceInstructions: Boolean,
+        hasNFPA25: Boolean,
+      },
+    },
 
-// Location of  System
-// Sprinklers
-array of [
-  Make
-  Model
-  Year of Mgf.
-  Orifice size
-  Quantity
-  Temp. rating
-]
+    // Section 3: System Location & Components
+    systemComponents: {
+      sprinklers: [sprinklerSchema],
+      pipeAndFittings: {
+        pipeType: String,
+        fittingsType: String,
+      },
+    },
 
-Pipe and Fittings
-Type of Pipe
-Type of Fittings
+    // Section 4: Alarm Devices & Valves
+    alarmsAndValves: {
+      alarmValvesOrFlowIndicators: [alarmDeviceSchema],
+      dryPipeOperatingTests: [dryPipeOperatingTestSchema],
+      delugeAndPreActionValves: [delugePreActionValveSchema],
+      pressureReducingValveTests: [pressureReducingValveTestSchema],
+    },
+    
+    // Section 5: Testing
+    testing: {
+        hydrostaticTest: {
+            pressurePsi: Number,
+            pressureBar: Number,
+            durationHrs: Number,
+        },
+        isDryPipingPneumaticallyTested: Boolean,
+        doesEquipmentOperateProperly: Boolean,
+        improperOperationReason: String,
+        noCorrosiveChemicalsCertification: Boolean,
+        drainTest: {
+            gaugeReadingPsi: Number,
+            gaugeReadingBar: Number,
+            residualPressurePsi: Number,
+            residualPressureBar: Number,
+        },
+        undergroundPiping: {
+            isVerifiedByCertificate: Boolean,
+            wasFlushedByInstaller: Boolean,
+            explanation: String,
+        },
+        powderDrivenFasteners: {
+            isTestingSatisfactory: Boolean,
+            explanation: String,
+        },
+        blankTestingGaskets: {
+            numberUsed: Number,
+            locations: String,
+            numberRemoved: Number,
+        },
+    },
 
+    // Section 6: Welding, Cutouts & Nameplate
+    weldingAndCutouts: {
+      isWeldingPiping: Boolean,
+      certifications: {
+        awsB21Compliant: Boolean,
+        weldersQualified: Boolean,
+        qualityControlProcedureCompliant: Boolean,
+      },
+      cutouts: {
+        hasRetrievalControl: Boolean,
+      },
+    },
 
-// Alarm device & Dry valve
-// Alarm valve or flow indicator
-array of [
-  Type
-  Make
-  Model
-  // Maximum time to operate 
-  Maximum time (min)
-  Maximum time (sec)
-]
+    // Section 7: Final Checks
+    finalChecks: {
+        hasHydraulicDataNameplate: Boolean,
+        nameplateExplanation: String,
+        areCapsAndStrapsRemoved: Boolean,
+    },
+    
+    // Section 8: Remarks & Signatures
+    remarksAndSignatures: {
+      remarks: String,
+      dateLeftInService: Date,
+      sprinklerContractorName: String,
+      fireMarshalOrAHJ: signatureSchema,
+      sprinklerContractor: signatureSchema,
+    },
 
-
-},
-  { timestamps: true }
+    // Section 9: Additional Notes
+    notes: String,
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+    }
+  },
+  { timestamps: true } // Automatically adds createdAt and updatedAt fields
 );
 
-const AboveGroundTest = mongoose.model("AboveGroundTest", aboveGroundTestSchema);
+const AboveGroundTest = model("AboveGroundTest", aboveGroundTestSchema);
 
 export default AboveGroundTest;

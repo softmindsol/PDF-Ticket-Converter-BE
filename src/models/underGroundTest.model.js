@@ -150,8 +150,13 @@ const UnderGroundTestSchema = new mongoose.Schema({
         }
     },
 
-    additionalNotes: String
+    additionalNotes: String,
 
+        createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: false,
+    }
 }, {
     timestamps: true // Adds createdAt and updatedAt timestamps
 });

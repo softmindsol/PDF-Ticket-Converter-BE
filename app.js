@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import { ApiError } from '#utils/api.utils.js';
 import router from '#routes/index.js';
+import { createAdmin } from "#admin/admin.js";
+import { swaggerServe, swaggerSetup } from '#config/swagger.config.js';
 
 const app = express();
 
@@ -26,6 +28,7 @@ app.options(/.*/, (req, res) => {
 
 
 // API routes
+app.use("/api/doc", swaggerServe, swaggerSetup); // Only backend API docs
 app.use('/api', router);
 
 

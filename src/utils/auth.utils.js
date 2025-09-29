@@ -31,7 +31,7 @@ const generateAuthToken = async (user) => {
             role: user.role,
         };
         const token = jwt.sign(payload, JWT_SECRET, {
-            expiresIn: "1h" 
+            expiresIn: "10h" 
         });
         if (!token) {
             throw new Error("Failed to generate auth token");

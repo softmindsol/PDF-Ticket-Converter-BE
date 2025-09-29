@@ -40,8 +40,11 @@ const loginController = asyncHandler(async (req, res) => {
 
   const token = await generateAuthToken(user);
 
-  return new ApiResponse(res,httpStatus.OK, { token }, "Login successful");
+  return new ApiResponse(res,httpStatus.OK, { token, user_id:user._id, role:user.role }, "Login successful");
 });
+
+
+
 
 // -----------------register controller-----------------
 const registerController = asyncHandler(async (req, res) => {

@@ -1,8 +1,9 @@
 import express from "express";
 import authRoute from "./auth.route.js";
-import managerRoute from "./admin/manager.route.js";
-import userRoute from "./manager/user.route.js";
+import userRoute from "./admin/user.route.js";
+// import userRoute from "./manager/user.route.js";
 import departmentRoute from "./admin/department.route.js";
+import AppticketRoutes from "./app/ticket.route.js";
 const router = express.Router();
 
 const defaultRoutes = [
@@ -11,20 +12,37 @@ const defaultRoutes = [
     route: authRoute,
   },
   {
-    path: "/admin/manager",
-    route: managerRoute,
+    path: "/admin/user",
+    route: userRoute,
   },
   {
     path: "/admin/department",
     route: departmentRoute,
   },
+  // {
+  //   path: "/manager/user",
+  //   route: userRoute,
+  // },
+
+
+  // App Routes 
   {
-    path: "/manager/user",
-    route: userRoute,
+    path: "/ticket",
+    route: AppticketRoutes,
   },
 
 ];
 
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *       description: Enter your JWT token here
+ */
 defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });

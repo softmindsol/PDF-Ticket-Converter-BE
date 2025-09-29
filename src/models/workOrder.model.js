@@ -19,7 +19,7 @@ const materialSchema = new mongoose.Schema({
   },
 });
 
-const serviceTicketSchema = new mongoose.Schema(
+const WorkOrderSchema = new mongoose.Schema(
   {
     customerName: {
       type: String,
@@ -77,6 +77,6 @@ const serviceTicketSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const ServiceTicket = mongoose.model("ServiceTicket", serviceTicketSchema);
+const WorkOrder = mongoose.model("WorkOrder", WorkOrderSchema);
 
-export default ServiceTicket;
+export default WorkOrder;
