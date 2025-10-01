@@ -57,12 +57,27 @@ class ApiFeatures {
   }
 
   async execute() {
+    // If page=0, fetch all documents without pagination.
+    if (this.queryString.page === "0") {
+      const documents = await this.query;
+      return {
+        documents,
+        pagination: {
+          totalItems: documents.length,
+          totalPages: 1,
+          currentPage: 1, // A single page of all results
+          itemsPerPage: documents.length,
+        },
+      };
+    }
+
+    // Standard execution with pagination
     const countQuery = this.query.clone();
     const totalCount = await countQuery.model.countDocuments(
       countQuery.getFilter()
     );
 
-    this.paginate();
+    this.paginate(); // Call paginate only when not getting all documents
 
     const documents = await this.query;
 

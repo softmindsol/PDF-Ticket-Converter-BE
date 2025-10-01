@@ -1,19 +1,88 @@
 import Joi from "joi";
 
+const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+
 const departmentValidation = {
-createDepartment:{
-body: Joi.object({
-    name: Joi.string().required().min(3).max(30).regex(/^(?!.*\s$).*\S.*\S$/).messages({
-        "string.base": "Name must be a string",
-        "string.empty": "Name cannot be empty",
-        "string.min": "Name must be at least 3 characters long",
-        "string.max": "Username cannot be longer than 30 characters",
-        "string.pattern.base": "Name must start with an alphabet and can only contain letters, numbers and spaces(in between)",
-        "any.required": "Name is required",
+  getDepartment: {
+    params: Joi.object({
+      id: Joi.string().required().regex(objectIdRegex).messages({
+        "string.pattern.base": "Department ID must be a valid MongoDB ObjectId",
+        "any.required": "Department ID is required in the URL",
+      }),
     }),
+  },
 
-})  
+  updateDepartment: {
+    params: Joi.object({
+      id: Joi.string().required().regex(objectIdRegex).messages({
+        "string.base": "Department ID must be a string",
+        "string.empty": "Department ID cannot be empty",
+        "string.pattern.base": "Department ID must be a valid MongoDB ObjectId",
+        "any.required": "Department ID is required in the URL",
+      }),
+    }),
+    body: Joi.object({
+      name: Joi.string().min(2).max(100).messages({
+        "string.base": "Name must be a string",
+        "string.min": "Name must be at least 2 characters long",
+        "string.max": "Name cannot be longer than 100 characters",
+      }),
 
-},
-}
-export default departmentValidation
+      description: Joi.string().max(500).optional().allow("").messages({
+        "string.base": "Description must be a string",
+        "string.max": "Description cannot be longer than 500 characters",
+      }),
+
+      status: Joi.string().valid("active", "inactive").messages({
+        "any.only": "Status must be either 'active' or 'inactive'",
+      }),
+
+      isDeleted: Joi.boolean().messages({
+        "boolean.base": "'isDeleted' must be a boolean (true or false)",
+      }),
+
+      doc: Joi.array().items(Joi.string().required()).messages({
+        "array.base": "doc must be an array of strings",
+        "any.required": "A string inside the doc array is required",
+      }),
+
+      allowedForms: Joi.array()
+        .items(
+          Joi.string().valid(
+            "AboveGround",
+            "serviceTicket",
+            "underGround",
+            "workOrder"
+          )
+        )
+        .messages({
+          "array.base": "allowedForms must be an array",
+          "any.only":
+            "allowedForms can only include 'AboveGround', 'serviceTicket', 'underGround', 'workOrder'",
+        }),
+
+      manager: Joi.string()
+        .regex(objectIdRegex)
+        .optional()
+        .allow(null, "")
+        .messages({
+          "string.pattern.base": "Manager ID must be a valid MongoDB ObjectId",
+        }),
+    })
+      .min(1)
+      .messages({
+        "object.min": "Request body must contain at least one field to update.",
+      }),
+  },
+
+  deleteDepartment: {
+    params: Joi.object({
+      id: Joi.string().required().regex(objectIdRegex).messages({
+        "string.pattern.base": "Department ID must be a valid MongoDB ObjectId",
+        "any.required": "Department ID is required in the URL",
+      }),
+    }),
+  },
+};
+
+export default departmentValidation;

@@ -48,12 +48,13 @@ const getUsers = asyncHandler(async (req, res) => {
   const searchableFields = ["firstName", "lastName", "username", "email"];
 
   const features = new ApiFeatures(
-    userModel.find().select("-password"),
+    userModel.find().select("-password").populate("department", "name"),
     req.query
   )
   .filter(searchableFields)
   .sort()
   .limitFields();
+  console.log("🚀 ~ features:", features)
 
   const { documents: users, pagination } = await features.execute();
 

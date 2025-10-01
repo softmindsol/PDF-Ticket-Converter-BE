@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema(
     email: { type: String, required: false, unique: true },
     password: { type: String, required: true },
     phoneNumber: { type: String, required: false },
-    role: { type: String, enum: ["user", "manager", "admin"], default: "admin" },
+    role: { type: String, enum: ["user", "manager", "admin"], default: "user" },
     status: { type: String, enum: ["active", "inactive"], default: "active" },
     department: { 
       type: mongoose.Schema.Types.ObjectId,

@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import { ApiError } from '#utils/api.utils.js';
 import router from '#routes/index.js';
-import { createAdmin } from "#admin/admin.js";
 import { swaggerServe, swaggerSetup } from '#config/swagger.config.js';
 
 const app = express();
