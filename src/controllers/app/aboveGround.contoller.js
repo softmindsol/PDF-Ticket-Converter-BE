@@ -6,9 +6,6 @@ const createAboveGroundTicket = asyncHandler(async (req, res) => {
   const body = req.body;
   const { _id } = req.user;
 
-
-
-  // Create the new customer
   const ticket = await AboveGround.create({ ...body, createdBy: _id });
 
   return new ApiResponse(
