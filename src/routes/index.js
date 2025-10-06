@@ -3,6 +3,7 @@ import authRoute from "./auth.route.js";
 import userRoute from "./admin/user.route.js";
 // import userRoute from "./manager/user.route.js";
 import departmentRoute from "./admin/department.route.js";
+import workOrderRoute from "./admin/workOrder.route.js";
 import AppticketRoutes from "./app/ticket.route.js";
 const router = express.Router();
 
@@ -18,6 +19,10 @@ const defaultRoutes = [
   {
     path: "/admin/department",
     route: departmentRoute,
+  },
+    {
+    path: "/admin/work-order",
+    route: workOrderRoute,
   },
   // {
   //   path: "/manager/user",
