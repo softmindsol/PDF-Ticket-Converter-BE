@@ -9,6 +9,3 @@ router.post("/work-order", WorkOrderTicket );
 
 
 export default router;
-
-
-
