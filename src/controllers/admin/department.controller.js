@@ -9,7 +9,10 @@ import mongoose from "mongoose";
 const getDepartments = asyncHandler(async (req, res) => {
   const searchableFields = ["name"];
 
-  const features = new ApiFeatures(departmentModel.find().populate("manager", "firstName lastName"), req.query)
+  const features = new ApiFeatures(
+    departmentModel.find().populate("manager", "firstName lastName"),
+    req.query
+  )
     .filter(searchableFields)
     .sort()
     .limitFields();
@@ -52,7 +55,7 @@ const getDepartmentById = asyncHandler(async (req, res) => {
 
 const updateDepartment = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, manager, status, isDeleted, doc, allowedForms } = req.body;
+  const { name, manager: newManagerIds, ...otherFields } = req.body;
 
   const currentDepartment = await departmentModel.findById(id);
 
@@ -71,10 +74,22 @@ const updateDepartment = asyncHandler(async (req, res) => {
     }
   }
 
-  const oldManagerId = currentDepartment.manager?.toString();
-  const newManagerId = manager;
+  const oldManagerIds = currentDepartment.manager.map((m) => m.toString());
 
-  if (oldManagerId === newManagerId) {
+  const newManagerIdsArray = Array.isArray(newManagerIds)
+    ? newManagerIds
+    : newManagerIds
+    ? [newManagerIds]
+    : [];
+
+  const managersToAdd = newManagerIdsArray.filter(
+    (id) => !oldManagerIds.includes(id)
+  );
+  const managersToRemove = oldManagerIds.filter(
+    (id) => !newManagerIdsArray.includes(id)
+  );
+
+  if (managersToAdd.length === 0 && managersToRemove.length === 0) {
     const updatedDept = await departmentModel
       .findByIdAndUpdate(id, { $set: req.body }, { new: true })
       .populate("manager", "firstName lastName username");
@@ -91,32 +106,28 @@ const updateDepartment = asyncHandler(async (req, res) => {
 
   try {
     await session.withTransaction(async () => {
-      await Promise.all([
-        oldManagerId
-          ? userModel.findByIdAndUpdate(
-              oldManagerId,
-              { role: "user" },
-              { session }
-            )
-          : Promise.resolve(),
+      if (managersToRemove.length > 0) {
+        await userModel.updateMany(
+          { _id: { $in: managersToRemove } },
+          { $set: { role: "user" } },
+          { session }
+        );
+      }
 
-        newManagerId
-          ? userModel.findByIdAndUpdate(
-              newManagerId,
-              { role: "manager" },
-              { session }
-            )
-          : Promise.resolve(),
-      ]);
-
-      const updateFields = { ...req.body };
-
-      if ("manager" in req.body) {
-        updateFields.manager = req.body.manager;
+      if (managersToAdd.length > 0) {
+        await userModel.updateMany(
+          { _id: { $in: managersToAdd } },
+          { $set: { role: "manager" } },
+          { session }
+        );
       }
 
       updatedDepartment = await departmentModel
-        .findByIdAndUpdate(id, { $set: updateFields }, { new: true, session })
+        .findByIdAndUpdate(
+          id,
+          { $set: { ...otherFields, name, manager: newManagerIdsArray } },
+          { new: true, session }
+        )
         .populate("manager", "firstName lastName username");
 
       if (!updatedDepartment) {

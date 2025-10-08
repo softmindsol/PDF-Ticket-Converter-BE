@@ -61,13 +61,15 @@ const departmentValidation = {
             "allowedForms can only include 'AboveGround', 'serviceTicket', 'underGround', 'workOrder'",
         }),
 
-      manager: Joi.string()
-        .regex(objectIdRegex)
+      manager: Joi.array()
+        .items(
+          Joi.string().regex(objectIdRegex).messages({
+            "string.pattern.base":
+              "Each manager ID must be a valid MongoDB ObjectId.",
+          })
+        )
         .optional()
-        .allow(null, "")
-        .messages({
-          "string.pattern.base": "Manager ID must be a valid MongoDB ObjectId",
-        }),
+        .default([]),
     })
       .min(1)
       .messages({

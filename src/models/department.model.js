@@ -19,7 +19,7 @@ const DepartmentSchema = new mongoose.Schema(
       default: [],
     },
 
-    manager: {
+    manager: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: false,
@@ -27,7 +27,7 @@ const DepartmentSchema = new mongoose.Schema(
         validator: isManager,
         message: "Manager must be a user with the 'manager' role.",
       },
-    },
+    }],
   },
   { timestamps: true }
 );
