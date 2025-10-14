@@ -9,7 +9,7 @@ const sprinklerSchema = new Schema({
   orificeSize: String,
   quantity: Number,
   tempRating: String,
-}); 
+});
 
 const alarmDeviceSchema = new Schema({
   type: String,
@@ -40,12 +40,12 @@ const dryPipeOperatingTestSchema = new Schema({
     min: Number,
     sec: Number,
   },
-  waterPressureWithoutQOD: Number, // psi
-  waterPressureWithQOD: Number, // psi
-  airPressureWithoutQOD: Number, // psi
-  airPressureWithQOD: Number, // psi
-  tripPointAirPressureWithoutQOD: Number, // psi
-  tripPointAirPressureWithQOD: Number, // psi
+  waterPressureWithoutQOD: Number,
+  waterPressureWithQOD: Number,
+  airPressureWithoutQOD: Number,
+  airPressureWithQOD: Number,
+  tripPointAirPressureWithoutQOD: Number,
+  tripPointAirPressureWithQOD: Number,
   timeWaterReachedOutletWithoutQOD: {
     min: Number,
     sec: Number,
@@ -59,51 +59,49 @@ const dryPipeOperatingTestSchema = new Schema({
 });
 
 const delugePreActionValveSchema = new Schema({
-    operation: {
-        type: String,
-        enum: ['pneumatic', 'electric', 'hydraulic']
-    },
-    isPipingSupervised: Boolean,
-    isDetectingMediaSupervised: Boolean,
-    operatesFromManualOrRemote: Boolean,
-    isAccessibleForTesting: Boolean,
-    explanation: String,
-    make: String,
-    model: String,
-    doesSupervisionLossAlarmOperate: Boolean,
-    doesValveReleaseOperate: Boolean,
-    maxTimeToOperateRelease: {
-        min: Number,
-        sec: Number,
-    }
+  operation: {
+    type: String,
+    enum: ["pneumatic", "electric", "hydraulic"],
+  },
+  isPipingSupervised: Boolean,
+  isDetectingMediaSupervised: Boolean,
+  operatesFromManualOrRemote: Boolean,
+  isAccessibleForTesting: Boolean,
+  explanation: String,
+  make: String,
+  model: String,
+  doesSupervisionLossAlarmOperate: Boolean,
+  doesValveReleaseOperate: Boolean,
+  maxTimeToOperateRelease: {
+    min: Number,
+    sec: Number,
+  },
 });
 
 const pressureReducingValveTestSchema = new Schema({
-    locationAndFloor: String,
-    makeAndModel: String,
-    setting: String,
-    staticPressure: {
-        inlet: Number, // psi
-        outlet: Number, // psi
-    },
-    residualPressure: {
-        inlet: Number, // psi
-        outlet: Number, // psi
-    },
-    flowRate: Number, // gpm
+  locationAndFloor: String,
+  makeAndModel: String,
+  setting: String,
+  staticPressure: {
+    inlet: Number,
+    outlet: Number,
+  },
+  residualPressure: {
+    inlet: Number,
+    outlet: Number,
+  },
+  flowRate: Number,
 });
 
 const signatureSchema = new Schema({
-    signature: String, // Can store image URL or digital signature data
-    name: String,
-    title: String,
-    date: Date,
+  signature: String,
+  name: String,
+  title: String,
+  date: Date,
 });
-
 
 const aboveGroundTestSchema = new Schema(
   {
-    // Section 1: Property Details
     propertyDetails: {
       propertyName: { type: String, required: true },
       date: { type: Date, default: Date.now },
@@ -112,7 +110,6 @@ const aboveGroundTestSchema = new Schema(
       isModification: Boolean,
     },
 
-    // Section 2: Plans & Instructions
     plansAndInstructions: {
       plans: {
         acceptedByAuthorities: [String],
@@ -130,7 +127,6 @@ const aboveGroundTestSchema = new Schema(
       },
     },
 
-    // Section 3: System Location & Components
     systemComponents: {
       sprinklers: [sprinklerSchema],
       pipeAndFittings: {
@@ -139,48 +135,45 @@ const aboveGroundTestSchema = new Schema(
       },
     },
 
-    // Section 4: Alarm Devices & Valves
     alarmsAndValves: {
       alarmValvesOrFlowIndicators: [alarmDeviceSchema],
       dryPipeOperatingTests: [dryPipeOperatingTestSchema],
       delugeAndPreActionValves: [delugePreActionValveSchema],
       pressureReducingValveTests: [pressureReducingValveTestSchema],
     },
-    
-    // Section 5: Testing
+
     testing: {
-        hydrostaticTest: {
-            pressurePsi: Number,
-            pressureBar: Number,
-            durationHrs: Number,
-        },
-        isDryPipingPneumaticallyTested: Boolean,
-        doesEquipmentOperateProperly: Boolean,
-        improperOperationReason: String,
-        noCorrosiveChemicalsCertification: Boolean,
-        drainTest: {
-            gaugeReadingPsi: Number,
-            gaugeReadingBar: Number,
-            residualPressurePsi: Number,
-            residualPressureBar: Number,
-        },
-        undergroundPiping: {
-            isVerifiedByCertificate: Boolean,
-            wasFlushedByInstaller: Boolean,
-            explanation: String,
-        },
-        powderDrivenFasteners: {
-            isTestingSatisfactory: Boolean,
-            explanation: String,
-        },
-        blankTestingGaskets: {
-            numberUsed: Number,
-            locations: String,
-            numberRemoved: Number,
-        },
+      hydrostaticTest: {
+        pressurePsi: Number,
+        pressureBar: Number,
+        durationHrs: Number,
+      },
+      isDryPipingPneumaticallyTested: Boolean,
+      doesEquipmentOperateProperly: Boolean,
+      improperOperationReason: String,
+      noCorrosiveChemicalsCertification: Boolean,
+      drainTest: {
+        gaugeReadingPsi: Number,
+        gaugeReadingBar: Number,
+        residualPressurePsi: Number,
+        residualPressureBar: Number,
+      },
+      undergroundPiping: {
+        isVerifiedByCertificate: Boolean,
+        wasFlushedByInstaller: Boolean,
+        explanation: String,
+      },
+      powderDrivenFasteners: {
+        isTestingSatisfactory: Boolean,
+        explanation: String,
+      },
+      blankTestingGaskets: {
+        numberUsed: Number,
+        locations: String,
+        numberRemoved: Number,
+      },
     },
 
-    // Section 6: Welding, Cutouts & Nameplate
     weldingAndCutouts: {
       isWeldingPiping: Boolean,
       certifications: {
@@ -193,14 +186,12 @@ const aboveGroundTestSchema = new Schema(
       },
     },
 
-    // Section 7: Final Checks
     finalChecks: {
-        hasHydraulicDataNameplate: Boolean,
-        nameplateExplanation: String,
-        areCapsAndStrapsRemoved: Boolean,
+      hasHydraulicDataNameplate: Boolean,
+      nameplateExplanation: String,
+      areCapsAndStrapsRemoved: Boolean,
     },
-    
-    // Section 8: Remarks & Signatures
+
     remarksAndSignatures: {
       remarks: String,
       dateLeftInService: Date,
@@ -209,15 +200,14 @@ const aboveGroundTestSchema = new Schema(
       sprinklerContractor: signatureSchema,
     },
 
-    // Section 9: Additional Notes
     notes: String,
     createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-    }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  { timestamps: true } // Automatically adds createdAt and updatedAt fields
+  { timestamps: true }
 );
 
 const AboveGroundTest = model("AboveGroundTest", aboveGroundTestSchema);
