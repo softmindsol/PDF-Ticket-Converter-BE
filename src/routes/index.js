@@ -5,6 +5,7 @@ import userRoute from "./admin/user.route.js";
 import departmentRoute from "./admin/department.route.js";
 import workOrderRoute from "./admin/workOrder.route.js";
 import customerRoute from "./admin/customer.route.js";
+import serviceTicketRoute from "./admin/serviceticket.route.js";
 import aboveGroundRoute from "./admin/aboveGroundTest.route.js";
 import AppticketRoutes from "./app/ticket.route.js";
 const router = express.Router();
@@ -22,15 +23,19 @@ const defaultRoutes = [
     path: "/admin/department",
     route: departmentRoute,
   },
-    {
+  {
     path: "/admin/work-order",
     route: workOrderRoute,
   },
-      {
+  {
     path: "/admin/customer-ticket",
     route: customerRoute,
   },
-     {
+  {
+    path: "/admin/service-ticket",
+    route: serviceTicketRoute,
+  },
+  {
     path: "/admin/above-ground",
     route: aboveGroundRoute,
   },
@@ -39,13 +44,11 @@ const defaultRoutes = [
   //   route: userRoute,
   // },
 
-
-  // App Routes 
+  // App Routes
   {
     path: "/ticket",
     route: AppticketRoutes,
   },
-
 ];
 
 /**
