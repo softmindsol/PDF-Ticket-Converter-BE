@@ -17,6 +17,10 @@ const materialSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  taxRate: {
+    type: Number,
+    required: true,
+  },
 });
 
 const WorkOrderSchema = new mongoose.Schema(
