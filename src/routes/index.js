@@ -7,6 +7,7 @@ import workOrderRoute from "./admin/workOrder.route.js";
 import customerRoute from "./admin/customer.route.js";
 import serviceTicketRoute from "./admin/serviceticket.route.js";
 import aboveGroundRoute from "./admin/aboveGroundTest.route.js";
+import underGroundRoute from "./admin/underground.route.js";
 import AppticketRoutes from "./app/ticket.route.js";
 const router = express.Router();
 
@@ -38,6 +39,10 @@ const defaultRoutes = [
   {
     path: "/admin/above-ground",
     route: aboveGroundRoute,
+  },
+   {
+    path: "/admin/under-ground",
+    route: underGroundRoute,
   },
   //\ {
   //   path: "/manager/user",
