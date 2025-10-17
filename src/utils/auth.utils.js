@@ -28,6 +28,7 @@ const generateAuthToken = async (user) => {
         const payload = {
             id: user._id,
             username: user.username,
+            allowedForms:user?.department?.allowedForms,
             role: user.role,
         };
         const token = jwt.sign(payload, JWT_SECRET, {
@@ -38,6 +39,7 @@ const generateAuthToken = async (user) => {
         }
         return token;
     } catch (error) {
+        console.log("🚀 ~ generateAuthToken ~ error:", error)
         throw new Error("Error generating auth token");
     }
 };

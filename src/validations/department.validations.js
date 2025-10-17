@@ -52,13 +52,14 @@ const departmentValidation = {
             "AboveGround",
             "serviceTicket",
             "underGround",
-            "workOrder"
+            "workOrder",
+             "customer"
           )
         )
         .messages({
           "array.base": "allowedForms must be an array",
           "any.only":
-            "allowedForms can only include 'AboveGround', 'serviceTicket', 'underGround', 'workOrder'",
+            "allowedForms can only include 'AboveGround', 'serviceTicket', 'underGround', 'workOrder', 'customer'",
         }),
 
       manager: Joi.array()

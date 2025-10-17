@@ -41,7 +41,7 @@ export const auth = (roles = []) => {
         );
       }
 
-      const user = await userModel.findById(decoded.id);
+      const user = await userModel.findById(decoded.id).populate("department");
       if (!user) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "User not found", [
           { user: "User not found" },

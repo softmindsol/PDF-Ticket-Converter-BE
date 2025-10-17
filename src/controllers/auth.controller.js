@@ -20,7 +20,7 @@ const loginController = asyncHandler(async (req, res) => {
     );
   }
 
-  const user = await userModel.findOne({ username }).select("+password");
+  const user = await userModel.findOne({ username }).populate("department", "allowedForms").select("+password");
   if (!user) {
     throw new ApiError(
       httpStatus.UNAUTHORIZED,
@@ -28,7 +28,7 @@ const loginController = asyncHandler(async (req, res) => {
       [{ username: "Invalid username" }]
     );
   }
-
+  
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
     throw new ApiError(
@@ -37,7 +37,8 @@ const loginController = asyncHandler(async (req, res) => {
       [{ password: "Invalid password" }]
     );
   }
-
+  
+  console.log("🚀 ~ user:", user)
   const token = await generateAuthToken(user);
 
   return new ApiResponse(res,httpStatus.OK, { token, user_id:user._id, role:user.role }, "Login successful");
@@ -46,7 +47,7 @@ const loginController = asyncHandler(async (req, res) => {
 
 
 
-// -----------------register controller-----------------
+// ----------------- register controller -----------------
 const registerController = asyncHandler(async (req, res) => {
   const { firstName, lastName, username, password, phoneNumber } = req.body;
 
