@@ -34,11 +34,11 @@ export const generateUndergroundTestHtml = async (testData = {}) => {
         <title>Contractor's Material and Test Certificate for Underground Piping</title>
         <style>
             /* --- General Page Setup --- */
-            body { font-family: Arial, sans-serif; font-size: 7pt; color: #000; background-color: #f0f0f0; }
+            body { font-family: Arial, sans-serif; font-size: 9pt; color: #000; background-color: #ffffffff; }
             .page-container { background-color: #fff; width: 8.5in; min-height: 11in; margin: 20px auto; padding: 0.5in; }
             
             /* --- Header and Main Table --- */
-            .header { text-align: right; margin-bottom: 10px; }
+            .header { text-align: center; margin-bottom: 20px; }
             .header img { width: 250px; height: auto; }
             .main-form-table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
             .main-form-table td { border: 1px solid #000; padding: 8px; vertical-align: top; }
