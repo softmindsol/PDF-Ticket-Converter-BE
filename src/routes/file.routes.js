@@ -1,6 +1,6 @@
 import express from "express";
 import { handleFileUpload } from "#middlewares/file.js";
-import { auth } from "#middlewares/auth.middleware.js";
+import { auth } from "#middlewares/auth.js";
 import {
   uploadFileController,
   deleteFileController,
@@ -9,9 +9,9 @@ import {
 const router = express.Router();
 
 router.post(
-  "/pdf",
-  auth(["user"]),
-  handleFileUpload("tickets", "ticket"),
+  "/signature",
+  auth(["user", 'admin', 'manager' ]),
+  handleFileUpload("signature", "signature"),
   uploadFileController
 );
 

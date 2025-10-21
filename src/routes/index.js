@@ -9,6 +9,7 @@ import serviceTicketRoute from "./admin/serviceticket.route.js";
 import aboveGroundRoute from "./admin/aboveGroundTest.route.js";
 import underGroundRoute from "./admin/underground.route.js";
 import AppticketRoutes from "./app/ticket.route.js";
+import fileHandlerRoute from "./file.routes.js";
 const router = express.Router();
 
 const defaultRoutes = [
@@ -43,6 +44,10 @@ const defaultRoutes = [
    {
     path: "/admin/under-ground",
     route: underGroundRoute,
+  },
+   {
+    path: "/file",
+    route: fileHandlerRoute,
   },
   //\ {
   //   path: "/manager/user",
