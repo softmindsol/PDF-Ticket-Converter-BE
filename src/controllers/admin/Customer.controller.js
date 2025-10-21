@@ -2,7 +2,8 @@ import Customer from "#models/customer.model.js";
 import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
-
+import { generateCustomerProfileHtml } from "#root/src/services/customer.pdf.js";
+import {savePdfToFile} from '#config/puppeteer.config.js' 
 const createCustomer = asyncHandler(async (req, res) => {
   const {
     customerName,
@@ -55,6 +56,10 @@ const createCustomer = asyncHandler(async (req, res) => {
     directPayCertificate,
     createdBy: req.user._id,
   });
+  const html = await generateCustomerProfileHtml(newCustomer);
+const safeTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
+const newFileName = `${newCustomer?._id}-${safeTimestamp}.pdf`;
+const fileName = await savePdfToFile(html, newFileName, 'customers');  console.log("🚀 ~ fileName:", fileName);
 
   return new ApiResponse(
     res,
@@ -65,7 +70,12 @@ const createCustomer = asyncHandler(async (req, res) => {
 });
 
 const getCustomers = asyncHandler(async (req, res) => {
-  const searchableFields = ["customerName", "phoneNumber", "emailForInspectionReports", "buildingName"];
+  const searchableFields = [
+    "customerName",
+    "phoneNumber",
+    "emailForInspectionReports",
+    "buildingName",
+  ];
 
   const features = new ApiFeatures(
     Customer.find().populate("createdBy", "username"),
@@ -87,7 +97,10 @@ const getCustomers = asyncHandler(async (req, res) => {
 
 const getCustomerById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const customer = await Customer.findById(id).populate("createdBy", "username");
+  const customer = await Customer.findById(id).populate(
+    "createdBy",  
+    "username"
+  );
   if (!customer) {
     throw new ApiError(httpStatus.NOT_FOUND, "Customer not found.");
   }
@@ -165,4 +178,10 @@ const deleteCustomer = asyncHandler(async (req, res) => {
   );
 });
 
-export { createCustomer, getCustomers, getCustomerById, updateCustomer, deleteCustomer };
+export {
+  createCustomer,
+  getCustomers,
+  getCustomerById,
+  updateCustomer,
+  deleteCustomer,
+};

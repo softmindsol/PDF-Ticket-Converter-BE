@@ -2,6 +2,8 @@ import ServiceTicket from "#models/serviceTicket.model.js";
 import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
+import { generateServiceTicketHtml } from "#root/src/services/service-ticket.pdf.js";
+import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 
 const createServiceTicket = asyncHandler(async (req, res) => {
   const {
@@ -40,6 +42,11 @@ const createServiceTicket = asyncHandler(async (req, res) => {
     customerSignature,
     createdBy: req.user._id,
   });
+  console.log("🚀 ~ newServiceTicket:", newServiceTicket)
+    const html = await generateServiceTicketHtml(newServiceTicket);
+  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const newFileName = `${newServiceTicket?._id}-${safeTimestamp}.pdf`;
+  const fileName = await savePdfToFile(html, newFileName, 'service-ticket');  console.log("🚀 ~ fileName:", fileName);
 
   return new ApiResponse(
     res,

@@ -2,6 +2,8 @@ import WorkOrder from "#models/workOrder.model.js";
 import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
+import { generateWorkOrderHtml } from "#root/src/services/work-order.pdf.js";
+import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 
 const createWorkOrder = asyncHandler(async (req, res) => {
   const {
@@ -39,6 +41,10 @@ const createWorkOrder = asyncHandler(async (req, res) => {
     customerSignature,
     createdBy: req.user._id,
   });
+    const html = await generateWorkOrderHtml(newWorkOrder);
+  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const newFileName = `${newWorkOrder?._id}-${safeTimestamp}.pdf`;
+  const fileName = await savePdfToFile(html, newFileName, 'work-order');  console.log("🚀 ~ fileName:", fileName);
 
   return new ApiResponse(
     res,

@@ -2,12 +2,18 @@ import UnderGroundTest from "#models/underGroundTest.model.js";
 import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
+import { generateUndergroundTestHtml } from "#root/src/services/underGround.pdf.js";
+import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 
 const createUndergroundTest = asyncHandler(async (req, res) => {
   const newUndergroundTest = await UnderGroundTest.create({
     ...req.body,
     createdBy: req.user._id,
   });
+  const html = await generateUndergroundTestHtml(newUndergroundTest);
+const safeTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
+const newFileName = `${newUndergroundTest?._id}-${safeTimestamp}.pdf`;
+const fileName = await savePdfToFile(html, newFileName, 'under-ground');  console.log("🚀 ~ fileName:", fileName);
 
   return new ApiResponse(
     res,

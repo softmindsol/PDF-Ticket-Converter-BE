@@ -81,6 +81,22 @@ const UnderGroundTestSchema = new mongoose.Schema(
       },
       openingType: {
         type: String,
+        enum: ["Hydrant butt", "Open pipe"],
+      },
+    },
+    leadsflushingTests: {
+      undergroundPipingStandard: String,
+      undergroundPipingStandardConform: {
+        type: Boolean,
+        default: false,
+      },
+      undergroundPipingStandardExplanation: String,
+      flushingFlowObtained: {
+        type: String,
+        enum: ["Public water", "Tank or reservoir", "Fire pump"],
+      },
+      openingType: {
+        type: String,
         enum: ["Y connection to flange and spigot", "Open pipe"],
       },
     },
