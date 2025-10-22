@@ -16,6 +16,8 @@
     "@adminjs/design-system": "^4.1.1",
     "@adminjs/express": "^6.1.1",
     "@adminjs/mongoose": "^4.1.0",
+    "@aws-sdk/client-s3": "^3.914.0",
+    "@aws-sdk/s3-request-presigner": "^3.914.0",
     "adminjs": "^7.8.17",
     "bcrypt": "^6.0.0",
     "connect-mongo": "^5.1.0",

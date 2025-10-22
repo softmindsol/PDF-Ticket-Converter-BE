@@ -3,7 +3,8 @@ import { handleFileUpload } from "#middlewares/file.js";
 import { auth } from "#middlewares/auth.js";
 import {
   uploadFileController,
-  deleteFileController,
+  deleteS3ObjectController,
+  getPresignedUrlController,
 } from "#controllers/filehandler.controller.js";
 
 const router = express.Router();
@@ -14,8 +15,13 @@ router.post(
   handleFileUpload("signature", "signature"),
   uploadFileController
 );
+router.get(
+  "/pre-sign",
+  auth(["user", 'admin', 'manager' ]),
+ getPresignedUrlController
+);
 
 
-router.delete("/delete-file", auth(["admin", "user"]), deleteFileController);
+router.delete("/delete-file", auth(["admin", "user"]), deleteS3ObjectController);
 
 export default router;

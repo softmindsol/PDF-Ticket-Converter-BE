@@ -1,113 +1,127 @@
-import path from "path";
-import fs from "fs/promises"; // <-- Import the file system promises API
 import { asyncHandler, ApiResponse, ApiError } from "#utils/api.utils.js";
 import httpStatus from "http-status";
+import s3Client from "../config/aws.config.js";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 /**
- * Controller to respond with the URLs of uploaded files.
- * This should be placed *after* the handleFileUpload middleware in a route.
+ * @desc    Respond with file info after a successful S3 upload.
+ * @route   POST /api/s3/upload (Example route)
+ * @access  Private
+ * @note    This controller should be placed *after* your S3 upload middleware.
  */
 const uploadFileController = asyncHandler(async (req, res) => {
-  // Check if any file was uploaded. The middleware handles the actual upload.
-  if (!req.file && (!req.files || req.files.length === 0)) {
+  if (!req.file) {
     throw new ApiError(httpStatus.BAD_REQUEST, "No file was uploaded.");
   }
 
-  // Helper function to construct a full URL for a file
-  const generateUrl = (file) => {
-    // The file.path from multer is an absolute system path.
-    // We need to find the path relative to the 'public' directory.
-    const publicDir = path.resolve(process.cwd(), "public");
-    const relativePath = path.relative(publicDir, file.path);
-
-    // Normalize path for URL (use forward slashes)
-    const urlPath = relativePath.replace(/\\/g, "/");
-
-    return `${req.protocol}://${req.get("host")}/${urlPath}`;
+  const fileInfo = {
+    url: req.file.location,
+    key: req.file.key,
+    originalname: req.file.originalname,
+    mimetype: req.file.mimetype,
+    size: req.file.size,
   };
 
-  // Handle multiple file uploads
-  if (req.files && req.files.length > 0) {
-    const filesInfo = req.files.map((file) => ({
-      url: generateUrl(file),
-      filename: file.filename, // Multer provides the final saved filename
-      originalname: file.originalname, // The original name of the file
-      mimetype: file.mimetype,
-      size: file.size,
-    }));
+  return new ApiResponse(
+    res,
+    httpStatus.OK,
+    { file: fileInfo },
+    "File uploaded successfully to S3."
+  );
+});
 
-    return new ApiResponse(
-      res,
-      httpStatus.OK,
-      { files: filesInfo },
-      "Files uploaded successfully."
-    );
+/**
+ * @desc    Generate a presigned URL for downloading/viewing a private S3 object.
+ * @route   GET /api/s3/get-signed-url
+ * @access  Private
+ */
+ const getPresignedUrlController = asyncHandler(async (req, res) => {
+  // 1. Receive the full URL from the request query.
+  const { key: fullUrl } = req.query;
+
+  if (!fullUrl) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'The "key" (containing the full URL) query parameter is required.');
   }
 
-  // Handle single file upload
-  if (req.file) {
-    const fileInfo = {
-      url: generateUrl(req.file),
-      filename: req.file.filename,
-      originalname: req.file.originalname,
-      mimetype: req.file.mimetype,
-      size: req.file.size,
-    };
+  let s3Key;
+  try {
+    // 2. Use the standard URL parser to safely deconstruct the URL.
+    const url = new URL(fullUrl);
+    
+    // 3. Extract the pathname (e.g., "/customers/file.pdf") and remove the leading slash.
+    // The result is the S3 Key (e.g., "customers/file.pdf").
+    s3Key = url.pathname.slice(1);
+
+  } catch (error) {
+    // This will catch invalid URLs.
+    throw new ApiError(httpStatus.BAD_REQUEST, "The provided key is not a valid URL.");
+  }
+
+  const bucketName = process.env.S3_BUCKET_NAME;
+
+  // 4. Use the EXTRACTED key in the S3 command.
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: s3Key,
+  });
+
+  try {
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 600 });
 
     return new ApiResponse(
       res,
       httpStatus.OK,
-      { file: fileInfo },
-      "File uploaded successfully."
+      { url: signedUrl },
+      "Signed URL generated successfully."
     );
+  } catch (error) {
+    if (error.name === 'NoSuchKey') {
+      throw new ApiError(httpStatus.NOT_FOUND, 'The requested file does not exist in S3.');
+    }
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Could not generate the file URL.');
   }
 });
 
 /**
- * Controller to delete a file from the public directory.
+ * @desc    Delete an object from the S3 bucket.
+ * @route   DELETE /api/s3/delete-object
+ * @access  Private
  */
-const deleteFileController = asyncHandler(async (req, res) => {
-  const { filePath } = req.body;
+const deleteS3ObjectController = asyncHandler(async (req, res) => {
+  const { key } = req.body;
 
-  if (!filePath) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "File path is required.");
+  if (!key) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "S3 object key is required.");
   }
 
-  // --- Security Critical: Prevent Directory Traversal ---
-  // 1. Define the base public directory.
-  const publicDir = path.resolve(process.cwd(), "public");
-  // 2. Create an absolute path to the file user wants to delete.
-  const absoluteFilePath = path.join(publicDir, filePath);
-  // 3. Check if the resolved absolute path is still within the public directory.
-  if (!absoluteFilePath.startsWith(publicDir)) {
-    throw new ApiError(
-      httpStatus.FORBIDDEN,
-      "Access denied. You cannot delete files outside of the intended directory."
-    );
-  }
+  const bucketName = process.env.S3_BUCKET_NAME;
+
+  const command = new DeleteObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+  });
 
   try {
-    // Check if the file exists before attempting to delete.
-    await fs.access(absoluteFilePath);
-    // If it exists, delete the file.
-    await fs.unlink(absoluteFilePath);
+    await s3Client.send(command);
 
     return new ApiResponse(
       res,
       httpStatus.OK,
       null,
-      "File deleted successfully."
+      "File deleted successfully from S3."
     );
   } catch (error) {
-    // If fs.access or fs.unlink throws an 'ENOENT' error, the file doesn't exist.
-    if (error.code === "ENOENT") {
-      throw new ApiError(httpStatus.NOT_FOUND, "File not found.");
-    }
-    // For any other system errors (e.g., permissions), let the global error handler manage it.
-    throw error;
+    console.error("Error deleting object from S3:", error);
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Could not delete the file."
+    );
   }
 });
 
-
-// Export both controllers
-export { uploadFileController, deleteFileController };
+export {
+  uploadFileController,
+  getPresignedUrlController,
+  deleteS3ObjectController,
+};

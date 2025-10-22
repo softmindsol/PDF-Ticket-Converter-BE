@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
 import { generateCustomerProfileHtml } from "#root/src/services/customer.pdf.js";
-import {savePdfToFile} from '#config/puppeteer.config.js' 
+import { savePdfToFile } from "#config/puppeteer.config.js";
 const createCustomer = asyncHandler(async (req, res) => {
   const {
     customerName,
@@ -57,14 +57,16 @@ const createCustomer = asyncHandler(async (req, res) => {
     createdBy: req.user._id,
   });
   const html = await generateCustomerProfileHtml(newCustomer);
-const safeTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
-const newFileName = `${newCustomer?._id}-${safeTimestamp}.pdf`;
-const fileName = await savePdfToFile(html, newFileName, 'customers');  console.log("🚀 ~ fileName:", fileName);
-
+  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const newFileName = `${newCustomer?._id}-${safeTimestamp}.pdf`;
+  const fileName = await savePdfToFile(html, newFileName, "customers");
+  console.log("🚀 ~ fileName:", fileName);
+  newCustomer.ticket = fileName?.url;
+  const updatedCustomerWithPdf = await newCustomer.save();
   return new ApiResponse(
     res,
     httpStatus.CREATED,
-    { customer: newCustomer },
+    { customer: updatedCustomerWithPdf },
     "Customer created successfully."
   );
 });
@@ -98,7 +100,7 @@ const getCustomers = asyncHandler(async (req, res) => {
 const getCustomerById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const customer = await Customer.findById(id).populate(
-    "createdBy",  
+    "createdBy",
     "username"
   );
   if (!customer) {

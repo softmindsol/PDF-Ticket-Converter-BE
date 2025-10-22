@@ -31,10 +31,11 @@ const customerSchema = new mongoose.Schema(
     directPayCertificate: { type: Boolean, default: false },
 
     createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-    }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    ticket: { type: String, required: false, default: "" },
   },
   { timestamps: true }
 );
