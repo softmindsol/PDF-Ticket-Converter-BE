@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 import {  PutObjectCommand } from "@aws-sdk/client-s3";
 import 'dotenv/config'; 
 
-import s3Client from "./aws.config";
+import s3Client from "./aws.config.js";
 
 export const savePdfToFile = async (htmlContent, fileName, folderName) => {
   let browser;
