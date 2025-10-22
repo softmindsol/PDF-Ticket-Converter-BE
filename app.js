@@ -11,21 +11,12 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    origin: "*", // For development, '*' is fine. For production, specify your frontend's domain.
+    methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
     credentials: true,
   })
 );
-app.options(/.*/, (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.sendStatus(204);
-});
+
 
 app.use("/api/doc", swaggerServe, swaggerSetup);
 app.use("/api", router);
