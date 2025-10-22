@@ -6,54 +6,50 @@ import { generateServiceTicketHtml } from "#root/src/services/service-ticket.pdf
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 
 const createServiceTicket = asyncHandler(async (req, res) => {
-  const {
-    jobName,
-    customerName,
-    emailAddress,
-    phoneNumber,
-    jobLocation,
-    workDescription,
-    materials,
-    technicianName,
-    technicianContactNumber,
-    stHours,
-    otHours,
-    applySalesTax,
-    workOrderStatus,
-    completionDate,
-    customerSignature,
-  } = req.body;
-
+  // 1. Create the initial service ticket record in the database.
   const newServiceTicket = await ServiceTicket.create({
-    jobName,
-    customerName,
-    emailAddress,
-    phoneNumber,
-    jobLocation,
-    workDescription,
-    materials,
-    technicianName,
-    technicianContactNumber,
-    stHours,
-    otHours,
-    applySalesTax,
-    workOrderStatus,
-    completionDate,
-    customerSignature,
+    ...req.body,
     createdBy: req.user._id,
   });
-  console.log("🚀 ~ newServiceTicket:", newServiceTicket)
-    const html = await generateServiceTicketHtml(newServiceTicket);
-  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const newFileName = `${newServiceTicket?._id}-${safeTimestamp}.pdf`;
-  const fileName = await savePdfToFile(html, newFileName, 'service-ticket');  console.log("🚀 ~ fileName:", fileName);
 
-  return new ApiResponse(
-    res,
-    httpStatus.CREATED,
-    { serviceTicket: newServiceTicket },
-    "Service Ticket created successfully."
-  );
+  // 2. Generate the HTML and upload the corresponding PDF to S3.
+  //    (We wrap this in a try/catch to handle potential PDF generation errors gracefully)
+  try {
+    const html = await generateServiceTicketHtml(newServiceTicket);
+    const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const newFileName = `${newServiceTicket._id}-${safeTimestamp}.pdf`;
+    
+    // This function should return an object like { key: '...', url: '...' }
+    const pdfData = await savePdfToFile(html, newFileName, 'service-tickets');
+    console.log("🚀 ~ PDF Data:", pdfData);
+
+    // 3. Update the document in memory with the S3 URL.
+    //    We save the full URL as per your requirement.
+    newServiceTicket.ticket = pdfData?.url;
+
+    // 4. Save the updated document back to the database.
+    const updatedServiceTicket = await newServiceTicket.save();
+
+    // 5. Respond with the FINAL, fully updated service ticket object.
+    return new ApiResponse(
+      res,
+      httpStatus.CREATED,
+      { serviceTicket: updatedServiceTicket },
+      "Service Ticket and PDF created successfully."
+    );
+  } catch (pdfError) {
+    console.error("Failed to generate PDF for service ticket:", pdfError);
+    // If PDF fails, we still return the created ticket but with a warning.
+    return new ApiResponse(
+      res,
+      httpStatus.CREATED,
+      {
+        serviceTicket: newServiceTicket,
+        warning: "Service Ticket was created, but failed to generate PDF profile."
+      },
+      "Service Ticket created without a PDF."
+    );
+  }
 });
 
 const getServiceTickets = asyncHandler(async (req, res) => {
