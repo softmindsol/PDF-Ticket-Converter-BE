@@ -4,12 +4,6 @@ import s3Client from "../config/aws.config.js";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
-/**
- * @desc    Respond with file info after a successful S3 upload.
- * @route   POST /api/s3/upload (Example route)
- * @access  Private
- * @note    This controller should be placed *after* your S3 upload middleware.
- */
 const uploadFileController = asyncHandler(async (req, res) => {
   if (!req.file) {
     throw new ApiError(httpStatus.BAD_REQUEST, "No file was uploaded.");

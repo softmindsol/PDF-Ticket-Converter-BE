@@ -56,6 +56,7 @@ const dryPipeOperatingTestSchema = new Schema({
   },
   alarmOperatedProperlyWithoutQOD: Boolean,
   alarmOperatedProperlyWithQOD: Boolean,
+  explain:String
 });
 
 const delugePreActionValveSchema = new Schema({
@@ -143,6 +144,13 @@ const aboveGroundTestSchema = new Schema(
     },
 
     testing: {
+      backflowTest: {
+        meansUsed: String, // For the "Indicate means used..." text field
+        wasFlowDemandCreated: {
+          type: String,
+          enum: ["Yes", "No", "N/A"]
+        } // For the Yes/No/N/A checkbox
+      },
       hydrostaticTest: {
         pressurePsi: Number,
         pressureBar: Number,
@@ -206,6 +214,8 @@ const aboveGroundTestSchema = new Schema(
       ref: "User",
       required: true,
     },
+    ticket: { type: String, required: false, default: "" },
+
   },
   { timestamps: true }
 );

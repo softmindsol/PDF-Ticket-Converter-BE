@@ -2,17 +2,25 @@ import AboveGroundTest from "#models/aboveGroundTest.model.js";
 import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
+import { generateAbovegroundTestHtml } from "#root/src/services/aboveGround.pdf.js";
+import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 
 const createAboveGroundTest = asyncHandler(async (req, res) => {
   const newAboveGroundTest = await AboveGroundTest.create({
     ...req.body,
     createdBy: req.user._id,
   });
-
+    const html = await generateAbovegroundTestHtml(newAboveGroundTest);
+    const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const newFileName = `${newAboveGroundTest?._id}-${safeTimestamp}.pdf`;
+    const fileName = await savePdfToFile(html, newFileName, "above-ground");
+    console.log("🚀 ~ fileName:", fileName)
+  newAboveGroundTest.ticket = fileName?.url;
+  const updatedCustomerWithPdf = await newAboveGroundTest.save();
   return new ApiResponse(
     res,
     httpStatus.CREATED,
-    { aboveGroundTest: newAboveGroundTest },
+    { aboveGroundTest: updatedCustomerWithPdf },
     "Above Ground Test created successfully."
   );
 });
