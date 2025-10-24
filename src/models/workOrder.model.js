@@ -41,7 +41,7 @@ const WorkOrderSchema = new mongoose.Schema(
     jobNumber: {
       type: String,
       required: true,
-      unique: true, 
+      unique: true,
     },
     technicianName: {
       type: String,
@@ -54,10 +54,10 @@ const WorkOrderSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       required: true,
-      enum:['cash', 'check', 'credit']
+      enum: ["cash", "check", "credit"],
     },
 
-    materialList: [materialSchema], 
+    materialList: [materialSchema],
 
     date: {
       type: Date,
@@ -65,7 +65,7 @@ const WorkOrderSchema = new mongoose.Schema(
     },
 
     customerSignature: {
-      type: String, 
+      type: String,
     },
 
     createdBy: {
@@ -73,6 +73,7 @@ const WorkOrderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    ticket: { type: String, required: false, default: "" },
   },
   { timestamps: true }
 );

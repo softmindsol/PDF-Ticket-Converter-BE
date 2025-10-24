@@ -4,33 +4,26 @@ import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
 import { generateServiceTicketHtml } from "#root/src/services/service-ticket.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
+import userModel from "#root/src/models/user.model.js";
 
 const createServiceTicket = asyncHandler(async (req, res) => {
-  // 1. Create the initial service ticket record in the database.
   const newServiceTicket = await ServiceTicket.create({
     ...req.body,
     createdBy: req.user._id,
   });
 
-  // 2. Generate the HTML and upload the corresponding PDF to S3.
-  //    (We wrap this in a try/catch to handle potential PDF generation errors gracefully)
   try {
     const html = await generateServiceTicketHtml(newServiceTicket);
     const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newFileName = `${newServiceTicket._id}-${safeTimestamp}.pdf`;
-    
-    // This function should return an object like { key: '...', url: '...' }
-    const pdfData = await savePdfToFile(html, newFileName, 'service-tickets');
+
+    const pdfData = await savePdfToFile(html, newFileName, "service-tickets");
     console.log("🚀 ~ PDF Data:", pdfData);
 
-    // 3. Update the document in memory with the S3 URL.
-    //    We save the full URL as per your requirement.
     newServiceTicket.ticket = pdfData?.url;
 
-    // 4. Save the updated document back to the database.
     const updatedServiceTicket = await newServiceTicket.save();
 
-    // 5. Respond with the FINAL, fully updated service ticket object.
     return new ApiResponse(
       res,
       httpStatus.CREATED,
@@ -39,13 +32,14 @@ const createServiceTicket = asyncHandler(async (req, res) => {
     );
   } catch (pdfError) {
     console.error("Failed to generate PDF for service ticket:", pdfError);
-    // If PDF fails, we still return the created ticket but with a warning.
+
     return new ApiResponse(
       res,
       httpStatus.CREATED,
       {
         serviceTicket: newServiceTicket,
-        warning: "Service Ticket was created, but failed to generate PDF profile."
+        warning:
+          "Service Ticket was created, but failed to generate PDF profile.",
       },
       "Service Ticket created without a PDF."
     );
@@ -61,10 +55,37 @@ const getServiceTickets = asyncHandler(async (req, res) => {
     "jobLocation",
   ];
 
-  const features = new ApiFeatures(
-    ServiceTicket.find().populate("createdBy", "username"),
-    req.query
-  )
+  let serverSideFilters = {};
+
+  if (req.user.role === "admin") {
+    if (req.query.department) {
+      const usersInDepartment = await userModel
+        .find({ department: req.query.department })
+        .select("_id");
+
+      const userIds = usersInDepartment.map((user) => user._id);
+
+      serverSideFilters.createdBy = { $in: userIds };
+    }
+  } else {
+    if (req.user.department?._id) {
+      const usersInDepartment = await userModel
+        .find({ department: req.user.department._id })
+        .select("_id");
+
+      const userIds = usersInDepartment.map((user) => user._id);
+      serverSideFilters.createdBy = { $in: userIds };
+    } else {
+      serverSideFilters.createdBy = null;
+    }
+  }
+
+  const baseQuery = ServiceTicket.find(serverSideFilters).populate(
+    "createdBy",
+    "username"
+  );
+
+  const features = new ApiFeatures(baseQuery, req.query)
     .filter(searchableFields)
     .sort()
     .limitFields();

@@ -14,7 +14,7 @@ import {
 
 const router = express.Router();
 
-router.use(auth(["admin"]));
+router.use(auth(["admin",'manager']));
 
 router
   .route("/")

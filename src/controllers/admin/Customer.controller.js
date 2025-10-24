@@ -4,6 +4,7 @@ import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
 import { generateCustomerProfileHtml } from "#root/src/services/customer.pdf.js";
 import { savePdfToFile } from "#config/puppeteer.config.js";
+import userModel from "#root/src/models/user.model.js";
 const createCustomer = asyncHandler(async (req, res) => {
   const {
     customerName,
@@ -79,10 +80,37 @@ const getCustomers = asyncHandler(async (req, res) => {
     "buildingName",
   ];
 
-  const features = new ApiFeatures(
-    Customer.find().populate("createdBy", "username"),
-    req.query
-  )
+  let serverSideFilters = {};
+
+  if (req.user.role === "admin") {
+    if (req.query.department) {
+      const usersInDepartment = await userModel
+        .find({ department: req.query.department })
+        .select("_id");
+
+      const userIds = usersInDepartment.map((user) => user._id);
+
+      serverSideFilters.createdBy = { $in: userIds };
+    }
+  } else {
+    if (req.user.department?._id) {
+      const usersInDepartment = await userModel
+        .find({ department: req.user.department._id })
+        .select("_id");
+
+      const userIds = usersInDepartment.map((user) => user._id);
+      serverSideFilters.createdBy = { $in: userIds };
+    } else {
+      serverSideFilters.createdBy = null;
+    }
+  }
+
+  const baseQuery = Customer.find(serverSideFilters).populate(
+    "createdBy",
+    "username"
+  );
+
+  const features = new ApiFeatures(baseQuery, req.query)
     .filter(searchableFields)
     .sort()
     .limitFields();

@@ -51,6 +51,7 @@ export const auth = (roles = []) => {
       req.user = user;
 
       if (roles.length > 0 && !roles.includes(user.role)) {
+        console.log("🚀 ~ auth ~ user.role:", user.role)
         throw new ApiError(httpStatus.FORBIDDEN, "Access denied", [
           { role: "Access denied" },
         ]);

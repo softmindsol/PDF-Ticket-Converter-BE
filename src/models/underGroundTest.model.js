@@ -164,6 +164,8 @@ const UnderGroundTestSchema = new mongoose.Schema(
       ref: "User",
       required: false,
     },
+    ticket: { type: String, required: false, default: "" },
+
   },
   {
     timestamps: true,

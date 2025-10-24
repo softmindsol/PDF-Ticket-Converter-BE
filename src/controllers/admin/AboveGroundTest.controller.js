@@ -4,17 +4,18 @@ import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
 import { generateAbovegroundTestHtml } from "#root/src/services/aboveGround.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
+import userModel from "#root/src/models/user.model.js";
 
 const createAboveGroundTest = asyncHandler(async (req, res) => {
   const newAboveGroundTest = await AboveGroundTest.create({
     ...req.body,
     createdBy: req.user._id,
   });
-    const html = await generateAbovegroundTestHtml(newAboveGroundTest);
-    const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const newFileName = `${newAboveGroundTest?._id}-${safeTimestamp}.pdf`;
-    const fileName = await savePdfToFile(html, newFileName, "above-ground");
-    console.log("🚀 ~ fileName:", fileName)
+  const html = await generateAbovegroundTestHtml(newAboveGroundTest);
+  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const newFileName = `${newAboveGroundTest?._id}-${safeTimestamp}.pdf`;
+  const fileName = await savePdfToFile(html, newFileName, "above-ground");
+  console.log("🚀 ~ fileName:", fileName);
   newAboveGroundTest.ticket = fileName?.url;
   const updatedCustomerWithPdf = await newAboveGroundTest.save();
   return new ApiResponse(
@@ -26,12 +27,42 @@ const createAboveGroundTest = asyncHandler(async (req, res) => {
 });
 
 const getAboveGroundTests = asyncHandler(async (req, res) => {
-  const searchableFields = ["propertyDetails.propertyName", "propertyDetails.propertyAddress"];
+  const searchableFields = [
+    "propertyDetails.propertyName",
+    "propertyDetails.propertyAddress",
+  ];
 
-  const features = new ApiFeatures(
-    AboveGroundTest.find().populate("createdBy", "username"),
-    req.query
-  )
+  let serverSideFilters = {};
+
+  if (req.user.role === "admin") {
+    if (req.query.department) {
+      const usersInDepartment = await userModel
+        .find({ department: req.query.department })
+        .select("_id");
+
+      const userIds = usersInDepartment.map((user) => user._id);
+
+      serverSideFilters.createdBy = { $in: userIds };
+    }
+  } else {
+    if (req.user.department?._id) {
+      const usersInDepartment = await userModel
+        .find({ department: req.user.department._id })
+        .select("_id");
+
+      const userIds = usersInDepartment.map((user) => user._id);
+      serverSideFilters.createdBy = { $in: userIds };
+    } else {
+      serverSideFilters.createdBy = null;
+    }
+  }
+
+  const baseQuery = AboveGroundTest.find(serverSideFilters).populate(
+    "createdBy",
+    "username"
+  );
+
+  const features = new ApiFeatures(baseQuery, req.query)
     .filter(searchableFields)
     .sort()
     .limitFields();
@@ -48,7 +79,10 @@ const getAboveGroundTests = asyncHandler(async (req, res) => {
 
 const getAboveGroundTestById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const aboveGroundTest = await AboveGroundTest.findById(id).populate("createdBy", "username");
+  const aboveGroundTest = await AboveGroundTest.findById(id).populate(
+    "createdBy",
+    "username"
+  );
   if (!aboveGroundTest) {
     throw new ApiError(httpStatus.NOT_FOUND, "Above Ground Test not found.");
   }

@@ -29,6 +29,8 @@ const generateAuthToken = async (user) => {
             id: user._id,
             username: user.username,
             allowedForms:user?.department?.allowedForms,
+            department:user?.department?._id,
+            departmentName:user?.department?.name,
             role: user.role,
         };
         const token = jwt.sign(payload, JWT_SECRET, {

@@ -4,6 +4,7 @@ import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
 import { generateWorkOrderHtml } from "#root/src/services/work-order.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
+import userModel from "#root/src/models/user.model.js";
 
 const createWorkOrder = asyncHandler(async (req, res) => {
   const {
@@ -41,26 +42,80 @@ const createWorkOrder = asyncHandler(async (req, res) => {
     customerSignature,
     createdBy: req.user._id,
   });
-    const html = await generateWorkOrderHtml(newWorkOrder);
-  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const newFileName = `${newWorkOrder?._id}-${safeTimestamp}.pdf`;
-  const fileName = await savePdfToFile(html, newFileName, 'work-order');  console.log("🚀 ~ fileName:", fileName);
 
-  return new ApiResponse(
-    res,
-    httpStatus.CREATED,
-    { workOrder: newWorkOrder },
-    "Work Order created successfully."
-  );
+  try {
+    const html = await generateWorkOrderHtml(newWorkOrder);
+    const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const newFileName = `${newWorkOrder._id}-${safeTimestamp}.pdf`;
+
+    const pdfData = await savePdfToFile(html, newFileName, "work-order");
+    console.log("🚀 ~ PDF Data:", pdfData);
+
+    newWorkOrder.ticket = pdfData?.url;
+
+    const updatedWorkOrder = await newWorkOrder.save();
+
+    return new ApiResponse(
+      res,
+      httpStatus.CREATED,
+      { workOrder: updatedWorkOrder },
+      "Work Order and PDF created successfully."
+    );
+  } catch (pdfError) {
+    console.error("Failed to generate PDF for work order:", pdfError);
+
+    return new ApiResponse(
+      res,
+      httpStatus.CREATED,
+      {
+        workOrder: newWorkOrder,
+        warning:
+          "Work Order was created, but failed to generate the PDF ticket.",
+      },
+      "Work Order created without a PDF."
+    );
+  }
 });
 
 const getWorkOrders = asyncHandler(async (req, res) => {
-  const searchableFields = ["customerName", "emailAddress", "jobNumber", "technicianName"];
+  const searchableFields = [
+    "customerName",
+    "emailAddress",
+    "jobNumber",
+    "technicianName",
+  ];
 
-  const features = new ApiFeatures(
-    WorkOrder.find().populate("createdBy", "username"),
-    req.query
-  )
+  let serverSideFilters = {};
+
+  if (req.user.role === "admin") {
+    if (req.query.department) {
+      const usersInDepartment = await userModel
+        .find({ department: req.query.department })
+        .select("_id");
+
+      const userIds = usersInDepartment.map((user) => user._id);
+
+      serverSideFilters.createdBy = { $in: userIds };
+    }
+  } else {
+    if (req.user.department?._id) {
+      const usersInDepartment = await userModel
+        .find({ department: req.user.department._id })
+        .select("_id");
+
+      const userIds = usersInDepartment.map((user) => user._id);
+      serverSideFilters.createdBy = { $in: userIds };
+    } else {
+      serverSideFilters.createdBy = null;
+    }
+  }
+
+  const baseQuery = WorkOrder.find(serverSideFilters).populate(
+    "createdBy",
+    "username"
+  );
+
+  const features = new ApiFeatures(baseQuery, req.query)
     .filter(searchableFields)
     .sort()
     .limitFields();
@@ -77,7 +132,10 @@ const getWorkOrders = asyncHandler(async (req, res) => {
 
 const getWorkOrderById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const workOrder = await WorkOrder.findById(id).populate("createdBy", "username");
+  const workOrder = await WorkOrder.findById(id).populate(
+    "createdBy",
+    "username"
+  );
   if (!workOrder) {
     throw new ApiError(httpStatus.NOT_FOUND, "Work Order not found.");
   }
@@ -127,7 +185,6 @@ const updateWorkOrder = asyncHandler(async (req, res) => {
   if (date) updateFields.date = date;
   if (customerSignature) updateFields.customerSignature = customerSignature;
 
-
   const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(
     id,
     { $set: updateFields },
@@ -160,4 +217,10 @@ const deleteWorkOrder = asyncHandler(async (req, res) => {
   );
 });
 
-export { createWorkOrder, getWorkOrders, getWorkOrderById, updateWorkOrder, deleteWorkOrder };
+export {
+  createWorkOrder,
+  getWorkOrders,
+  getWorkOrderById,
+  updateWorkOrder,
+  deleteWorkOrder,
+};

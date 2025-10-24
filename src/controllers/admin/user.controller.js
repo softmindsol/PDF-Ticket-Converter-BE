@@ -5,7 +5,15 @@ import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
 
 const createUser = asyncHandler(async (req, res) => {
-  const {department, username, password, firstName, lastName, role = "user", email } = req.body;
+  const {
+    department,
+    username,
+    password,
+    firstName,
+    lastName,
+    role = "user",
+    email,
+  } = req.body;
 
   if (!["user", "manager"].includes(role)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid user role specified.");
@@ -28,7 +36,7 @@ const createUser = asyncHandler(async (req, res) => {
     firstName,
     lastName,
     role,
-    department
+    department: req?.user?.department?._id || department,
   });
 
   const userResponse = newUser.toObject();
@@ -46,15 +54,20 @@ const createUser = asyncHandler(async (req, res) => {
 
 const getUsers = asyncHandler(async (req, res) => {
   const searchableFields = ["firstName", "lastName", "username", "email"];
+  let baseQuery = userModel
+    .find()
+    .select("-password")
+    .populate("department", "name");
 
-  const features = new ApiFeatures(
-    userModel.find().select("-password").populate("department", "name"),
-    req.query
-  )
-  .filter(searchableFields)
-  .sort()
-  .limitFields();
-  console.log("🚀 ~ features:", features)
+  if (req.user.role === "manager" && req.user.department?._id) {
+    baseQuery = baseQuery.where("department").equals(req.user.department._id);
+  }
+
+  const features = new ApiFeatures(baseQuery, req.query)
+    .filter(searchableFields)
+    .sort()
+    .limitFields();
+  console.log("🚀 ~ features:", features);
 
   const { documents: users, pagination } = await features.execute();
 

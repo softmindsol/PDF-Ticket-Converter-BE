@@ -12,7 +12,7 @@ import departmentValidation from "#validations/department.validations.js";
 
 const router = express.Router();
 
-router.use(auth(["admin"]));
+router.use(auth(["admin", "manager"]));
 
 router.route("/").get(getDepartments);
 
