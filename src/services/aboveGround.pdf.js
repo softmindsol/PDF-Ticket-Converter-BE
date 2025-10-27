@@ -1,7 +1,20 @@
 import fs from "fs/promises";
 import path from "path";
+import { generateSignedS3Url } from "../utils/s3.utils.js";
 
 export const generateAbovegroundTestHtml = async (testData = {}) => {
+      let sprinklerContractorSign=null
+  if (testData.remarksAndSignatures?.sprinklerContractor?.signature) {
+    sprinklerContractorSign = await generateSignedS3Url(
+      testData.remarksAndSignatures?.sprinklerContractor?.signature
+    );
+  }
+        let fireMarshalOrAHJSign=null
+  if (testData.remarksAndSignatures?.fireMarshalOrAHJ?.signature) {
+    fireMarshalOrAHJSign = await generateSignedS3Url(
+      testData.remarksAndSignatures?.fireMarshalOrAHJ?.signature
+    );
+  }
   let logoDataUri = "";
   try {
     const logoPath = path.join(process.cwd(), "public", "southLogoFull.svg");
@@ -1222,7 +1235,7 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div class="field-row" style="margin-top: 15px;">
                             <div style="flex-grow: 2;">
                                 <div class="line">
-                                    ${testData.remarksAndSignatures?.fireMarshalOrAHJ?.signature ? `<img src="${testData.remarksAndSignatures.fireMarshalOrAHJ.signature}" style="max-height: 35px; width: auto;">` : ''}
+                                    ${fireMarshalOrAHJSign ? `<img src="${fireMarshalOrAHJSign}" style="max-height: 35px; width: auto;">` : ''}
                                 </div>
                                 <div style="font-size: 8pt;">Fire Marshal or AHJ (signed)</div>
                             </div>
@@ -1240,7 +1253,7 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div class="field-row" style="margin-top: 25px;">
                             <div style="flex-grow: 2;">
                                 <div class="line">
-                                    ${testData.remarksAndSignatures?.sprinklerContractor?.signature ? `<img src="${testData.remarksAndSignatures.sprinklerContractor.signature}" style="max-height: 35px; width: auto;">` : ''}
+                                    ${sprinklerContractorSign ? `<img src="${sprinklerContractorSign}" style="max-height: 35px; width: auto;">` : ''}
                                 </div>
                                 <div style="font-size: 8pt;">For sprinkler contractor (signed)</div>
                             </div>
