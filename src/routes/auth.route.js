@@ -7,7 +7,7 @@ import {
 } from "#controllers/auth.controller.js";
 import validate from "#middlewares/validate.js";
 import authValidation from "#validations/auth.validations.js";
-import { auth } from "../middlewares/auth";
+import { auth } from "../middlewares/auth.js";
 const router = express.Router();
 
 router.post("/login", validate(authValidation.login), loginController);
