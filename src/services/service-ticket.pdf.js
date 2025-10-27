@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { generateSignedS3Url } from "../utils/s3.utils.js";
 
 /**
  * Generates a complete HTML string for a Service Ticket.
@@ -9,6 +10,12 @@ import path from "path";
  * @returns {Promise<string>} A promise that resolves with the complete HTML content.
  */
 export const generateServiceTicketHtml = async (ticketData) => {
+    let sign=null
+    if (ticketData?.customerSignature) {
+      sign = await generateSignedS3Url(
+        ticketData?.customerSignature
+      );
+    }
   if (!ticketData || !ticketData._id) {
     throw new Error(
       "A valid service ticket object with an _id must be provided."
@@ -251,8 +258,8 @@ export const generateServiceTicketHtml = async (ticketData) => {
                 <div class="data-field" style="width: 60%;">
                     <strong>Signature:</strong>
                     <span>${
-                      ticketData.customerSignature
-                        ? `<img src="${ticketData.customerSignature}" style="max-height: 40px; width: auto;"/>`
+                      sign
+                        ? `<img src="${sign}" style="max-height: 40px; width: auto;"/>`
                         : ""
                     }</span>
                 </div>
