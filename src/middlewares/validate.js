@@ -16,7 +16,9 @@ const validate = (schema) => (req, res, next) => {
     
   if (error) {
     const errorArray = error.details.map((details) =>  {return{message:details.message,
-     key:details.context?.key
+     key:details.context?.key,
+     [details.context.key]:details.message
+     
     }});
     
     return next(new ApiError(httpStatus.BAD_REQUEST, "Validation Error",errorArray));
