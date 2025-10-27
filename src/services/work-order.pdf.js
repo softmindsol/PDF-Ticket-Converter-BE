@@ -2,7 +2,7 @@
 
 import fs from "fs/promises";
 import path from "path";
-import { generateSignedS3Url } from "../utils/s3.utils";
+import { generateSignedS3Url } from "../utils/s3.utils.js";
 
 /**
  * Generates a complete HTML string for a work order/invoice.
