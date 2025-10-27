@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { generateSignedS3Url } from "../utils/s3.utils.js";
 
 /**
  * Generates the HTML for the Underground Piping Certificate with the correct layout.
@@ -8,6 +9,18 @@ import path from "path";
  * @returns {Promise<string>} A promise that resolves with the complete HTML content.
  */
 export const generateUndergroundTestHtml = async (testData = {}) => {
+  let forPropertyOwnerSign = null;
+  if (testData.signatures?.forPropertyOwner?.signed) {
+    forPropertyOwnerSign = await generateSignedS3Url(
+      testData.signatures?.forPropertyOwner?.signed
+    );
+  }
+  let forInstallingContractorSign = null;
+  if (testData.signatures?.forInstallingContractor?.signed) {
+    fireMarshalOrAHJSign = await generateSignedS3Url(
+      testData.signatures?.forInstallingContractor?.signed
+    );
+  }
   // --- 1. Load Logo ---
   let logoDataUri = "";
   try {
@@ -775,8 +788,8 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div style="flex-grow: 2;">
                 <div class="line">
                     ${
-                      testData.signatures?.forPropertyOwner?.signed
-                        ? `<img src="${testData.signatures.forPropertyOwner.signed}" style="max-height: 35px; width: auto;">`
+                      forPropertyOwnerSign
+                        ? `<img src="${forPropertyOwnerSign}" style="max-height: 35px; width: auto;">`
                         : ""
                     }
                 </div>
@@ -801,8 +814,8 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div style="flex-grow: 2;">
                 <div class="line">
                     ${
-                      testData.signatures?.forInstallingContractor?.signed
-                        ? `<img src="${testData.signatures.forInstallingContractor.signed}" style="max-height: 35px; width: auto;">`
+                      forInstallingContractorSign
+                        ? `<img src="${forInstallingContractorSign}" style="max-height: 35px; width: auto;">`
                         : ""
                     }
                 </div>
