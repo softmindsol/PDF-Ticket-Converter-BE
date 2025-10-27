@@ -73,8 +73,67 @@ register:{
             "any.required": "Phone number is required",
         }),  
     }) 
-}
+},
 
+  changePassword: {
+    body: Joi.object({
+      oldPassword: Joi.string().required().messages({
+        "string.base": "Current password must be a string",
+        "string.empty": "Current password cannot be empty",
+        "any.required": "Current password is required",
+      }),
+      newPassword: Joi.string()
+        .required()
+        .regex(passwordRegrex)
+        .min(6)
+        .max(30)
+        .not(Joi.ref("oldPassword")) // Ensure new password is not the same as the old one
+        .messages({
+          "string.base": "New password must be a string",
+          "string.empty": "New password cannot be empty",
+          "string.pattern.base":
+            "Password must be 6-30 characters and include an uppercase letter, a lowercase letter, a number, and a special character.",
+          "string.min": "New password must be at least 6 characters long",
+          "string.max": "New password cannot be longer than 30 characters",
+          "any.required": "New password is required",
+          "any.invalid": "New password must be different from the current password",
+        }),
+      confirmPassword: Joi.string()
+        .required()
+        .valid(Joi.ref("newPassword")) // Ensure it matches the new password
+        .messages({
+          "string.base": "Confirm password must be a string",
+          "string.empty": "Confirm password cannot be empty",
+          "any.required": "You must confirm your new password",
+          "any.only": "Passwords do not match",
+        }),
+    }),
+  },
+
+  // ----------------- Change Username Validation -----------------
+  changeUsername: {
+    body: Joi.object({
+      newUsername: Joi.string()
+        .required()
+        .regex(/^[a-z][a-z0-9]+$/)
+        .min(3)
+        .max(30)
+        .messages({
+          "string.base": "New username must be a string",
+          "string.empty": "New username cannot be empty",
+          "string.pattern.base":
+            "Username must start with a lowercase letter and contain only lowercase letters and numbers",
+          "string.min": "New username must be at least 3 characters long",
+          "string.max": "New username cannot be longer than 30 characters",
+          "any.required": "New username is required",
+        }),
+      password: Joi.string().required().messages({
+        "string.base": "Password must be a string",
+        "string.empty": "Password cannot be empty",
+        "any.required": "Your current password is required to make this change",
+      }),
+    }),
+  },
 
 }
 

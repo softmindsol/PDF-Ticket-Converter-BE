@@ -1,15 +1,20 @@
 import express from "express";
-import { loginController, registerController } from "#controllers/auth.controller.js";
+import {
+    changePasswordController,
+  changeUsernameController,
+  loginController,
+  registerController,
+} from "#controllers/auth.controller.js";
 import validate from "#middlewares/validate.js";
 import authValidation from "#validations/auth.validations.js";
+import { auth } from "../middlewares/auth";
 const router = express.Router();
 
-router.post("/login",validate(authValidation.login), loginController);
-router.post("/register",validate(authValidation.register), registerController);
-
+router.post("/login", validate(authValidation.login), loginController);
+router.post("/register", validate(authValidation.register), registerController);
+router.patch("/change-password", auth(['admin','manager', 'user']), validate(authValidation.changePassword),changePasswordController);
+router.patch("/change-username", auth(['admin','manager', 'user']),validate(authValidation.changeUsername),changeUsernameController);
 export default router;
-
-
 
 /**
  * @swagger
