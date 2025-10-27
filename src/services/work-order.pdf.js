@@ -12,8 +12,9 @@ import { generateSignedS3Url } from "../utils/s3.utils.js";
  * @returns {Promise<string>} A promise that resolves with the complete HTML content.
  */
 export const generateWorkOrderHtml = async (workOrderData) => {
+  let sign=null
   if (workOrderData?.customerSignature) {
-    workOrderData.customerSignature = await generateSignedS3Url(
+    sign = await generateSignedS3Url(
       workOrderData?.customerSignature
     );
   }
@@ -206,7 +207,7 @@ export const generateWorkOrderHtml = async (workOrderData) => {
                    
                     <strong>Customer Signature:</strong> ${
                       workOrderData.customerSignature
-                        ? `<img src="${workOrderData.customerSignature}" style="max-height: 40px; width: auto;">`
+                        ? `<img src="${sign}" style="max-height: 40px; width: auto;">`
                         : '<div class="line"></div>'
                     }
                 </div>
