@@ -2,6 +2,7 @@
 
 import fs from "fs/promises";
 import path from "path";
+import { generateSignedS3Url } from "../utils/s3.utils";
 
 /**
  * Generates a complete HTML string for a work order/invoice.
@@ -11,6 +12,11 @@ import path from "path";
  * @returns {Promise<string>} A promise that resolves with the complete HTML content.
  */
 export const generateWorkOrderHtml = async (workOrderData) => {
+  if (workOrderData?.customerSignature) {
+    workOrderData.customerSignature = await generateSignedS3Url(
+      workOrderData?.customerSignature
+    );
+  }
   if (!workOrderData || !workOrderData.materialList) {
     throw new Error(
       "A valid work order object with a material list must be provided."
