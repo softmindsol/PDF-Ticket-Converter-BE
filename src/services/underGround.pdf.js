@@ -15,9 +15,9 @@ export const generateUndergroundTestHtml = async (testData = {}) => {
       testData.signatures?.forPropertyOwner?.signed
     );
   }
-  let fireMarshalOrAHJSign = null;
+  let forInstallingContractorign = null;
   if (testData.signatures?.forInstallingContractor?.signed) {
-    fireMarshalOrAHJSign = await generateSignedS3Url(
+    forInstallingContractorign = await generateSignedS3Url(
       testData.signatures?.forInstallingContractor?.signed
     );
   }
@@ -814,8 +814,8 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div style="flex-grow: 2;">
                 <div class="line">
                     ${
-                      forInstallingContractorSign
-                        ? `<img src="${forInstallingContractorSign}" style="max-height: 35px; width: auto;">`
+                      forInstallingContractorign
+                        ? `<img src="${forInstallingContractorign}" style="max-height: 35px; width: auto;">`
                         : ""
                     }
                 </div>
