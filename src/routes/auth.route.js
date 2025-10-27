@@ -12,8 +12,8 @@ const router = express.Router();
 
 router.post("/login", validate(authValidation.login), loginController);
 router.post("/register", validate(authValidation.register), registerController);
-router.patch("/change-password", auth(['admin','manager', 'user']), validate(authValidation.changePassword),changePasswordController);
-router.patch("/change-username", auth(['admin','manager', 'user']),validate(authValidation.changeUsername),changeUsernameController);
+router.post("/change-password", auth(['admin','manager', 'user']), validate(authValidation.changePassword),changePasswordController);
+router.post("/change-username", auth(['admin','manager', 'user']),validate(authValidation.changeUsername),changeUsernameController);
 export default router;
 
 /**

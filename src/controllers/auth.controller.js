@@ -101,7 +101,7 @@ const changePasswordController = asyncHandler(async (req, res) => {
 
   const isMatch = await comparePassword(oldPassword, user.password);
   if (!isMatch) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid current password.", [
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid current password.", [
       { oldPassword: "The password you entered is incorrect" },
     ]);
   }
