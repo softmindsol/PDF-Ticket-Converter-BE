@@ -15,7 +15,7 @@ export const generateUndergroundTestHtml = async (testData = {}) => {
       testData.signatures?.forPropertyOwner?.signed
     );
   }
-  let forInstallingContractorSign = null;
+  let fireMarshalOrAHJSign = null;
   if (testData.signatures?.forInstallingContractor?.signed) {
     fireMarshalOrAHJSign = await generateSignedS3Url(
       testData.signatures?.forInstallingContractor?.signed
