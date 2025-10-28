@@ -13,7 +13,7 @@ const loginController = asyncHandler(async (req, res) => {
 
   const user = await userModel
     .findOne({ username })
-    .populate("department", "allowedForms")
+    .populate("department", "allowedForms name")
     .select("+password");
 
   if (!user) {
@@ -144,7 +144,7 @@ const changeUsernameController = asyncHandler(async (req, res) => {
 
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid password.", [
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid password.", [
       { password: "The password you entered is incorrect" },
     ]);
   }
