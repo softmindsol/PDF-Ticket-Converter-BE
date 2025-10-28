@@ -1,16 +1,15 @@
 import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import WorkOrder from "#models/workOrder.model.js";
+import User from "#models/user.model.js";
 import { generateWorkOrderHtml } from "#root/src/services/work-order.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
+import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
 
 const WorkOrderTicket = asyncHandler(async (req, res) => {
-  const body = req.body;
-  const { jobNumber } = body;
-  const { _id } = req.user;
+  const { jobNumber } = req.body;
 
   const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
-
   if (existingWorkOrder) {
     throw new ApiError(
       httpStatus.CONFLICT,
@@ -18,20 +17,60 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
     );
   }
 
-  const newWorkOrder = await WorkOrder.create({ ...body, createdBy: _id });
+  const newWorkOrder = await WorkOrder.create({
+    ...req.body,
+    createdBy: req.user._id,
+  });
 
   try {
     const html = await generateWorkOrderHtml(newWorkOrder);
-
     const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newFileName = `${newWorkOrder._id}-${safeTimestamp}.pdf`;
 
     const pdfData = await savePdfToFile(html, newFileName, "work-order");
-    console.log("🚀 ~ PDF Data:", pdfData);
 
     newWorkOrder.ticket = pdfData?.url;
-
     const updatedWorkOrder = await newWorkOrder.save();
+
+    const managersExist = req.user?.department?.manager?.length >= 1;
+
+    if (managersExist && pdfData?.url) {
+      try {
+        const managerIds = req.user.department.manager;
+
+        const managers = await User.find({
+          _id: { $in: managerIds },
+        })
+          .select("+email")
+          .lean();
+
+        const managerEmails = managers
+          .map((manager) => manager.email)
+          .filter(Boolean);
+
+        if (managerEmails.length > 0) {
+          const subject = `New Work Order Created: Job #${updatedWorkOrder.jobNumber}`;
+          const htmlContent = `
+            <p>Hello,</p>
+            <p>A new Work Order for job <strong>#${updatedWorkOrder.jobNumber}</strong> has been created by ${req.user.firstName} ${req.user.lastName}.</p>
+            <p>The work order PDF is attached for your review.</p>
+            <p>Thank you.</p>
+          `;
+
+          sendEmailWithS3Attachment(
+            managerEmails,
+            subject,
+            htmlContent,
+            pdfData.url
+          );
+        }
+      } catch (emailError) {
+        console.error(
+          "Failed to send manager notification email for new work order, but the work order was created successfully.",
+          emailError
+        );
+      }
+    }
 
     return new ApiResponse(
       res,

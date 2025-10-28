@@ -4,13 +4,7 @@ import httpStatus from "http-status";
 import ApiError from "./api.utils.js";
 import s3Client from "../config/aws.config.js";
 
-/**
- * Generates a presigned URL for a given S3 object URL.
- * @param {string} fullUrl - The complete public or S3 URI of the object.
- * @param {number} expiresIn - The duration in seconds for which the signed URL is valid. Defaults to 600 (10 minutes).
- * @returns {Promise<string>} A promise that resolves to the signed URL.
- * @throws {ApiError} Throws an error if the URL is invalid, the object is not found, or another S3 error occurs.
- */
+
 export const generateSignedS3Url = async (fullUrl, expiresIn = 600) => {
   if (!fullUrl) {
     throw new ApiError(httpStatus.BAD_REQUEST, "A URL must be provided.");

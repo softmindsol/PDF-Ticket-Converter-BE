@@ -1,35 +1,75 @@
 import httpStatus from "http-status";
-import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
-import underGroundTest from "#models/underGroundTest.model.js";
+import { ApiResponse, asyncHandler } from "#utils/api.utils.js";
+import UndergroundTicket from "#models/underGroundTest.model.js";
+import User from "#models/user.model.js";
 import { generateUndergroundTestHtml } from "#root/src/services/underGround.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
+import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
 
 const underGroundTicket = asyncHandler(async (req, res) => {
-  // Create the new underground ticket using the request body and user ID
   const newUndergroundTicket = await UndergroundTicket.create({
     ...req.body,
     createdBy: req.user._id,
   });
 
   try {
-    // Generate the HTML content needed for the PDF document
     const html = await generateUndergroundTestHtml(newUndergroundTicket);
 
-    // Create a safe, unique filename using the ticket's ID and a timestamp
     const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newFileName = `${newUndergroundTicket._id}-${safeTimestamp}.pdf`;
 
-    // Call the helper function to save the HTML as a PDF
-    const pdfData = await savePdfToFile(html, newFileName, "underground-tickets");
-    console.log("🚀 ~ PDF Data:", pdfData);
+    const pdfData = await savePdfToFile(
+      html,
+      newFileName,
+      "underground-tickets"
+    );
 
-    // Attach the URL of the newly created PDF to the ticket record
     newUndergroundTicket.ticket = pdfData?.url;
 
-    // Save the updated record to the database
     const updatedTicket = await newUndergroundTicket.save();
 
-    // Return a success response with the updated ticket data
+    const managersExist = req.user?.department?.manager?.length >= 1;
+
+    if (managersExist && pdfData?.url) {
+      try {
+        const managerIds = req.user.department.manager;
+
+        const managers = await User.find({
+          _id: { $in: managerIds },
+        })
+          .select("+email")
+          .lean();
+
+        const managerEmails = managers
+          .map((manager) => manager.email)
+          .filter(Boolean);
+
+        if (managerEmails.length > 0) {
+          const subject = `New Underground Ticket Created: #${
+            updatedTicket.ticketNumber || updatedTicket._id
+          }`;
+          const htmlContent = `
+            <p>Hello,</p>
+            <p>A new Underground Ticket has been created by <strong>${req.user.firstName} ${req.user.lastName}</strong>.</p>
+            <p>The ticket PDF is attached for your review.</p>
+            <p>Thank you.</p>
+          `;
+
+          sendEmailWithS3Attachment(
+            managerEmails,
+            subject,
+            htmlContent,
+            pdfData.url
+          );
+        }
+      } catch (emailError) {
+        console.error(
+          "Failed to send manager notification email for new underground ticket, but the ticket was created successfully.",
+          emailError
+        );
+      }
+    }
+
     return new ApiResponse(
       res,
       httpStatus.CREATED,
@@ -37,10 +77,8 @@ const underGroundTicket = asyncHandler(async (req, res) => {
       "Underground Ticket and PDF created successfully."
     );
   } catch (pdfError) {
-    // If PDF generation fails, log the error for diagnostics
     console.error("Failed to generate PDF for Underground Ticket:", pdfError);
 
-    // Return a success response for the ticket creation, but add a warning
     return new ApiResponse(
       res,
       httpStatus.CREATED,

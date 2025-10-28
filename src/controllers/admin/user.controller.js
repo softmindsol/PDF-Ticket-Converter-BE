@@ -36,6 +36,7 @@ const createUser = asyncHandler(async (req, res) => {
     firstName,
     lastName,
     role,
+    email,
     department: req?.user?.department?._id || department,
   });
 
