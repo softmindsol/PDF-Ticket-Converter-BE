@@ -14,13 +14,24 @@ const loginController = asyncHandler(async (req, res) => {
   const user = await userModel
     .findOne({ username })
     .populate("department", "allowedForms name")
-    .select("+password");
+    .select("+password +status"); // Ensure 'status' is selected if it's excluded by default
 
   if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials.", [
       { user: "Invalid username or password" },
     ]);
   }
+
+  // --- START: ADDED LOGIC ---
+  // Check if the user's account is active before proceeding.
+  if (user.status === "inactive") {
+    throw new ApiError(
+      httpStatus.FORBIDDEN, // 403 Forbidden is appropriate here
+      "Your account is inactive. Please contact an administrator.",
+      [{ account: "Account is inactive" }]
+    );
+  }
+  // --- END: ADDED LOGIC ---
 
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
@@ -36,8 +47,7 @@ const loginController = asyncHandler(async (req, res) => {
       [{ department: "User is not assigned to a department" }]
     );
   }
-
-  console.log("🚀 ~ user:", user);
+  
   const token = await generateAuthToken(user);
 
   return new ApiResponse(
