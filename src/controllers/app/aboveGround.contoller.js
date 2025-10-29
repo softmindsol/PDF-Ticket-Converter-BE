@@ -5,8 +5,21 @@ import User from "#models/user.model.js";
 import { generateAbovegroundTestHtml } from "#root/src/services/aboveGround.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
+import { uploadBase64ToS3 } from "#root/src/utils/base64.util.js";
 
 const createAboveGroundTicket = asyncHandler(async (req, res) => {
+    if (req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature) {
+      req.body.remarksAndSignatures.fireMarshalOrAHJ.signature = await uploadBase64ToS3(
+        req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature,
+        "signature"
+      );
+    }
+    if (req.body?.remarksAndSignatures?.sprinklerContractor?.signature) {
+      req.body.remarksAndSignatures.sprinklerContractor.signature = await uploadBase64ToS3(
+        req.body?.remarksAndSignatures?.sprinklerContractor?.signature,
+        "signature"
+      );
+    }
   const newAboveGroundTicket = await AboveGround.create({
     ...req.body,
     createdBy: req.user._id,

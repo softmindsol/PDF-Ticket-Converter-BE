@@ -5,8 +5,12 @@ import User from "#models/user.model.js";
 import { generateWorkOrderHtml } from "#root/src/services/work-order.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
+import { uploadBase64ToS3 } from "#root/src/utils/base64.util.js";
 
 const WorkOrderTicket = asyncHandler(async (req, res) => {
+    if(req.body?.customerSignature){
+      req.body.customerSignature=await uploadBase64ToS3(req.body.customerSignature,'signature' )
+    }
   const { jobNumber } = req.body;
 
   const existingWorkOrder = await WorkOrder.findOne({ jobNumber });

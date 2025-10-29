@@ -5,8 +5,21 @@ import User from "#models/user.model.js";
 import { generateUndergroundTestHtml } from "#root/src/services/underGround.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
+import { uploadBase64ToS3 } from "#root/src/utils/base64.util.js";
 
 const underGroundTicket = asyncHandler(async (req, res) => {
+  if (req.body?.signatures?.forPropertyOwner?.signed) {
+    req.body.signatures.forPropertyOwner.signed = await uploadBase64ToS3(
+      req.body.signatures.forPropertyOwner.signed,
+      "signature"
+    );
+  }
+  if (req.body?.signatures?.forInstallingContractor?.signed) {
+    req.body.signatures.forInstallingContractor.signed = await uploadBase64ToS3(
+      req.body.signatures.forInstallingContractor.signed,
+      "signature"
+    );
+  }
   const newUndergroundTicket = await UndergroundTicket.create({
     ...req.body,
     createdBy: req.user._id,
