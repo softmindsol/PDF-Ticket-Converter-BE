@@ -5,8 +5,11 @@ import User from "#models/user.model.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { generateServiceTicketHtml } from "#root/src/services/service-ticket.pdf.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
-
+import {uploadBase64ToS3} from '#utils/base64.util.js'
 const createServiceTicket = asyncHandler(async (req, res) => {
+  if(req.body?.customerSignature){
+    req.body.customerSignature=await uploadBase64ToS3(req.body.customerSignature,'signature' )
+  }
   const newServiceTicket = await ServiceTicket.create({
     ...req.body,
     createdBy: req.user._id,
@@ -25,6 +28,7 @@ const createServiceTicket = asyncHandler(async (req, res) => {
     const updatedServiceTicket = await newServiceTicket.save();
 
     const managersExist = req.user?.department?.manager?.length >= 1;
+    console.log("🚀 ~ managersExist:", managersExist)
 
     if (managersExist && pdfData?.url) {
       try {
@@ -51,7 +55,7 @@ const createServiceTicket = asyncHandler(async (req, res) => {
             <p>Thank you.</p>
           `;
 
-          sendEmailWithS3Attachment(
+          await sendEmailWithS3Attachment(
             managerEmails,
             subject,
             htmlContent,

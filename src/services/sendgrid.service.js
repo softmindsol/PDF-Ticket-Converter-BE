@@ -22,6 +22,7 @@ export async function sendEmailWithS3Attachment(
   let s3Key;
   try {
     const url = new URL(s3FileUrl);
+    console.log("🚀 ~ sendEmailWithS3Attachment ~ url:", url)
 
     s3Key = url.pathname.slice(1);
 
