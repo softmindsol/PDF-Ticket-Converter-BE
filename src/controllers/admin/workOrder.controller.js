@@ -150,18 +150,11 @@ const getWorkOrderById = asyncHandler(async (req, res) => {
 const updateWorkOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const {
-    customerName,
-    emailAddress,
-    phoneNumber,
+    // You can still destructure here for clarity if you want
     jobNumber,
-    technicianName,
-    contactNumber,
-    paymentMethod,
-    materialList,
-    date,
-    customerSignature,
   } = req.body;
 
+  // 1. Check for duplicate job number
   if (jobNumber) {
     const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
     if (existingWorkOrder && existingWorkOrder._id.toString() !== id) {
@@ -173,34 +166,59 @@ const updateWorkOrder = asyncHandler(async (req, res) => {
     }
   }
 
-  const updateFields = {};
-  if (customerName) updateFields.customerName = customerName;
-  if (emailAddress) updateFields.emailAddress = emailAddress;
-  if (phoneNumber) updateFields.phoneNumber = phoneNumber;
-  if (jobNumber) updateFields.jobNumber = jobNumber;
-  if (technicianName) updateFields.technicianName = technicianName;
-  if (contactNumber) updateFields.contactNumber = contactNumber;
-  if (paymentMethod) updateFields.paymentMethod = paymentMethod;
-  if (materialList) updateFields.materialList = materialList;
-  if (date) updateFields.date = date;
-  if (customerSignature) updateFields.customerSignature = customerSignature;
-
+  // 2. Find and update the document with all data from req.body
   const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(
     id,
-    { $set: updateFields },
-    { new: true }
+    { $set: req.body }, // $set is safer and updates only provided fields
+    { new: true, runValidators: true }
   );
 
+  // 3. If no work order was found, throw an error
   if (!updatedWorkOrder) {
     throw new ApiError(httpStatus.NOT_FOUND, "Work Order not found.");
   }
 
-  return new ApiResponse(
-    res,
-    httpStatus.OK,
-    { workOrder: updatedWorkOrder },
-    "Work Order details updated successfully."
-  );
+  // 4. Attempt to regenerate and replace the PDF
+  try {
+    // Generate HTML with the new, updated data
+    const html = await generateWorkOrderHtml(updatedWorkOrder);
+    const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const newFileName = `${updatedWorkOrder._id}-${safeTimestamp}.pdf`;
+
+    // Save the new PDF file
+    const pdfData = await savePdfToFile(html, newFileName, "work-order");
+    console.log("🚀 ~ PDF Data on update:", pdfData);
+
+    // Update the ticket field with the new PDF's URL
+    updatedWorkOrder.ticket = pdfData?.url;
+
+    // Save the document a second time to persist the new ticket URL
+    const finalWorkOrder = await updatedWorkOrder.save();
+
+    // Return the final, fully updated work order
+    return new ApiResponse(
+      res,
+      httpStatus.OK,
+      { workOrder: finalWorkOrder },
+      "Work Order and PDF updated successfully."
+    );
+  } catch (pdfError) {
+    // 5. Handle PDF generation failure gracefully
+    console.error("Failed to regenerate PDF for work order:", pdfError);
+
+    // The data update succeeded, so return a 200 OK response
+    // but include a warning that the PDF is now out-of-date.
+    return new ApiResponse(
+      res,
+      httpStatus.OK,
+      {
+        workOrder: updatedWorkOrder, // Return the updated data with the old ticket URL
+        warning:
+          "Work Order was updated, but failed to regenerate the PDF ticket.",
+      },
+      "Work Order updated without a new PDF."
+    );
+  }
 });
 
 const deleteWorkOrder = asyncHandler(async (req, res) => {

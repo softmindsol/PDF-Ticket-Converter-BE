@@ -97,20 +97,35 @@ const getAboveGroundTestById = asyncHandler(async (req, res) => {
 const updateAboveGroundTest = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
+  // First, update the document with the new data from the request
   const updatedAboveGroundTest = await AboveGroundTest.findByIdAndUpdate(
     id,
     { $set: req.body },
     { new: true, runValidators: true }
   );
 
+  // If no document was found with that ID, throw an error
   if (!updatedAboveGroundTest) {
     throw new ApiError(httpStatus.NOT_FOUND, "Above Ground Test not found.");
   }
 
+  // Now, regenerate the PDF with the updated data
+  const html = await generateAbovegroundTestHtml(updatedAboveGroundTest);
+  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const newFileName = `${updatedAboveGroundTest?._id}-${safeTimestamp}.pdf`;
+  const fileName = await savePdfToFile(html, newFileName, "above-ground");
+
+  // Update the ticket field with the new PDF's URL
+  updatedAboveGroundTest.ticket = fileName?.url;
+  
+  // Save the document again to persist the new ticket URL
+  const finalUpdatedTest = await updatedAboveGroundTest.save();
+
+  // Return the fully updated document in the response
   return new ApiResponse(
     res,
     httpStatus.OK,
-    { aboveGroundTest: updatedAboveGroundTest },
+    { aboveGroundTest: finalUpdatedTest },
     "Above Ground Test details updated successfully."
   );
 });

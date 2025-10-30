@@ -122,25 +122,59 @@ const getServiceTicketById = asyncHandler(async (req, res) => {
 const updateServiceTicket = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
+  // Step 1: Update the service ticket with the new data from the request body
   const updatedServiceTicket = await ServiceTicket.findByIdAndUpdate(
     id,
-    req.body,
+    { $set: req.body }, // Using $set is often safer
     {
-      new: true,
+      new: true, // Return the updated document
       runValidators: true,
     }
   );
 
+  // Step 2: If no ticket was found, throw a 404 error
   if (!updatedServiceTicket) {
     throw new ApiError(httpStatus.NOT_FOUND, "Service Ticket not found.");
   }
 
-  return new ApiResponse(
-    res,
-    httpStatus.OK,
-    { serviceTicket: updatedServiceTicket },
-    "Service Ticket updated successfully."
-  );
+  // Step 3: Try to regenerate the PDF with the updated data
+  try {
+    const html = await generateServiceTicketHtml(updatedServiceTicket);
+    const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const newFileName = `${updatedServiceTicket._id}-${safeTimestamp}.pdf`;
+
+    const pdfData = await savePdfToFile(html, newFileName, "service-tickets");
+    console.log("🚀 ~ PDF Data on update:", pdfData);
+
+    // Update the ticket field with the URL of the new PDF
+    updatedServiceTicket.ticket = pdfData?.url;
+
+    // Save the ticket again to persist the new PDF URL
+    const finalServiceTicket = await updatedServiceTicket.save();
+
+    return new ApiResponse(
+      res,
+      httpStatus.OK,
+      { serviceTicket: finalServiceTicket },
+      "Service Ticket updated and PDF regenerated successfully."
+    );
+  } catch (pdfError) {
+    // Step 4: Handle cases where PDF generation fails
+    console.error("Failed to regenerate PDF for service ticket:", pdfError);
+
+    // The main data was updated successfully, but the PDF failed.
+    // Return a success response but include a warning message.
+    return new ApiResponse(
+      res,
+      httpStatus.OK, // The update itself was successful
+      {
+        serviceTicket: updatedServiceTicket, // Return the updated data (with the old PDF link)
+        warning:
+          "Service Ticket was updated, but failed to regenerate PDF profile.",
+      },
+      "Service Ticket updated without a new PDF."
+    );
+  }
 });
 
 const deleteServiceTicket = asyncHandler(async (req, res) => {
