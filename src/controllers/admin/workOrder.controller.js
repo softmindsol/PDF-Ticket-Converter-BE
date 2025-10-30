@@ -78,13 +78,7 @@ const createWorkOrder = asyncHandler(async (req, res) => {
 });
 
 const getWorkOrders = asyncHandler(async (req, res) => {
-  const searchableFields = [
-    "customerName",
-    "emailAddress",
-    "jobNumber",
-    "technicianName",
-  ];
-
+  // --- 1. Department & Security Filtering ---
   let serverSideFilters = {};
 
   if (req.user.role === "admin") {
@@ -92,9 +86,7 @@ const getWorkOrders = asyncHandler(async (req, res) => {
       const usersInDepartment = await userModel
         .find({ department: req.query.department })
         .select("_id");
-
       const userIds = usersInDepartment.map((user) => user._id);
-
       serverSideFilters.createdBy = { $in: userIds };
     }
   } else {
@@ -102,23 +94,90 @@ const getWorkOrders = asyncHandler(async (req, res) => {
       const usersInDepartment = await userModel
         .find({ department: req.user.department._id })
         .select("_id");
-
       const userIds = usersInDepartment.map((user) => user._id);
       serverSideFilters.createdBy = { $in: userIds };
     } else {
+      // Non-admin users with no department see nothing
       serverSideFilters.createdBy = null;
     }
   }
 
-  const baseQuery = WorkOrder.find(serverSideFilters).populate(
+  // This will be our master filter object
+  const finalQueryFilters = { ...serverSideFilters };
+
+  // --- 2. Advanced Search Term Filtering ---
+  if (req.query.search) {
+    const searchTerm = req.query.search.trim();
+    const searchRegex = new RegExp(searchTerm, "i");
+    const userSearchOrConditions = [
+      { username: searchRegex },
+      { firstName: searchRegex },
+      { lastName: searchRegex },
+    ];
+    const nameParts = searchTerm.split(" ").filter(Boolean);
+    if (nameParts.length > 1) {
+      const part1Regex = new RegExp(nameParts[0], "i");
+      const part2Regex = new RegExp(nameParts[1], "i");
+      userSearchOrConditions.push({ $and: [{ firstName: part1Regex }, { lastName: part2Regex }] });
+      userSearchOrConditions.push({ $and: [{ firstName: part2Regex }, { lastName: part1Regex }] });
+    }
+    const matchingUsers = await userModel.find({ $or: userSearchOrConditions }).select("_id");
+    const matchingUserIds = matchingUsers.map((user) => user._id);
+    const mainSearchOrConditions = [
+      { customerName: searchRegex },
+      { emailAddress: searchRegex },
+      { jobNumber: searchRegex },
+      { technicianName: searchRegex },
+    ];
+    if (matchingUserIds.length > 0) {
+      mainSearchOrConditions.push({ createdBy: { $in: matchingUserIds } });
+    }
+    finalQueryFilters.$or = mainSearchOrConditions;
+  }
+
+  // --- 3. Date Range and Other Direct Filtering ---
+  const queryObj = { ...req.query };
+  const excludedFields = ["page", "sort", "limit", "fields", "search", "department"];
+  excludedFields.forEach((el) => delete queryObj[el]);
+
+  Object.keys(queryObj).forEach((key) => {
+    const match = key.match(/(.+)\[(gte|gt|lte|lt)\]/);
+
+    if (match) {
+      const field = match[1]; // e.g., 'createdAt' or 'date'
+      let operator = match[2];
+      let value = queryObj[key];
+
+      // ** FIX for the "Midnight Problem" **
+      // If filtering for "less than or equal to" a date, we actually
+      // search for "less than" the *start of the next day*.
+      if (operator === "lte") {
+        operator = "lt"; // Change to "less than"
+        const endDate = new Date(value);
+        endDate.setDate(endDate.getDate() + 1); // Increment to the next day
+        value = endDate.toISOString().split('T')[0]; // Format back to 'YYYY-MM-DD'
+      }
+
+      if (!finalQueryFilters[field]) {
+        finalQueryFilters[field] = {};
+      }
+      finalQueryFilters[field][`$${operator}`] = value;
+    } else {
+      // Handle other direct filters like ?paymentMethod=cash
+      finalQueryFilters[key] = queryObj[key];
+    }
+  });
+
+  // --- 4. Database Query Execution ---
+  // The single .find() call now contains ALL combined filters
+  const baseQuery = WorkOrder.find(finalQueryFilters).populate(
     "createdBy",
-    "username"
+    "username firstName lastName"
   );
 
-  const features = new ApiFeatures(baseQuery, req.query)
-    .filter(searchableFields)
-    .sort()
-    .limitFields();
+  // CRITICAL: .filter() is no longer called here.
+  // ApiFeatures is now only responsible for sorting, pagination, and fields.
+  const features = new ApiFeatures(baseQuery, req.query).sort().limitFields();
 
   const { documents: workOrders, pagination } = await features.execute();
 
@@ -149,12 +208,8 @@ const getWorkOrderById = asyncHandler(async (req, res) => {
 
 const updateWorkOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const {
-    // You can still destructure here for clarity if you want
-    jobNumber,
-  } = req.body;
+  const { jobNumber } = req.body;
 
-  // 1. Check for duplicate job number
   if (jobNumber) {
     const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
     if (existingWorkOrder && existingWorkOrder._id.toString() !== id) {
@@ -166,36 +221,28 @@ const updateWorkOrder = asyncHandler(async (req, res) => {
     }
   }
 
-  // 2. Find and update the document with all data from req.body
   const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(
     id,
-    { $set: req.body }, // $set is safer and updates only provided fields
+    { $set: req.body },
     { new: true, runValidators: true }
   );
 
-  // 3. If no work order was found, throw an error
   if (!updatedWorkOrder) {
     throw new ApiError(httpStatus.NOT_FOUND, "Work Order not found.");
   }
 
-  // 4. Attempt to regenerate and replace the PDF
   try {
-    // Generate HTML with the new, updated data
     const html = await generateWorkOrderHtml(updatedWorkOrder);
     const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newFileName = `${updatedWorkOrder._id}-${safeTimestamp}.pdf`;
 
-    // Save the new PDF file
     const pdfData = await savePdfToFile(html, newFileName, "work-order");
     console.log("🚀 ~ PDF Data on update:", pdfData);
 
-    // Update the ticket field with the new PDF's URL
     updatedWorkOrder.ticket = pdfData?.url;
 
-    // Save the document a second time to persist the new ticket URL
     const finalWorkOrder = await updatedWorkOrder.save();
 
-    // Return the final, fully updated work order
     return new ApiResponse(
       res,
       httpStatus.OK,
@@ -203,16 +250,13 @@ const updateWorkOrder = asyncHandler(async (req, res) => {
       "Work Order and PDF updated successfully."
     );
   } catch (pdfError) {
-    // 5. Handle PDF generation failure gracefully
     console.error("Failed to regenerate PDF for work order:", pdfError);
 
-    // The data update succeeded, so return a 200 OK response
-    // but include a warning that the PDF is now out-of-date.
     return new ApiResponse(
       res,
       httpStatus.OK,
       {
-        workOrder: updatedWorkOrder, // Return the updated data with the old ticket URL
+        workOrder: updatedWorkOrder,
         warning:
           "Work Order was updated, but failed to regenerate the PDF ticket.",
       },

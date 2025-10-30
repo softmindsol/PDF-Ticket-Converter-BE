@@ -46,12 +46,9 @@ const createUndergroundTest = asyncHandler(async (req, res) => {
   }
 });
 
-const getUndergroundTests = asyncHandler(async (req, res) => {
-  const searchableFields = [
-    "propertyDetails.propertyName",
-    "propertyDetails.propertyAddress",
-  ];
 
+const getUndergroundTests = asyncHandler(async (req, res) => {
+  // --- 1. Department & Security Filtering ---
   let serverSideFilters = {};
 
   if (req.user.role === "admin") {
@@ -59,9 +56,7 @@ const getUndergroundTests = asyncHandler(async (req, res) => {
       const usersInDepartment = await userModel
         .find({ department: req.query.department })
         .select("_id");
-
       const userIds = usersInDepartment.map((user) => user._id);
-
       serverSideFilters.createdBy = { $in: userIds };
     }
   } else {
@@ -69,23 +64,85 @@ const getUndergroundTests = asyncHandler(async (req, res) => {
       const usersInDepartment = await userModel
         .find({ department: req.user.department._id })
         .select("_id");
-
       const userIds = usersInDepartment.map((user) => user._id);
       serverSideFilters.createdBy = { $in: userIds };
     } else {
+      // Non-admin users with no department see nothing
       serverSideFilters.createdBy = null;
     }
   }
 
-  const baseQuery = UnderGroundTest.find(serverSideFilters).populate(
+  // This will be our master filter object
+  const finalQueryFilters = { ...serverSideFilters };
+
+  // --- 2. Advanced Search Term Filtering ---
+  if (req.query.search) {
+    const searchTerm = req.query.search.trim();
+    const searchRegex = new RegExp(searchTerm, "i");
+    const userSearchOrConditions = [
+      { username: searchRegex },
+      { firstName: searchRegex },
+      { lastName: searchRegex },
+    ];
+    const nameParts = searchTerm.split(" ").filter(Boolean);
+    if (nameParts.length > 1) {
+      const part1Regex = new RegExp(nameParts[0], "i");
+      const part2Regex = new RegExp(nameParts[1], "i");
+      userSearchOrConditions.push({ $and: [{ firstName: part1Regex }, { lastName: part2Regex }] });
+      userSearchOrConditions.push({ $and: [{ firstName: part2Regex }, { lastName: part1Regex }] });
+    }
+    const matchingUsers = await userModel.find({ $or: userSearchOrConditions }).select("_id");
+    const matchingUserIds = matchingUsers.map((user) => user._id);
+    const mainSearchOrConditions = [
+      { "propertyDetails.propertyName": searchRegex },
+      { "propertyDetails.propertyAddress": searchRegex },
+    ];
+    if (matchingUserIds.length > 0) {
+      mainSearchOrConditions.push({ createdBy: { $in: matchingUserIds } });
+    }
+    finalQueryFilters.$or = mainSearchOrConditions;
+  }
+
+  // --- 3. Date Range and Other Direct Filtering ---
+  const queryObj = { ...req.query };
+  const excludedFields = ["page", "sort", "limit", "fields", "search", "department"];
+  excludedFields.forEach((el) => delete queryObj[el]);
+
+  Object.keys(queryObj).forEach((key) => {
+    const match = key.match(/(.+)\[(gte|gt|lte|lt)\]/);
+
+    if (match) {
+      const field = match[1]; // e.g., 'propertyDetails.date' or 'createdAt'
+      let operator = match[2];
+      let value = queryObj[key];
+
+      // ** FIX for the "Midnight Problem" **
+      if (operator === "lte") {
+        operator = "lt"; // Change to "less than"
+        const endDate = new Date(value);
+        endDate.setDate(endDate.getDate() + 1); // Increment to the next day
+        value = endDate.toISOString().split('T')[0]; // Format back to 'YYYY-MM-DD'
+      }
+
+      if (!finalQueryFilters[field]) {
+        finalQueryFilters[field] = {};
+      }
+      finalQueryFilters[field][`$${operator}`] = value;
+    } else {
+      // Handle other direct filters
+      finalQueryFilters[key] = queryObj[key];
+    }
+  });
+
+  // --- 4. Database Query Execution ---
+  // The single .find() call now contains ALL combined filters
+  const baseQuery = UnderGroundTest.find(finalQueryFilters).populate(
     "createdBy",
-    "username"
+    "username firstName lastName"
   );
 
-  const features = new ApiFeatures(baseQuery, req.query)
-    .filter(searchableFields)
-    .sort()
-    .limitFields();
+  // CRITICAL: .filter() is no longer called here.
+  const features = new ApiFeatures(baseQuery, req.query).sort().limitFields();
 
   const { documents: undergroundTests, pagination } = await features.execute();
 
@@ -119,36 +176,28 @@ const getUndergroundTestById = asyncHandler(async (req, res) => {
 const updateUndergroundTest = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  // Step 1: Find the document by its ID and update it with the request body.
   const updatedUndergroundTest = await UnderGroundTest.findByIdAndUpdate(
     id,
-    { $set: req.body }, // Use $set for safer updates
-    { new: true, runValidators: true } // Return the updated document
+    { $set: req.body },
+    { new: true, runValidators: true }
   );
 
-  // Step 2: If no document is found, throw a "Not Found" error.
   if (!updatedUndergroundTest) {
     throw new ApiError(httpStatus.NOT_FOUND, "Underground Test not found.");
   }
 
-  // Step 3: Attempt to regenerate the PDF with the updated data.
   try {
-    // Generate the HTML for the PDF using the newly updated data.
     const html = await generateUndergroundTestHtml(updatedUndergroundTest);
     const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newFileName = `${updatedUndergroundTest._id}-${safeTimestamp}.pdf`;
 
-    // Save the new PDF file.
     const pdfData = await savePdfToFile(html, newFileName, "under-ground");
     console.log("🚀 ~ PDF Data on update:", pdfData);
 
-    // Update the 'ticket' field with the URL of the new PDF.
     updatedUndergroundTest.ticket = pdfData?.url;
 
-    // Save the document again to commit the new ticket URL to the database.
     const finalUpdatedTest = await updatedUndergroundTest.save();
 
-    // Return a success response with the fully updated document.
     return new ApiResponse(
       res,
       httpStatus.OK,
@@ -156,16 +205,13 @@ const updateUndergroundTest = asyncHandler(async (req, res) => {
       "Underground Test and PDF updated successfully."
     );
   } catch (pdfError) {
-    // Step 4: If PDF generation fails, handle the error gracefully.
     console.error("Failed to regenerate PDF for underground test:", pdfError);
 
-    // The data update was successful, so return a 200 OK status.
-    // Include a warning message in the response.
     return new ApiResponse(
       res,
       httpStatus.OK,
       {
-        undergroundTest: updatedUndergroundTest, // Return the updated data (with the old PDF link)
+        undergroundTest: updatedUndergroundTest,
         warning:
           "Underground Test was updated, but failed to regenerate the PDF.",
       },
