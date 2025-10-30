@@ -1,45 +1,48 @@
 import httpStatus from "http-status";
 import { ApiResponse, asyncHandler } from "#utils/api.utils.js";
-import UndergroundTicket from "#models/underGroundTest.model.js";
+import UnderGround from "#models/underGroundTest.model.js";
 import User from "#models/user.model.js";
 import { generateUndergroundTestHtml } from "#root/src/services/underGround.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
 import { uploadBase64ToS3 } from "#root/src/utils/base64.util.js";
+import { CLIENT_URL } from "#root/src/config/env.config.js";
 
 const underGroundTicket = asyncHandler(async (req, res) => {
-  if (req.body?.signatures?.forPropertyOwner?.signed) {
-    req.body.signatures.forPropertyOwner.signed = await uploadBase64ToS3(
-      req.body.signatures.forPropertyOwner.signed,
-      "signature"
-    );
+  // Handle signature uploads if they exist
+  if (req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature) {
+    req.body.remarksAndSignatures.fireMarshalOrAHJ.signature =
+      await uploadBase64ToS3(
+        req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature,
+        "signature"
+      );
   }
-  if (req.body?.signatures?.forInstallingContractor?.signed) {
-    req.body.signatures.forInstallingContractor.signed = await uploadBase64ToS3(
-      req.body.signatures.forInstallingContractor.signed,
-      "signature"
-    );
+  if (req.body?.remarksAndSignatures?.sprinklerContractor?.signature) {
+    req.body.remarksAndSignatures.sprinklerContractor.signature =
+      await uploadBase64ToS3(
+        req.body?.remarksAndSignatures?.sprinklerContractor?.signature,
+        "signature"
+      );
   }
-  const newUndergroundTicket = await UndergroundTicket.create({
+
+  const newUndergroundTicket = await UnderGround.create({
     ...req.body,
     createdBy: req.user._id,
   });
 
   try {
     const html = await generateUndergroundTestHtml(newUndergroundTicket);
-
     const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newFileName = `${newUndergroundTicket._id}-${safeTimestamp}.pdf`;
 
     const pdfData = await savePdfToFile(
       html,
       newFileName,
-      "underground-tickets"
+      "under-ground-tickets" // PDF save location
     );
 
     newUndergroundTicket.ticket = pdfData?.url;
-
-    const updatedTicket = await newUndergroundTicket.save();
+    const updatedUndergroundTicket = await newUndergroundTicket.save();
 
     const managersExist = req.user?.department?.manager?.length >= 1;
 
@@ -58,17 +61,23 @@ const underGroundTicket = asyncHandler(async (req, res) => {
           .filter(Boolean);
 
         if (managerEmails.length > 0) {
-          const subject = `New Underground Ticket Created: #${
-            updatedTicket.ticketNumber || updatedTicket._id
+          const subject = `New Under Ground Ticket Created: #${
+            updatedUndergroundTicket.ticketNumber ||
+            updatedUndergroundTicket._id
           }`;
+
+          // Construct the direct link to the ticket
+          const ticketUrl = `${CLIENT_URL}/under-ground/${updatedUndergroundTicket._id}`;
+
           const htmlContent = `
             <p>Hello,</p>
-            <p>A new Underground Ticket has been created by <strong>${req.user.firstName} ${req.user.lastName}</strong>.</p>
-            <p>The ticket PDF is attached for your review.</p>
+            <p>A new Under Ground Ticket has been created by <strong>${req.user.firstName} ${req.user.lastName}</strong>.</p>
+            <p>You can view the ticket directly by clicking this link: <a href="${ticketUrl}">View Under Ground Ticket</a>.</p>
+            <p>The ticket PDF is also attached for your review.</p>
             <p>Thank you.</p>
           `;
 
-          sendEmailWithS3Attachment(
+          await sendEmailWithS3Attachment(
             managerEmails,
             subject,
             htmlContent,
@@ -77,7 +86,7 @@ const underGroundTicket = asyncHandler(async (req, res) => {
         }
       } catch (emailError) {
         console.error(
-          "Failed to send manager notification email for new underground ticket, but the ticket was created successfully.",
+          "Failed to send manager notification email, but the ticket was created successfully.",
           emailError
         );
       }
@@ -86,21 +95,21 @@ const underGroundTicket = asyncHandler(async (req, res) => {
     return new ApiResponse(
       res,
       httpStatus.CREATED,
-      { ticket: updatedTicket },
-      "Underground Ticket and PDF created successfully."
+      { undergroundTicket: updatedUndergroundTicket },
+      "Under Ground Ticket and PDF created successfully."
     );
   } catch (pdfError) {
-    console.error("Failed to generate PDF for Underground Ticket:", pdfError);
+    console.error("Failed to generate PDF for Under Ground Ticket:", pdfError);
 
     return new ApiResponse(
       res,
       httpStatus.CREATED,
       {
-        ticket: newUndergroundTicket,
+        undergroundTicket: newUndergroundTicket,
         warning:
-          "Underground Ticket was created, but failed to generate the PDF.",
+          "Under Ground Ticket was created, but failed to generate the PDF.",
       },
-      "Underground Ticket created without a PDF."
+      "Under Ground Ticket created without a PDF."
     );
   }
 });

@@ -6,20 +6,23 @@ import { generateAbovegroundTestHtml } from "#root/src/services/aboveGround.pdf.
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
 import { uploadBase64ToS3 } from "#root/src/utils/base64.util.js";
+import { CLIENT_URL } from "#root/src/config/env.config.js";
 
 const createAboveGroundTicket = asyncHandler(async (req, res) => {
-    if (req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature) {
-      req.body.remarksAndSignatures.fireMarshalOrAHJ.signature = await uploadBase64ToS3(
+  if (req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature) {
+    req.body.remarksAndSignatures.fireMarshalOrAHJ.signature =
+      await uploadBase64ToS3(
         req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature,
         "signature"
       );
-    }
-    if (req.body?.remarksAndSignatures?.sprinklerContractor?.signature) {
-      req.body.remarksAndSignatures.sprinklerContractor.signature = await uploadBase64ToS3(
+  }
+  if (req.body?.remarksAndSignatures?.sprinklerContractor?.signature) {
+    req.body.remarksAndSignatures.sprinklerContractor.signature =
+      await uploadBase64ToS3(
         req.body?.remarksAndSignatures?.sprinklerContractor?.signature,
         "signature"
       );
-    }
+  }
   const newAboveGroundTicket = await AboveGround.create({
     ...req.body,
     createdBy: req.user._id,
@@ -59,10 +62,15 @@ const createAboveGroundTicket = asyncHandler(async (req, res) => {
           const subject = `New Above Ground Ticket Created: #${
             updatedTicket.ticketNumber || updatedTicket._id
           }`;
+
+          // Construct the direct link to the ticket
+          const ticketUrl = `${CLIENT_URL}/above-ground/${updatedTicket._id}`;
+
           const htmlContent = `
             <p>Hello,</p>
             <p>A new Above Ground Ticket has been created by <strong>${req.user.firstName} ${req.user.lastName}</strong>.</p>
-            <p>The ticket PDF is attached to this email for your review.</p>
+            <p>You can view the ticket details by clicking on this link: <a href="${ticketUrl}">View Ticket</a>.</p>
+            <p>The ticket PDF is also attached to this email for your review.</p>
             <p>Thank you.</p>
           `;
 

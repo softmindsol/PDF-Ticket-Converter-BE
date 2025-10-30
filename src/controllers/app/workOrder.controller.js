@@ -6,11 +6,15 @@ import { generateWorkOrderHtml } from "#root/src/services/work-order.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
 import { uploadBase64ToS3 } from "#root/src/utils/base64.util.js";
+import { CLIENT_URL } from "#root/src/config/env.config.js"; // Imported CLIENT_URL
 
 const WorkOrderTicket = asyncHandler(async (req, res) => {
-    if(req.body?.customerSignature){
-      req.body.customerSignature=await uploadBase64ToS3(req.body.customerSignature,'signature' )
-    }
+  if (req.body?.customerSignature) {
+    req.body.customerSignature = await uploadBase64ToS3(
+      req.body.customerSignature,
+      "signature"
+    );
+  }
   const { jobNumber } = req.body;
 
   const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
@@ -54,10 +58,15 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
 
         if (managerEmails.length > 0) {
           const subject = `New Work Order Created: Job #${updatedWorkOrder.jobNumber}`;
+
+          // Construct the direct link to the work order
+          const ticketUrl = `${CLIENT_URL}/work-order/${updatedWorkOrder._id}`;
+
           const htmlContent = `
             <p>Hello,</p>
             <p>A new Work Order for job <strong>#${updatedWorkOrder.jobNumber}</strong> has been created by ${req.user.firstName} ${req.user.lastName}.</p>
-            <p>The work order PDF is attached for your review.</p>
+            <p>You can view the work order directly here: <a href="${ticketUrl}">View Work Order</a>.</p>
+            <p>The work order PDF is also attached for your review.</p>
             <p>Thank you.</p>
           `;
 
@@ -79,8 +88,8 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
     return new ApiResponse(
       res,
       httpStatus.CREATED,
-      { ticket: updatedWorkOrder },
-      "Work Order Ticket and PDF created successfully."
+      { workOrder: updatedWorkOrder },
+      "Work Order and PDF created successfully."
     );
   } catch (pdfError) {
     console.error("Failed to generate PDF for work order:", pdfError);
@@ -89,11 +98,10 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
       res,
       httpStatus.CREATED,
       {
-        ticket: newWorkOrder,
-        warning:
-          "Work Order Ticket was created, but failed to generate the PDF.",
+        workOrder: newWorkOrder,
+        warning: "Work Order was created, but failed to generate the PDF.",
       },
-      "Work Order Ticket created without a PDF."
+      "Work Order created without a PDF."
     );
   }
 });

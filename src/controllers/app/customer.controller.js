@@ -5,6 +5,7 @@ import User from "#models/user.model.js";
 import { generateCustomerProfileHtml } from "#root/src/services/customer.pdf.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
+import { CLIENT_URL } from "#root/src/config/env.config.js"; // Imported CLIENT_URL
 
 const createCustomer = asyncHandler(async (req, res) => {
   const { customerName } = req.body;
@@ -51,10 +52,15 @@ const createCustomer = asyncHandler(async (req, res) => {
 
         if (managerEmails.length > 0) {
           const subject = `New Customer Profile Created: ${updatedCustomer.customerName}`;
+          
+          // Construct the direct link to the customer profile
+          const customerUrl = `${CLIENT_URL}/customer/${updatedCustomer._id}`;
+
           const htmlContent = `
             <p>Hello,</p>
             <p>A new customer profile for <strong>${updatedCustomer.customerName}</strong> has been created by ${req.user.firstName} ${req.user.lastName}.</p>
-            <p>The customer's profile PDF is attached for your review.</p>
+            <p>You can view the profile directly here: <a href="${customerUrl}">View Customer Profile</a>.</p>
+            <p>The customer's profile PDF is also attached for your review.</p>
             <p>Thank you.</p>
           `;
 

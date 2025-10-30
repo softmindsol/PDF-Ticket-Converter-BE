@@ -5,10 +5,15 @@ import User from "#models/user.model.js";
 import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 import { generateServiceTicketHtml } from "#root/src/services/service-ticket.pdf.js";
 import { sendEmailWithS3Attachment } from "#root/src/services/sendgrid.service.js";
-import {uploadBase64ToS3} from '#utils/base64.util.js'
+import { uploadBase64ToS3 } from "#utils/base64.util.js";
+import { CLIENT_URL } from "#root/src/config/env.config.js"; // Imported CLIENT_URL
+
 const createServiceTicket = asyncHandler(async (req, res) => {
-  if(req.body?.customerSignature){
-    req.body.customerSignature=await uploadBase64ToS3(req.body.customerSignature,'signature' )
+  if (req.body?.customerSignature) {
+    req.body.customerSignature = await uploadBase64ToS3(
+      req.body.customerSignature,
+      "signature"
+    );
   }
   const newServiceTicket = await ServiceTicket.create({
     ...req.body,
@@ -28,7 +33,6 @@ const createServiceTicket = asyncHandler(async (req, res) => {
     const updatedServiceTicket = await newServiceTicket.save();
 
     const managersExist = req.user?.department?.manager?.length >= 1;
-    console.log("🚀 ~ managersExist:", managersExist)
 
     if (managersExist && pdfData?.url) {
       try {
@@ -48,10 +52,15 @@ const createServiceTicket = asyncHandler(async (req, res) => {
           const subject = `New Service Ticket Created: #${
             updatedServiceTicket.ticketNumber || updatedServiceTicket._id
           }`;
+
+          // Construct the direct link to the service ticket
+          const ticketUrl = `${CLIENT_URL}/service-ticket/${updatedServiceTicket._id}`;
+
           const htmlContent = `
             <p>Hello,</p>
             <p>A new Service Ticket has been created by <strong>${req.user.firstName} ${req.user.lastName}</strong>.</p>
-            <p>The ticket PDF is attached for your review.</p>
+            <p>You can view the ticket directly by clicking this link: <a href="${ticketUrl}">View Service Ticket</a>.</p>
+            <p>The ticket PDF is also attached for your review.</p>
             <p>Thank you.</p>
           `;
 
