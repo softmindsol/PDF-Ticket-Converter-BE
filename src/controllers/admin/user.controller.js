@@ -81,6 +81,9 @@ const getUsers = asyncHandler(async (req, res) => {
 });
 const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  if (req.user?.department?._id){
+    req.body.department=req.user?.department?._id
+  }
   const {
     firstName,
     lastName,
