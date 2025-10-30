@@ -47,7 +47,7 @@ const loginController = asyncHandler(async (req, res) => {
       [{ department: "User is not assigned to a department" }]
     );
   }
-  
+
   const token = await generateAuthToken(user);
 
   return new ApiResponse(
@@ -146,7 +146,10 @@ const changeUsernameController = asyncHandler(async (req, res) => {
     );
   }
 
-  const user = await userModel.findById(userId).select("+password");
+  const user = await userModel
+    .findById(userId)
+    .populate("department", "allowedForms name")
+    .select("+password");
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found.");
@@ -178,13 +181,18 @@ const changeUsernameController = asyncHandler(async (req, res) => {
 
   user.username = newUsername;
   await user.save();
-
+  const token = await generateAuthToken(user);
   return new ApiResponse(
     res,
     httpStatus.OK,
-    { username: user.username },
+    {token, username: user.username },
     "Username changed successfully."
   );
 });
 
-export { loginController, registerController, changePasswordController, changeUsernameController };
+export {
+  loginController,
+  registerController,
+  changePasswordController,
+  changeUsernameController,
+};
