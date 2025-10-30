@@ -8,9 +8,9 @@ export const generateCustomerProfileHtml = async (customerData) => {
 
   let logoDataUri = "";
   try {
-    const logoPath = path.join(process.cwd(), "public", "southLogoFull.svg");
+    const logoPath = path.join(process.cwd(), "public", "logo.jpg");
     const logoFile = await fs.readFile(logoPath, "base64");
-    logoDataUri = `data:image/svg+xml;base64,${logoFile}`;
+    logoDataUri = `data:mage/jpeg;base64,${logoFile}`;
   } catch (error) {
     console.warn(
       "Logo file not found or could not be read. Proceeding without logo."
