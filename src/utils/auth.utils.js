@@ -29,6 +29,7 @@ const generateAuthToken = async (user) => {
       username: user.username,
       firstName: user?.firstName,
       lastName: user?.lastName,
+      profile: user?.profile,
       allowedForms: user?.department?.allowedForms,
       department: user?.department?._id,
       departmentName: user?.department?.name,

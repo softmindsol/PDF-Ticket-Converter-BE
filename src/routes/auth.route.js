@@ -1,6 +1,7 @@
 import express from "express";
 import {
-    changePasswordController,
+  changePasswordController,
+  changeProfilePictureController,
   changeUsernameController,
   loginController,
   registerController,
@@ -8,12 +9,29 @@ import {
 import validate from "#middlewares/validate.js";
 import authValidation from "#validations/auth.validations.js";
 import { auth } from "../middlewares/auth.js";
+import { handleFileUpload } from "../middlewares/file.js";
 const router = express.Router();
 
 router.post("/login", validate(authValidation.login), loginController);
 router.post("/register", validate(authValidation.register), registerController);
-router.post("/change-password", auth(['admin','manager', 'user']), validate(authValidation.changePassword),changePasswordController);
-router.post("/change-username", auth(['admin','manager', 'user']),validate(authValidation.changeUsername),changeUsernameController);
+router.post(
+  "/change-password",
+  auth(["admin", "manager", "user"]),
+  validate(authValidation.changePassword),
+  changePasswordController
+);
+router.post(
+  "/change-username",
+  auth(["admin", "manager", "user"]),
+  validate(authValidation.changeUsername),
+  changeUsernameController
+);
+router.post(
+  "/change-profile",
+  auth(["admin", "manager", "user"]),
+  handleFileUpload("profile", "profile"),
+  changeProfilePictureController
+);
 export default router;
 
 /**

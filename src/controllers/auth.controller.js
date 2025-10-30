@@ -190,9 +190,41 @@ const changeUsernameController = asyncHandler(async (req, res) => {
   );
 });
 
+const changeProfilePictureController = asyncHandler(async (req, res) => {
+  // 1. Check if the file was successfully uploaded by the middleware
+  if (!req.file) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "No file was uploaded. Please select a valid image.");
+  }
+
+  const userId = req.user._id;
+
+  // 2. Find the user in the database
+  const user = await userModel.findById(userId);
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found.");
+  }
+
+  // 3. Get the URL of the uploaded file from req.file (provided by multer-s3)
+  const newProfilePictureUrl = req.file.location;
+
+  // 4. Update the user's profilePicture field and save the document
+  user.profilePicture = newProfilePictureUrl;
+  await user.save();
+
+  // 5. Return a successful response with the new image URL
+  return new ApiResponse(
+    res,
+    httpStatus.OK,
+    { profilePicture: newProfilePictureUrl },
+    "Profile picture updated successfully."
+  );
+});
+
 export {
   loginController,
   registerController,
   changePasswordController,
   changeUsernameController,
+  changeProfilePictureController
 };

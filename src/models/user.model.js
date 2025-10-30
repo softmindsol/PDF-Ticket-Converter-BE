@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
+    profile: { type: String,default:'https://pdf-ticket.s3.eu-north-1.amazonaws.com/signature/signature-1761813953533-310665042.png' },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: false, unique: true },
     password: { type: String, required: true },
