@@ -34,6 +34,7 @@ const createCustomer = asyncHandler(async (req, res) => {
     newCustomer.ticket = pdfData?.url;
     const updatedCustomer = await newCustomer.save();
 
+    // --- Send Email to Managers ---
     const managersExist = req.user?.department?.manager?.length >= 1;
 
     if (managersExist && pdfData?.url) {
@@ -52,7 +53,7 @@ const createCustomer = asyncHandler(async (req, res) => {
 
         if (managerEmails.length > 0) {
           const subject = `New Customer Profile Created: ${updatedCustomer.customerName}`;
-          
+
           // Construct the direct link to the customer profile
           const customerUrl = `${CLIENT_URL}/customer/${updatedCustomer._id}`;
 
@@ -78,6 +79,40 @@ const createCustomer = asyncHandler(async (req, res) => {
         );
       }
     }
+
+    // --- Send Email to the Customer ---
+    const customerEmailForReports = updatedCustomer.emailForInspectionReports;
+    if (customerEmailForReports && pdfData?.url) {
+      try {
+        const subject = `Your Customer Profile for ${updatedCustomer.customerName} Has Been Created!`;
+        const customerProfileLink = `${CLIENT_URL}/customer/${updatedCustomer._id}`; // Assuming a public-facing link if applicable
+
+        const htmlContent = `
+          <p>Dear ${updatedCustomer.customerName},</p>
+          <p>We are pleased to inform you that your customer profile has been successfully created!</p>
+          <p>You can access and review your profile details here: <a href="${customerProfileLink}">View Your Customer Profile</a>.</p>
+          <p>The PDF version of your customer profile is attached to this email for your convenience.</p>
+          <p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>
+          <p>Thank you for choosing our services!</p>
+          <p>Sincerely,</p>
+          <p>The [Your Company Name] Team</p>
+        `;
+
+        await sendEmailWithS3Attachment(
+          [customerEmailForReports], // sendEmailWithS3Attachment expects an array of emails
+          subject,
+          htmlContent,
+          pdfData.url
+        );
+        console.log(`Customer profile email sent to ${customerEmailForReports}`);
+      } catch (customerEmailError) {
+        console.error(
+          `Failed to send customer profile email to ${customerEmailForReports}, but the customer was created successfully.`,
+          customerEmailError
+        );
+      }
+    }
+
 
     return new ApiResponse(
       res,
