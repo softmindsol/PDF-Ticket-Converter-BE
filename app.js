@@ -6,8 +6,8 @@ import { swaggerServe, swaggerSetup } from "#config/swagger.config.js";
 
 const app = express();
 
-app.use(express.json());
-app.use(express.json({ limit: '30mb' })); 
+// ONLY use express.json() ONCE, with the desired limit.
+app.use(express.json({ limit: '30mb' })); // Changed to '30mb' as per your update.
 
 app.use(express.static("public"));
 
