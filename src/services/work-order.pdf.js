@@ -206,7 +206,7 @@ export const generateWorkOrderHtml = async (workOrderData) => {
                 <div class="signature-box">
                       <strong>Customer Signature:</strong> ${
                         workOrderData.customerSignature
-                          ? `<img src="${sign}" style="height: 140px; width: 140px; margin-bottom: -30px; display: block;">` // Adjusted style
+                          ? `<img src="${sign}" style="height: 140px; width: 140px; margin-top: 5px;">`
                           : '<div class="line"></div>'
                       }
                   </div>

@@ -1233,12 +1233,12 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         
                         <!-- Fire Marshal Signature -->
                         <div class="field-row" style="margin-top: 15px;">
-                           <div style="flex-grow: 2;">
-    <div class="line">
-        ${fireMarshalOrAHJSign ? `<img src="${fireMarshalOrAHJSign}" style="height: 170px; width: 170px; margin-bottom: -30px; display: block;">` : ''}
-    </div>
-    <div style="font-size: 8pt;">Fire Marshal or AHJ (signed)</div>
-</div>
+                            <div style="flex-grow: 2;">
+                                <div class="line">
+                                    ${fireMarshalOrAHJSign ? `<img src="${fireMarshalOrAHJSign}" style="height: 140px; width: 140px; margin-top: 5px;">` : ''}
+                                </div>
+                                <div style="font-size: 8pt;">Fire Marshal or AHJ (signed)</div>
+                            </div>
                             <div style="flex-grow: 1; margin-left: 20px;">
                                 <div class="line"><span class="data-value">${val(testData.remarksAndSignatures?.fireMarshalOrAHJ?.title)}</span></div>
                                 <div style="font-size: 8pt;">Title</div>
@@ -1251,12 +1251,12 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
 
                         <!-- Sprinkler Contractor Signature -->
                         <div class="field-row" style="margin-top: 25px;">
-                           <div style="flex-grow: 2;">
-    <div class="line">
-        ${sprinklerContractorSign ? `<img src="${sprinklerContractorSign}" style="height: 170px; width: 170px; margin-bottom: -30px; display: block;">` : ''}
-    </div>
-    <div style="font-size: 8pt;">For sprinkler contractor (signed)</div>
-</div>
+                            <div style="flex-grow: 2;">
+                                <div class="line">
+                                    ${sprinklerContractorSign ? `<img src="${sprinklerContractorSign}" style="height: 140px; width: 140px; margin-top: 5px;">` : ''}
+                                </div>
+                                <div style="font-size: 8pt;">For sprinkler contractor (signed)</div>
+                            </div>
                             <div style="flex-grow: 1; margin-left: 20px;">
                                 <div class="line"><span class="data-value">${val(testData.remarksAndSignatures?.sprinklerContractor?.title)}</span></div>
                                 <div style="font-size: 8pt;">Title</div>
