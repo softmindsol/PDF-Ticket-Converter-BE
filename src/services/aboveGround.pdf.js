@@ -1235,7 +1235,7 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div class="field-row" style="margin-top: 15px;">
                             <div style="flex-grow: 2;">
                                 <div class="line">
-                                    ${fireMarshalOrAHJSign ? `<img src="${fireMarshalOrAHJSign}" style="max-height: 35px; width: auto;">` : ''}
+                                    ${fireMarshalOrAHJSign ? `<img src="${fireMarshalOrAHJSign}" style="max-height: 70px; width: auto;">` : ''}
                                 </div>
                                 <div style="font-size: 8pt;">Fire Marshal or AHJ (signed)</div>
                             </div>
@@ -1253,7 +1253,7 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div class="field-row" style="margin-top: 25px;">
                             <div style="flex-grow: 2;">
                                 <div class="line">
-                                    ${sprinklerContractorSign ? `<img src="${sprinklerContractorSign}" style="max-height: 35px; width: auto;">` : ''}
+                                    ${sprinklerContractorSign ? `<img src="${sprinklerContractorSign}" style="max-height: 70px; width: auto;">` : ''}
                                 </div>
                                 <div style="font-size: 8pt;">For sprinkler contractor (signed)</div>
                             </div>

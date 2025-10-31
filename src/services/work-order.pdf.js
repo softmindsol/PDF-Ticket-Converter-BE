@@ -207,7 +207,7 @@ export const generateWorkOrderHtml = async (workOrderData) => {
                    
                     <strong>Customer Signature:</strong> ${
                       workOrderData.customerSignature
-                        ? `<img src="${sign}" style="max-height: 40px; width: auto;">`
+                        ? `<img src="${sign}" style="max-height: 70px; width: auto;">`
                         : '<div class="line"></div>'
                     }
                 </div>

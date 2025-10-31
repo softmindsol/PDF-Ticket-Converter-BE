@@ -30,7 +30,7 @@ const authValidation = {
         "any.required": "Password is required",
       }),
     }),
-  },
+  },  
   register: {
     body: Joi.object({
       username: Joi.string()
