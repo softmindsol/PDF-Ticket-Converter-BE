@@ -1253,7 +1253,7 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div class="field-row" style="margin-top: 25px;">
                             <div style="flex-grow: 2;">
                                 <div class="line">
-                                    ${sprinklerContractorSign ? `<img src="${sprinklerContractorSign}" style="max-height: 70px; width: auto;">` : ''}
+                                    ${sprinklerContractorSign ? `<img src="${sprinklerContractorSign}" style="height: 70px; width: auto;">` : ''}
                                 </div>
                                 <div style="font-size: 8pt;">For sprinkler contractor (signed)</div>
                             </div>

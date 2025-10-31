@@ -259,7 +259,7 @@ export const generateServiceTicketHtml = async (ticketData) => {
                     <strong>Signature:</strong>
                     <span>${
                       sign
-                        ? `<img src="${sign}" style="max-height: 70px; width: auto;"/>`
+                        ? `<img src="${sign}" style="height: 70px; width: auto;"/>`
                         : ""
                     }</span>
                 </div>

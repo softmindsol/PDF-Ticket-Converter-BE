@@ -789,7 +789,7 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <div class="line">
                     ${
                       forPropertyOwnerSign
-                        ? `<img src="${forPropertyOwnerSign}" style="max-height: 70px; width: auto;">`
+                        ? `<img src="${forPropertyOwnerSign}" style="height: 70px; width: auto;">`
                         : ""
                     }
                 </div>
@@ -815,7 +815,7 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <div class="line">
                     ${
                       forInstallingContractorign
-                        ? `<img src="${forInstallingContractorign}" style="max-height: 70px; width: auto;">`
+                        ? `<img src="${forInstallingContractorign}" style="height: 70px; width: auto;">`
                         : ""
                     }
                 </div>
