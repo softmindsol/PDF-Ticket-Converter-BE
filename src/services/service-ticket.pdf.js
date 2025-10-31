@@ -253,30 +253,30 @@ export const generateServiceTicketHtml = async (ticketData) => {
             </div>
         </main>
 
-        <footer>
-            <div class="signature-section">
-               <div class="data-field" style="width: 60%;">
-                  <strong>Signature:</strong>
-                  <span>${
-                    sign
-                      ? `<img src="${sign}" style="height: 170px; width: 170px; margin-top: 5px;"/>`
-                      : ""
-                  }</span>
-              </div>
-                <div class="data-field" style="width: 35%;">
-                    <strong>Date:</strong><span>${formatDate(
-                      ticketData.completionDate
-                    )}</span>
+       <footer>
+                <div class="signature-section">
+                   <div class="data-field" style="width: 60%;">
+                      <strong>Signature:</strong>
+                      <span>${
+                        sign
+                          ? `<img src="${sign}" style="height: 170px; width: 170px; margin-bottom: -30px; display: block;"/>` // Adjusted style
+                          : ""
+                      }</span>
+                  </div>
+                    <div class="data-field" style="width: 35%;">
+                        <strong>Date:</strong><span>${formatDate(
+                          ticketData.completionDate
+                        )}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="signature-section" style="margin-top: 15px;">
-                <div class="data-field" style="width: 100%;">
-                    <strong>Print Name:</strong><span>${val(
-                      ticketData.customerName
-                    )}</span>
+                <div class="signature-section" style="margin-top: 15px;">
+                    <div class="data-field" style="width: 100%;">
+                        <strong>Print Name:</strong><span>${val(
+                          ticketData.customerName
+                        )}</span>
+                    </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
     </div>
     </body>
     </html>

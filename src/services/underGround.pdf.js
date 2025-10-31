@@ -785,16 +785,16 @@ workmanship, or failure to comply with approving authority’s requirements or l
         
         <!-- Property Owner Signature Block -->
         <div class="field-row" style="margin-top: 15px;">
-            <div style="flex-grow: 2;">
-              <div class="line">
-                  ${
-                    forPropertyOwnerSign
-                      ? `<img src="${forPropertyOwnerSign}" style="height: 170px; width: 170px; margin-top: 5px;">`
-                      : ""
-                  }
-              </div>
-              <div style="font-size: 8pt;">For property owner (signed)</div>
-          </div>
+           <div style="flex-grow: 2;">
+    <div class="line">
+        ${
+          forPropertyOwnerSign
+            ? `<img src="${forPropertyOwnerSign}" style="height: 170px; width: 170px; margin-bottom: -30px; display: block;">` // Adjusted style
+            : ""
+        }
+    </div>
+    <div style="font-size: 8pt;">For property owner (signed)</div>
+</div>
             <div style="flex-grow: 1; margin-left: 20px;">
                 <div class="line">${val(
                   testData.signatures?.forPropertyOwner?.title
@@ -812,15 +812,15 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <!-- Installing Contractor Signature Block -->
         <div class="field-row" style="margin-top: 25px;">
             <div style="flex-grow: 2;">
-                <div class="line">
-                    ${
-                      forInstallingContractorign
-                        ? `<img src="${forInstallingContractorign}" style="height: 170px; width: 170px; margin-top: 5px;">`
-                        : ""
-                    }
-                </div>
-                <div style="font-size: 8pt;">For installing contractor (signed)</div>
-            </div>
+    <div class="line">
+        ${
+          forInstallingContractorign
+            ? `<img src="${forInstallingContractorign}" style="height: 170px; width: 170px; margin-bottom: -30px; display: block;">` // Adjusted style
+            : ""
+        }
+    </div>
+    <div style="font-size: 8pt;">For installing contractor (signed)</div>
+</div>
             <div style="flex-grow: 1; margin-left: 20px;">
                 <div class="line">${val(
                   testData.signatures?.forInstallingContractor?.title
