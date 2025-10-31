@@ -786,15 +786,15 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <!-- Property Owner Signature Block -->
         <div class="field-row" style="margin-top: 15px;">
             <div style="flex-grow: 2;">
-                <div class="line">
-                    ${
-                      forPropertyOwnerSign
-                        ? `<img src="${forPropertyOwnerSign}" style="height: 70px; width: auto;">`
-                        : ""
-                    }
-                </div>
-                <div style="font-size: 8pt;">For property owner (signed)</div>
-            </div>
+              <div class="line">
+                  ${
+                    forPropertyOwnerSign
+                      ? `<img src="${forPropertyOwnerSign}" style="height: 170px; width: 170px; margin-top: 5px;">`
+                      : ""
+                  }
+              </div>
+              <div style="font-size: 8pt;">For property owner (signed)</div>
+          </div>
             <div style="flex-grow: 1; margin-left: 20px;">
                 <div class="line">${val(
                   testData.signatures?.forPropertyOwner?.title
@@ -815,7 +815,7 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <div class="line">
                     ${
                       forInstallingContractorign
-                        ? `<img src="${forInstallingContractorign}" style="height: 70px; width: auto;">`
+                        ? `<img src="${forInstallingContractorign}" style="height: 170px; width: 170px; margin-top: 5px;">`
                         : ""
                     }
                 </div>
