@@ -114,8 +114,6 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
         );
       }
     }
-    // --- End of new code ---
-    // --- End of new code ---
 
     return new ApiResponse(
       res,

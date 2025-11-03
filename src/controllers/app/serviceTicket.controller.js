@@ -79,6 +79,36 @@ const createServiceTicket = asyncHandler(async (req, res) => {
       }
     }
 
+    // --- Start of new code to email the customer ---
+    if (updatedServiceTicket.emailAddress && pdfData?.url) {
+      try {
+        const customerSubject = `Service Ticket Created: #${
+          updatedServiceTicket.ticketNumber || updatedServiceTicket._id
+        }`;
+        const ticketUrl = `${CLIENT_URL}/service-ticket/${updatedServiceTicket._id}`;
+        const customerHtmlContent = `
+          <p>Hello,</p>
+          <p>A new service ticket has been created for you.</p>
+          <p>You can view your ticket directly here: <a href="${ticketUrl}">View Service Ticket</a>.</p>
+          <p>A PDF copy of your ticket is also attached for your records.</p>
+          <p>Thank you.</p>
+        `;
+
+        await sendEmailWithS3Attachment(
+          [updatedServiceTicket.emailAddress], // Ensure this is an array
+          customerSubject,
+          customerHtmlContent,
+          pdfData.url
+        );
+      } catch (customerEmailError) {
+        console.error(
+          "Failed to send service ticket email to customer, but the ticket was created successfully.",
+          customerEmailError
+        );
+      }
+    }
+    // --- End of new code ---
+
     return new ApiResponse(
       res,
       httpStatus.CREATED,
