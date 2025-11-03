@@ -89,7 +89,6 @@ const createServiceTicket = asyncHandler(async (req, res) => {
         const customerHtmlContent = `
           <p>Hello,</p>
           <p>A new service ticket has been created for you.</p>
-          <p>You can view your ticket directly here: <a href="${ticketUrl}">View Service Ticket</a>.</p>
           <p>A PDF copy of your ticket is also attached for your records.</p>
           <p>Thank you.</p>
         `;

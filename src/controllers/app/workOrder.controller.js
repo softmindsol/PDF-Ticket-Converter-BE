@@ -94,7 +94,6 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
         const customerHtmlContent = `
           <p>Hello,</p>
           <p>Your work order for job <strong>#${updatedWorkOrder.jobNumber}</strong> has been generated.</p>
-          <p>You can view the work order directly here: <a href="${ticketUrl}">View Work Order</a>.</p>
           <p>The work order PDF is also attached for your convenience.</p>
           <p>Thank you.</p>
         `;

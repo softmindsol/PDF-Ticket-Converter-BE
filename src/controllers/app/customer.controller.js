@@ -90,7 +90,6 @@ const createCustomer = asyncHandler(async (req, res) => {
         const htmlContent = `
           <p>Dear ${updatedCustomer.customerName},</p>
           <p>We are pleased to inform you that your customer profile has been successfully created!</p>
-          <p>You can access and review your profile details here: <a href="${customerProfileLink}">View Your Customer Profile</a>.</p>
           <p>The PDF version of your customer profile is attached to this email for your convenience.</p>
           <p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>
           <p>Thank you for choosing our services!</p>
