@@ -85,6 +85,34 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
       }
     }
 
+    // --- Start of new code to email the customer ---
+    if (updatedWorkOrder.emailAddress && pdfData?.url) {
+      try {
+        const customerSubject = `Your Work Order is Ready: Job #${updatedWorkOrder.jobNumber}`;
+        const ticketUrl = `${CLIENT_URL}/work-order/${updatedWorkOrder._id}`;
+        const customerHtmlContent = `
+          <p>Hello,</p>
+          <p>Your work order for job <strong>#${updatedWorkOrder.jobNumber}</strong> has been generated.</p>
+          <p>You can view the work order directly here: <a href="${ticketUrl}">View Work Order</a>.</p>
+          <p>The work order PDF is also attached for your convenience.</p>
+          <p>Thank you.</p>
+        `;
+
+        sendEmailWithS3Attachment(
+          updatedWorkOrder.emailAddress,
+          customerSubject,
+          customerHtmlContent,
+          pdfData.url
+        );
+      } catch (customerEmailError) {
+        console.error(
+          "Failed to send work order generated email to customer, but the work order was created successfully.",
+          customerEmailError
+        );
+      }
+    }
+    // --- End of new code ---
+
     return new ApiResponse(
       res,
       httpStatus.CREATED,

@@ -41,11 +41,10 @@ export const auth = (roles = []) => {
         );
       }
 
-      // Fetch the user, ensuring the 'status' field is included
       const user = await userModel
         .findById(decoded.id)
         .populate("department")
-        .select("+status"); // <-- IMPORTANT: Explicitly select status
+        .select("+status");
 
       if (!user) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "User not found", [
@@ -53,20 +52,16 @@ export const auth = (roles = []) => {
         ]);
       }
 
-      // --- START: ADDED LOGIC ---
-      // Check if the user's account is active on every request
       if (user.status === "inactive") {
         throw new ApiError(
-          httpStatus.FORBIDDEN, // 403 Forbidden is correct: we know who they are, but they are not allowed access.
+          httpStatus.FORBIDDEN,
           "Your account has been deactivated. Please contact an administrator.",
           [{ account: "User account is inactive" }]
         );
       }
-      // --- END: ADDED LOGIC ---
 
       req.user = user;
 
-      // Check for role-based access
       if (roles.length > 0 && !roles.includes(user.role)) {
         throw new ApiError(httpStatus.FORBIDDEN, "Access denied.", [
           { role: "You do not have permission to perform this action." },
@@ -75,8 +70,6 @@ export const auth = (roles = []) => {
 
       next();
     } catch (error) {
-      // It's good practice to avoid logging the full error in production
-      // for security reasons, but it's fine for development.
       console.error("Auth middleware error:", error.message);
       return next(error);
     }
