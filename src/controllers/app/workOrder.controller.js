@@ -86,6 +86,7 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
     }
 
     // --- Start of new code to email the customer ---
+    // --- Start of new code to email the customer ---
     if (updatedWorkOrder.emailAddress && pdfData?.url) {
       try {
         const customerSubject = `Your Work Order is Ready: Job #${updatedWorkOrder.jobNumber}`;
@@ -98,8 +99,10 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
           <p>Thank you.</p>
         `;
 
+        // **SOLUTION for TypeError**
+        // Wrap the single email string in an array
         sendEmailWithS3Attachment(
-          updatedWorkOrder.emailAddress,
+          [updatedWorkOrder.emailAddress], // <--- FIX IS HERE
           customerSubject,
           customerHtmlContent,
           pdfData.url
@@ -111,6 +114,7 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
         );
       }
     }
+    // --- End of new code ---
     // --- End of new code ---
 
     return new ApiResponse(
