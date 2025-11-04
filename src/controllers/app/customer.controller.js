@@ -94,7 +94,7 @@ const createCustomer = asyncHandler(async (req, res) => {
           <p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>
           <p>Thank you for choosing our services!</p>
           <p>Sincerely,</p>
-          <p>The [Your Company Name] Team</p>
+          <p>The Southern Fire Team</p>
         `;
 
         await sendEmailWithS3Attachment(

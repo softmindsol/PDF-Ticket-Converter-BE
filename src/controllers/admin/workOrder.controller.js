@@ -279,10 +279,56 @@ const deleteWorkOrder = asyncHandler(async (req, res) => {
   );
 });
 
+const regenerateWorkOrderPdf = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  
+  const workOrder = await WorkOrder.findById(id);
+
+  if (!workOrder) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Work Order not found.");
+  }
+
+  try {
+    
+    const html = await generateWorkOrderHtml(workOrder);
+
+    
+    const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const newFileName = `${workOrder._id}-${safeTimestamp}.pdf`;
+
+    
+    const pdfData = await savePdfToFile(html, newFileName, "work-order");
+
+    
+    workOrder.ticket = pdfData?.url;
+
+    
+    const updatedWorkOrder = await workOrder.save();
+
+    
+    return new ApiResponse(
+      res,
+      httpStatus.OK,
+      { workOrder: updatedWorkOrder },
+      "Work Order PDF regenerated and updated successfully."
+    );
+  } catch (pdfError) {
+    console.error("Failed to regenerate PDF for work order:", pdfError);
+
+    
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Failed to regenerate the PDF ticket. Please try again."
+    );
+  }
+});
+
 export {
   createWorkOrder,
   getWorkOrders,
   getWorkOrderById,
   updateWorkOrder,
   deleteWorkOrder,
+  regenerateWorkOrderPdf
 };
