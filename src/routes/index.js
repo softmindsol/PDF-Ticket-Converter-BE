@@ -8,6 +8,7 @@ import customerRoute from "./admin/customer.route.js";
 import serviceTicketRoute from "./admin/serviceticket.route.js";
 import aboveGroundRoute from "./admin/aboveGroundTest.route.js";
 import underGroundRoute from "./admin/underground.route.js";
+import alarmRoute from "./admin/alarm.route.js";
 import AppticketRoutes from "./app/ticket.route.js";
 import fileHandlerRoute from "./file.routes.js";
 const router = express.Router();
@@ -48,6 +49,10 @@ const defaultRoutes = [
    {
     path: "/file",
     route: fileHandlerRoute,
+  },
+  {
+    path: "/admin/alarm",
+    route: alarmRoute,
   },
   //\ {
   //   path: "/manager/user",

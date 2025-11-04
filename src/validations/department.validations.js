@@ -53,7 +53,8 @@ const departmentValidation = {
             "serviceTicket",
             "underGround",
             "workOrder",
-             "customer"
+            "customer",
+            "alarm"
           )
         )
         .messages({

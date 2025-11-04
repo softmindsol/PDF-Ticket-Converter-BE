@@ -15,7 +15,7 @@ const DepartmentSchema = new mongoose.Schema(
 
     allowedForms: {
       type: [String],
-      enum: ["AboveGround", "serviceTicket", "underGround", "workOrder"],
+      enum: ["AboveGround", "serviceTicket", "underGround", "workOrder", 'customer', 'alarm'],
       default: [],
     },
 
