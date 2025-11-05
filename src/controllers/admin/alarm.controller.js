@@ -212,10 +212,20 @@ const updateAlarm = asyncHandler(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Alarm not found.");
   }
 
+  // --- Regenerate PDF after updating ---
+  const html = await generateAlarmProfileHtml(updatedAlarm);
+  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const newFileName = `${updatedAlarm._id}-${safeTimestamp}.pdf`;
+  const fileInfo = await savePdfToFile(html, newFileName, "alarm");
+
+  // Update the ticket URL and save the document again
+  updatedAlarm.ticket = fileInfo?.url;
+  const finalUpdatedAlarm = await updatedAlarm.save();
+
   return new ApiResponse(
     res,
     httpStatus.OK,
-    { alarm: updatedAlarm },
+    { alarm: finalUpdatedAlarm },
     "Alarm updated successfully."
   );
 });
