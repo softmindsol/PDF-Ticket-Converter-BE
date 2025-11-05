@@ -89,6 +89,10 @@ const ServiceTicketSchema = new mongoose.Schema(
       type: String, // Often a URL to the signature image
       trim: true,
     },
+    printName: {
+      type: String, // Often a URL to the signature image
+      trim: true,
+    },
         ticket: { type: String, required: false, default: "" },
 
 

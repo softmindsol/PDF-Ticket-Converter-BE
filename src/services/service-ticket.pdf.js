@@ -272,7 +272,7 @@ export const generateServiceTicketHtml = async (ticketData) => {
             <div class="signature-section" style="margin-top: 15px;">
                 <div class="data-field" style="width: 100%;">
                     <strong>Print Name:</strong><span>${val(
-                      ticketData.customerName
+                      ticketData.printName
                     )}</span>
                 </div>
             </div>
