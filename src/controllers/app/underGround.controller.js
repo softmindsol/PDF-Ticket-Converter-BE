@@ -10,17 +10,17 @@ import { CLIENT_URL } from "#root/src/config/env.config.js";
 
 const underGroundTicket = asyncHandler(async (req, res) => {
   // Handle signature uploads if they exist
-  if (req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature) {
-    req.body.remarksAndSignatures.fireMarshalOrAHJ.signature =
+  if (req.body?.signatures?.forPropertyOwner?.signed) {
+    req.body.signatures.forPropertyOwner.signed =
       await uploadBase64ToS3(
-        req.body?.remarksAndSignatures?.fireMarshalOrAHJ?.signature,
+req.body?.signatures?.forPropertyOwner?.signed,
         "signature"
       );
   }
-  if (req.body?.remarksAndSignatures?.sprinklerContractor?.signature) {
-    req.body.remarksAndSignatures.sprinklerContractor.signature =
+  if (req.body?.signatures?.forInstallingContractor?.signed) {
+    req.body.signatures.forInstallingContractor.signed =
       await uploadBase64ToS3(
-        req.body?.remarksAndSignatures?.sprinklerContractor?.signature,
+req.body?.signatures?.forInstallingContractor?.signed,
         "signature"
       );
   }

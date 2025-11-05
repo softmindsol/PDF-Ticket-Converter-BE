@@ -8,6 +8,7 @@ import ServiceTicket from "#models/serviceTicket.model.js";
 import WorkOrder from "#models/workOrder.model.js";
 import Customer from "#models/customer.model.js";
 import User from "#models/user.model.js"; // <-- Import the User model
+import alarmMonitorModel from "#root/src/models/alarmMonitor.model.js";
 
 const getMyLatestTickets = asyncHandler(async (req, res) => {
   const { _id: userId, role, department } = req.user;
@@ -46,6 +47,8 @@ const getMyLatestTickets = asyncHandler(async (req, res) => {
     { model: ServiceTicket, type: "Service Ticket" },
     { model: WorkOrder, type: "Work Order" },
     { model: Customer, type: "Customer" },
+        { model: alarmMonitorModel, type: "Alarm" }, // 2. Added the new Alarm model to the query list
+
   ];
 
   // 3. Execute the queries in parallel using the dynamically created filter
