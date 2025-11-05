@@ -104,6 +104,8 @@ const AlarmSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    ticket: { type: String, required: false, default: "" },
+
   },
   { timestamps: true }
 );

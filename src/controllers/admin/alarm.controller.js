@@ -3,6 +3,8 @@ import httpStatus from "http-status";
 import ApiError, { ApiResponse, asyncHandler } from "#utils/api.utils.js";
 import ApiFeatures from "#root/src/utils/apiFeatures.util.js";
 import userModel from "#root/src/models/user.model.js";
+import { generateAlarmProfileHtml } from "#root/src/services/alarm.pdf.js";
+import { savePdfToFile } from "#root/src/config/puppeteer.config.js";
 
 const createAlarm = asyncHandler(async (req, res) => {
   const { accountNumber } = req.body;
@@ -22,11 +24,18 @@ const createAlarm = asyncHandler(async (req, res) => {
   };
 
   const newAlarm = await Alarm.create(alarmData);
+  const html = await generateAlarmProfileHtml(newAlarm);
+  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const newFileName = `${newAlarm?._id}-${safeTimestamp}.pdf`;
+  const fileName = await savePdfToFile(html, newFileName, "alarm");
+  console.log("🚀 ~ fileName:", fileName);
+  newAlarm.ticket = fileName?.url;
+  const updatedCustomerWithPdf = await newAlarm.save();
 
   return new ApiResponse(
     res,
     httpStatus.CREATED,
-    { alarm: newAlarm },
+    { alarm: updatedCustomerWithPdf },
     "Alarm created successfully."
   );
 });
@@ -69,16 +78,22 @@ const getAlarms = asyncHandler(async (req, res) => {
       { firstName: searchRegex },
       { lastName: searchRegex },
     ];
-    
+
     const nameParts = searchTerm.split(" ").filter(Boolean);
     if (nameParts.length > 1) {
       const part1Regex = new RegExp(nameParts[0], "i");
       const part2Regex = new RegExp(nameParts[1], "i");
-      userSearchOrConditions.push({ $and: [{ firstName: part1Regex }, { lastName: part2Regex }] });
-      userSearchOrConditions.push({ $and: [{ firstName: part2Regex }, { lastName: part1Regex }] });
+      userSearchOrConditions.push({
+        $and: [{ firstName: part1Regex }, { lastName: part2Regex }],
+      });
+      userSearchOrConditions.push({
+        $and: [{ firstName: part2Regex }, { lastName: part1Regex }],
+      });
     }
 
-    const matchingUsers = await userModel.find({ $or: userSearchOrConditions }).select("_id");
+    const matchingUsers = await userModel
+      .find({ $or: userSearchOrConditions })
+      .select("_id");
     const matchingUserIds = matchingUsers.map((user) => user._id);
 
     // Build the main search conditions for the Alarm model
