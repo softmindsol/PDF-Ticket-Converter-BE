@@ -6,13 +6,14 @@ export const generateAlarmProfileHtml = async (alarmData) => {
     throw new Error("A valid alarm object with an _id must be provided.");
   }
 
-  // Helper function to safely access properties and provide a default value
-  const val = (field, fallback = "&nbsp;") => (field ? field : fallback);
-  
+  // Helper function to safely convert fields to strings
+  const val = (field, fallback = "") => (field ? String(field) : fallback);
+
   // Format date to MM/DD/YYYY, if it exists
   const formatDate = (dateString) => {
-    if (!dateString) return "&nbsp;";
+    if (!dateString) return "";
     const date = new Date(dateString);
+    if (isNaN(date)) return "";
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "2-digit",
@@ -20,23 +21,8 @@ export const generateAlarmProfileHtml = async (alarmData) => {
     });
   };
 
-  // Dynamically generate the rows for the communicator/zones table
-  const communicatorRows = alarmData.communicatorFormat
-    .map(
-      (comm) => `
-    <tr>
-      <td>${val(comm.areaNumber)}</td>
-      <td>${val(comm.zoneNumber)}</td>
-      <td>${val(comm.zoneDescription)}</td>
-      <td>${val(comm.partitionAreaDescription)}</td>
-      <td>${val(comm.instruction1)}</td>
-      <td>${val(comm.instruction2)}</td>
-      <td>${val(comm.instruction3)}</td>
-      <td>${val(comm.instruction4)}</td>
-    </tr>
-  `
-    )
-    .join("");
+  // Render an HTML non-breaking space if the value is empty, otherwise render the text
+  const renderVal = (text) => (text.trim() === "" ? "&nbsp;" : text);
 
   const htmlContent = `
   <!DOCTYPE html>
@@ -45,110 +31,146 @@ export const generateAlarmProfileHtml = async (alarmData) => {
       <meta charset="UTF-8">
       <title>Alarm Monitoring Services - Dealer Instructions</title>
       <style>
-          body { font-family: Arial, sans-serif; font-size: 10pt; color: #333; }
-          .container { max-width: 800px; margin: auto; padding: 20px; }
-          h1 { text-align: center; margin-bottom: 2px; }
-          h2 { text-align: center; margin-top: 0; margin-bottom: 20px; font-weight: normal; }
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px 20px; margin-bottom: 20px; }
-          .info-item { border-bottom: 1px solid #000; padding: 4px 0; }
-          .info-item strong { font-size: 9pt; }
-          .full-width { grid-column: 1 / -1; }
-          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-          th, td { border: 1px solid #000; padding: 6px; text-align: left; font-size: 9pt; }
-          th { background-color: #f2f2f2; }
-          .instructions-header { text-align: center; }
-          .footer { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; }
-          .footer-item { padding-top: 40px; border-top: 1px solid #000; }
-          .verification-box { margin-top: 20px; border: 1px solid #000; padding: 10px; }
-          .verification-box h3 { margin-top: 0; }
-          .verification-list p { margin: 2px 0; }
+          body { 
+              font-family: Arial, sans-serif; 
+              font-size: 10pt; 
+              color: #000;
+          }
+          .container { 
+              max-width: 850px; 
+              margin: auto; 
+              padding: 15px; 
+          }
+          .header {
+              text-align: center;
+              margin-bottom: 30px;
+          }
+          .header h1 {
+              font-size: 16pt;
+              margin-bottom: 5px;
+              font-weight: bold;
+          }
+          .header h2 {
+              font-size: 14pt;
+              margin-top: 0;
+              font-weight: bold;
+          }
+
+          /* Flexbox layout for rows */
+          .field-row {
+              display: flex;
+              flex-wrap: nowrap; /* Ensures fields stay on one line */
+              gap: 25px; /* Creates horizontal space between fields */
+              margin-bottom: 7px; /* Creates vertical space between rows */
+              align-items: baseline;
+          }
+
+          /* Container for a single label/value pair */
+          .field {
+              display: flex;
+              align-items: baseline;
+              flex-grow: 1; /* Allows field to grow */
+              flex-shrink: 1; /* Allows field to shrink if needed */
+          }
+
+          .field-label {
+              font-weight: bold;
+              white-space: nowrap;
+              margin-right: 8px;
+          }
+
+          .field-value {
+              width: 100%; /* Makes the value (and underline) fill the space */
+              border-bottom: 1.2px solid #000;
+              padding-bottom: 2px;
+              font-size: 9.5pt;
+              text-indent: 4px; /* Small space before text starts */
+          }
       </style>
   </head>
   <body>
       <div class="container">
-          <h1>ALARM MONITORING SERVICES</h1>
-          <h2>DEALER INSTRUCTIONS - ZONES & PARTITIONS</h2>
-
-          <div class="info-grid">
-              <div class="info-item"><strong>Account #:</strong> ${val(
-                alarmData.accountNumber
-              )}</div>
-              <div class="info-item"><strong>Dealer Name:</strong> ${val(
-                alarmData.dealerName
-              )}</div>
-              <div class="info-item"><strong>Dealer Code:</strong> ${val(
-                alarmData.dealerCode
-              )}</div>
-              <div class="info-item full-width"><strong>Subscriber Name:</strong> ${val(
-                alarmData.subscriberName
-              )}</div>
-              <div class="info-item full-width"><strong>Installation Address:</strong> ${val(
-                alarmData.installationAddress
-              )}</div>
-              <div class="info-item"><strong>City:</strong> ${val(
-                alarmData.city
-              )}</div>
-              <div class="info-item"><strong>State:</strong> ${val(
-                alarmData.state
-              )}</div>
-              <div class="info-item"><strong>Zip:</strong> ${val(
-                alarmData.zip
-              )}</div>
-               <div class="info-item"><strong>Start Date:</strong> ${formatDate(
-                 alarmData.startDate
-               )}</div>
-                <div class="info-item "><strong>Monitor:</strong> ${val(
-                  alarmData.monitor
-                )}</div>
-                 <div class="info-item "><strong>Ticket:</strong> ${val(
-                   alarmData.ticket
-                 )}</div>
+          <div class="header">
+              <h1>ALARM MONITORING SERVICES</h1>
+              <h2>DEALER INSTRUCTIONS - ZONES & PARTITIONS</h2>
           </div>
 
-          <table>
-              <thead>
-                  <tr>
-                      <th rowspan="2">Partition / Area #</th>
-                      <th rowspan="2">Zone #</th>
-                      <th rowspan="2">Code Description</th>
-                      <th rowspan="2">Zone Description</th>
-                      <th colspan="4" class="instructions-header">Instructions (Use Initials Below)</th>
-                  </tr>
-                  <tr>
-                      <th>1st</th>
-                      <th>2nd</th>
-                      <th>3rd</th>
-                      <th>4th</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  ${communicatorRows}
-              </tbody>
-          </table>
-
-          <div class="verification-box">
-              <h3>Partition/Area Descriptions (Complete an SIS for Each Partition)</h3>
-              <div class="verification-list">
-                  <p><strong>VN</strong> - Verification</p>
-                  <p><strong>NA</strong> - Numbers Notify Authorities</p>
-                  <p><strong>NC</strong> - Notify Contact</p>
-                  <p><strong>ND</strong> - Notify Dealer</p>
-                  <p><strong>NG</strong> - Notify Guard</p>
+          <!-- Row 1 -->
+          <div class="field-row">
+              <div class="field" style="flex-basis: 18%;">
+                  <span class="field-label">Account #</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.accountNumber)
+                  )}</span>
+              </div>
+              <div class="field" style="flex-basis: 32%;">
+                  <span class="field-label">Dealer Name</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.dealerName)
+                  )}</span>
+              </div>
+              <div class="field" style="flex-basis: 25%;">
+                  <span class="field-label">Dealer Code</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.dealerCode)
+                  )}</span>
+              </div>
+              <div class="field" style="flex-basis: 25%;">
+                  <span class="field-label">Start Date</span>
+                  <span class="field-value">${renderVal(
+                    formatDate(alarmData.startDate)
+                  )}</span>
               </div>
           </div>
 
-          <div class="footer">
-              <div>ALARM MONITORING SERVICES, INC.</div>
-              <div style="text-align: right;"><strong>DEALER:</strong> ${val(
-                alarmData.dealer
-              )}</div>
+          <!-- Row 2 -->
+          <div class="field-row">
+              <div class="field" style="flex-basis: 100%;">
+                  <span class="field-label">Subscriber Name</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.subscriberName)
+                  )}</span>
+              </div>
           </div>
-           <div class="footer">
-              <div class="footer-item"><strong>BY:</strong> ${val(
-                alarmData.createdBy?.username
-              )}</div>
-              <div class="footer-item"></div>
+
+          <!-- Row 3 -->
+          <div class="field-row">
+              <div class="field" style="flex-basis: 45%;">
+                  <span class="field-label">Installation Address</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.installationAddress)
+                  )}</span>
+              </div>
+              <div class="field" style="flex-basis: 25%;">
+                  <span class="field-label">City</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.city)
+                  )}</span>
+              </div>
+              <div class="field" style="flex-basis: 15%;">
+                  <span class="field-label">State</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.state)
+                  )}</span>
+              </div>
+              <div class="field" style="flex-basis: 15%;">
+                  <span class="field-label">Zip</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.zip)
+                  )}</span>
+              </div>
           </div>
+
+          <!-- Row 4 -->
+          <div class="field-row">
+              <div class="field" style="flex-basis: 100%;">
+                  <span class="field-label">Communicator Format</span>
+                  <span class="field-value">${renderVal(
+                    val(alarmData.communicatorFormat)
+                  )}</span>
+              </div>
+          </div>
+
       </div>
   </body>
   </html>

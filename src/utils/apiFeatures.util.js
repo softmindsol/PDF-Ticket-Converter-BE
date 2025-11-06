@@ -4,9 +4,7 @@ class ApiFeatures {
     this.queryString = queryString;
   }
 
-  // NOTE: This method is correct, but it is NOT used by the getWorkOrders
-  // controller anymore because that controller has more complex, custom filtering.
-  // It can still be used by other, simpler controllers if needed.
+  // ... (filter method remains the same)
   filter(searchableFields = []) {
     const queryObj = { ...this.queryString };
     const excludedFields = ["page", "sort", "limit", "fields", "search"];
@@ -37,16 +35,34 @@ class ApiFeatures {
     return this;
   }
 
+  // --- UPDATED METHOD ---
   sort() {
+    // 1. If an explicit sort parameter is provided, always use it.
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(",").join(" ");
       this.query = this.query.sort(sortBy);
+      return this;
+    }
+
+    // 2. Determine the default sorting logic.
+    // Check if any query parameter key contains a date range operator.
+    const hasDateFilter = Object.keys(this.queryString).some((key) =>
+      /\[(gte|gt|lte|lt)\]/.test(key)
+    );
+
+    if (hasDateFilter) {
+      // 3a. If a date range is present, sort in ASCENDING order (oldest first).
+      // This makes chronological sense for reports and filtered views.
+      this.query = this.query.sort("createdAt");
     } else {
+      // 3b. If no date range is present, keep the default DESCENDING order (newest first).
       this.query = this.query.sort("-createdAt");
     }
+
     return this;
   }
 
+  // ... (limitFields and paginate methods remain the same)
   limitFields() {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(",").join(" ");
@@ -65,6 +81,7 @@ class ApiFeatures {
     return this;
   }
 
+  // ... (execute method remains the same)
   async execute() {
     if (this.queryString.page === "0") {
       const documents = await this.query;

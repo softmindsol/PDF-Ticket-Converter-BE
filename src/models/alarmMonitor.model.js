@@ -48,6 +48,11 @@ const AlarmSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+    communicatorFormat: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     dealerName: {
       type: String,
       required: true,
@@ -105,7 +110,6 @@ const AlarmSchema = new mongoose.Schema(
       required: true,
     },
     ticket: { type: String, required: false, default: "" },
-
   },
   { timestamps: true }
 );
