@@ -209,7 +209,7 @@ const changeProfilePictureController = asyncHandler(async (req, res) => {
   const newProfilePictureUrl = req.file.location;
 
   // 4. Update the user's profilePicture field and save the document
-  user.profilePicture = newProfilePictureUrl;
+  user.profile = newProfilePictureUrl;
   await user.save();
 
   // 5. Return a successful response with the new image URL
