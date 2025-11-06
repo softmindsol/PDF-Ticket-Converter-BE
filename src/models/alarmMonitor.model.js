@@ -99,7 +99,7 @@ const AlarmSchema = new mongoose.Schema(
     areas: [CommunicatorSchema],
     monitorSign: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     dealerSign: {
