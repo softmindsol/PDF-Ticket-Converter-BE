@@ -48,7 +48,6 @@ const AlarmSchema = new mongoose.Schema(
     accountNumber: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
       index: true,
     },
@@ -98,12 +97,12 @@ const AlarmSchema = new mongoose.Schema(
       trim: true,
     },
     areas: [CommunicatorSchema],
-    monitor: {
+    monitorSign: {
       type: String,
       required: true,
       trim: true,
     },
-    dealer: {
+    dealerSign: {
       type: String,
       required: false,
       trim: true,
