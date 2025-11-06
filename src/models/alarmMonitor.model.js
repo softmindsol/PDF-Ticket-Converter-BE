@@ -17,6 +17,10 @@ const CommunicatorSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  codeDescription: {
+    type: String,
+    trim: true,
+  },
   instruction1: {
     type: String,
     enum: ["VN", "NA", "NC", "ND", "NG"],
@@ -93,7 +97,7 @@ const AlarmSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    communicatorFormat: [CommunicatorSchema],
+    areas: [CommunicatorSchema],
     monitor: {
       type: String,
       required: true,
