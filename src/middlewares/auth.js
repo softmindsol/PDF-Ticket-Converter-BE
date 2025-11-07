@@ -60,6 +60,17 @@ export const auth = (roles = []) => {
         );
       }
 
+
+       const tokenAllowedForms = decoded.allowedForms;
+      const dbAllowedForms = user.department?.allowedForms;
+
+      if (!areArraysEqual(tokenAllowedForms, dbAllowedForms)) {
+        throw new ApiError(
+          httpStatus.UNAUTHORIZED,
+          "Your permissions have changed. Please log in again.",
+          [{ auth: "Permissions mismatch" }]
+        );
+      }
       req.user = user;
 
       if (roles.length > 0 && !roles.includes(user.role)) {
@@ -75,3 +86,21 @@ export const auth = (roles = []) => {
     }
   };
 };
+
+
+const areArraysEqual = (arr1 = [], arr2 = []) => {
+  // Ensure both are arrays
+  const a = Array.isArray(arr1) ? arr1 : [];
+  const b = Array.isArray(arr2) ? arr2 : [];
+
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  // Sort and compare
+  const sortedArr1 = [...a].sort();
+  const sortedArr2 = [...b].sort();
+
+  return sortedArr1.every((value, index) => String(value) === String(sortedArr2[index]));
+};
+
