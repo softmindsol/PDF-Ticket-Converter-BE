@@ -129,21 +129,26 @@ export const generateCustomerProfileHtml = async (customerData) => {
             </div>
 
             <div>
-                <p class="section-header">DO YOU HAVE A:</p>
-                <!-- UPDATED CHECKBOX LOGIC -->
-                <div class="data-field">
-                    <strong>Tax Exempt Certificate:</strong>
-                    <input type="checkbox" disabled ${
-                      customerData.taxExemptCertificate ? "checked" : ""
-                    }>
-                </div>
-                <div class="data-field">
-                    <strong>Direct Pay Certificate:</strong>
-                    <input type="checkbox" disabled ${
-                      customerData.directPayCertificate ? "checked" : ""
-                    }>
-                </div>
-            </div>
+    <p class="section-header">DO YOU HAVE A:</p>
+    <div class="data-field">
+        <strong>Tax Exempt Certificate:</strong>
+        <span>
+            ${
+              customerData.taxExemptCertificate === 'Yes' ? 'Yes' :
+              customerData.taxExemptCertificate === 'No' ? 'No' : 'N/A'
+            }
+        </span>
+    </div>
+    <div class="data-field">
+        <strong>Direct Pay Certificate:</strong>
+        <span>
+            ${
+              customerData.directPayCertificate === 'Yes' ? 'Yes' :
+              customerData.directPayCertificate === 'No' ? 'No' : 'N/A'
+            }
+        </span>
+    </div>
+</div>
 
             <p class="footer-note"><strong>*PLEASE EMAIL A COPY OF THE CERTIFICATE ALONG WITH CUSTOMER PROFILE SHEET*</strong></p>
         </div>

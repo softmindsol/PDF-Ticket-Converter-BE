@@ -27,8 +27,16 @@ const customerSchema = new mongoose.Schema(
     ownerEmailAddress: { type: String, required: true },
 
     // Certificates
-    taxExemptCertificate: { type: Boolean, default: false },
-    directPayCertificate: { type: Boolean, default: false },
+    taxExemptCertificate: {
+      type: String,
+      enum: ['Yes', 'No', 'N/A'], // Restricts values to this list
+      default: 'N/A',             // Sets the default to N/A
+    },
+    directPayCertificate: {
+      type: String,
+      enum: ['Yes', 'No', 'N/A'], // Restricts values to this list
+      default: 'N/A',             // Sets the default to N/A
+    },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

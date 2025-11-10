@@ -139,7 +139,7 @@ export const generateWorkOrderHtml = async (workOrderData) => {
                       workOrderData.customerName
                     )}</span></div>
                     <div class="data-field"><strong>Contact Name:</strong><span>${val(
-                      workOrderData.customerName
+                      workOrderData.contactName
                     )}</span></div>
                     <div class="data-field"><strong>Contact Number:</strong><span>${val(
                       workOrderData.contactNumber
