@@ -10,12 +10,10 @@ import { generateSignedS3Url } from "../utils/s3.utils.js";
  * @returns {Promise<string>} A promise that resolves with the complete HTML content.
  */
 export const generateServiceTicketHtml = async (ticketData) => {
-    let sign=null
-    if (ticketData?.customerSignature) {
-      sign = await generateSignedS3Url(
-        ticketData?.customerSignature
-      );
-    }
+  let sign = null;
+  if (ticketData?.customerSignature) {
+    sign = await generateSignedS3Url(ticketData?.customerSignature);
+  }
   if (!ticketData || !ticketData._id) {
     throw new Error(
       "A valid service ticket object with an _id must be provided."
@@ -27,7 +25,7 @@ export const generateServiceTicketHtml = async (ticketData) => {
   try {
     const logoPath = path.join(process.cwd(), "public", "logo.jpg");
     const logoFile = await fs.readFile(logoPath, "base64");
-    logoDataUri = `data:mage/jpeg;base64,${logoFile}`;
+    logoDataUri = `data:image/jpeg;base64,${logoFile}`;
   } catch (error) {
     console.warn("Logo file not found. Proceeding without logo.");
   }
@@ -36,81 +34,77 @@ export const generateServiceTicketHtml = async (ticketData) => {
   const formatDate = (date) =>
     date ? new Date(date).toLocaleDateString() : "";
 
-  // --- 2. Prepare Data for the Table (REVISED DYNAMIC LOGIC) ---
-  const maxTechRows = 6;
-  const minMaterialRows = 21; // Set the minimum number of material rows
+  // --- 2. Prepare Data for the Table (FULLY DYNAMIC LOGIC) ---
+  const minTotalRows = 25; // Total desired rows in the table body to maintain form height.
+  const staffCount = ticketData.staff.length;
+  const materialCount = ticketData.materials.length;
 
-  // Dynamically determine the total rows needed. It will be at least minMaterialRows,
-  // but will grow if the number of materials exceeds the minimum.
-  const totalMaterialRows = Math.max(
-    minMaterialRows,
-    ticketData.materials.length
-  );
+  // This single loop will now build the entire table body.
+  let tableBodyHtml = "";
 
-  // Build the top 6 rows for Technician and initial materials
-  let topTableRows = "";
-  for (let i = 0; i < maxTechRows; i++) {
-    const techName = i === 0 ? val(ticketData.technicianName) : "";
-    const st = i === 0 ? val(ticketData.stHours) : "";
-    const ot = i === 0 ? val(ticketData.otHours) : "";
+  // Calculate the total number of rows needed. It's the max of staff, materials, or the minimum form height.
+  const totalRows = Math.max(minTotalRows, staffCount, materialCount);
+
+  // The row where the Work Description should start. We'll place it after all staff members.
+  const workDescriptionStartIndex = staffCount;
+
+  // Calculate the rowspan for the work description. It will fill all remaining space.
+  const workDescriptionRowSpan = totalRows - workDescriptionStartIndex;
+
+  for (let i = 0; i < totalRows; i++) {
+    const staffMember = ticketData.staff[i];
     const materialItem = ticketData.materials[i];
 
-    topTableRows += `
-      <tr>
-          <td>${techName}</td>
-          <td>${st}</td>
-          <td>${ot}</td>
-          <td>${materialItem ? val(materialItem.quantity) : ""}</td>
-          <td>${materialItem ? val(materialItem.material) : ""}</td>
-      </tr>`;
-  }
-
-  // Build the bottom section combining Work Description and remaining materials
-  let bottomTableRows = "";
-  const remainingRowsCount = Math.max(0, totalMaterialRows - maxTechRows);
-
-  if (remainingRowsCount > 0) {
-    // Loop through the remaining material slots
-    for (let i = 0; i < remainingRowsCount; i++) {
-      const materialIndex = i + maxTechRows;
-      const materialItem = ticketData.materials[materialIndex];
-
-      if (i === 0) {
-        // The first row contains the Work Description cell with a dynamic rowspan
-        bottomTableRows += `
-          <tr>
-              <td colspan="3" rowspan="${remainingRowsCount}" style="padding: 10px; vertical-align: top;">
-                  <strong>Work Description:</strong>
-                  <p style="white-space: pre-wrap; margin-top: 5px;">${val(
-                    ticketData.workDescription
-                  )}</p>
-              </td>
-              <td>${materialItem ? val(materialItem.quantity) : ""}</td>
-              <td>${materialItem ? val(materialItem.material) : ""}</td>
-          </tr>
-        `;
-      } else {
-        // Subsequent rows only contain the material quantity and description
-        bottomTableRows += `
-          <tr>
-              <td>${materialItem ? val(materialItem.quantity) : ""}</td>
-              <td>${materialItem ? val(materialItem.material) : ""}</td>
-          </tr>
-        `;
-      }
-    }
-  } else {
-    // Fallback if there are 0 remaining rows, just show the Work Description
-    bottomTableRows = `
-      <tr>
-          <td colspan="5" style="padding: 10px; vertical-align: top;">
+    // Check if the current row is where the Work Description should be injected.
+    if (i === workDescriptionStartIndex && workDescriptionRowSpan > 0) {
+      // This row gets the Work Description cell, which spans the remaining rows.
+      tableBodyHtml += `
+        <tr>
+          <td colspan="3" rowspan="${workDescriptionRowSpan}" style="padding: 10px; vertical-align: top;">
               <strong>Work Description:</strong>
               <p style="white-space: pre-wrap; margin-top: 5px;">${val(
                 ticketData.workDescription
               )}</p>
           </td>
-      </tr>
-    `;
+          <td>${materialItem ? val(materialItem.quantity) : ""}</td>
+          <td>${materialItem ? val(materialItem.material) : ""}</td>
+        </tr>
+      `;
+    } else if (i < workDescriptionStartIndex) {
+      // These are the rows for staff members (and parallel materials).
+      tableBodyHtml += `
+        <tr>
+          <td>${staffMember ? val(staffMember.technicianName) : ""}</td>
+          <td>${staffMember ? val(staffMember.stHours) : ""}</td>
+          <td>${staffMember ? val(staffMember.otHours) : ""}</td>
+          <td>${materialItem ? val(materialItem.quantity) : ""}</td>
+          <td>${materialItem ? val(materialItem.material) : ""}</td>
+        </tr>
+      `;
+    } else if (i > workDescriptionStartIndex) {
+      // These are rows for materials that appear after the Work Description has started.
+      // The first three columns are already covered by the rowspan.
+      tableBodyHtml += `
+        <tr>
+          <td>${materialItem ? val(materialItem.quantity) : ""}</td>
+          <td>${materialItem ? val(materialItem.material) : ""}</td>
+        </tr>
+      `;
+    }
+  }
+
+  // A fallback for the rare case where no rows were generated but a description exists.
+  if (tableBodyHtml === "" && ticketData.workDescription) {
+    tableBodyHtml = `
+        <tr>
+            <td colspan="5" style="padding: 10px; vertical-align: top;">
+                <strong>Work Description:</strong>
+                <p style="white-space: pre-wrap; margin-top: 5px;">${val(
+                  ticketData.workDescription
+                )}</p>
+            </td>
+        </tr>
+      `;
   }
 
   // --- 3. Assemble the Final HTML Template ---
@@ -211,8 +205,7 @@ export const generateServiceTicketHtml = async (ticketData) => {
                     </tr>
                 </thead>
                 <tbody>
-                    ${topTableRows}
-                    ${bottomTableRows}
+                    ${tableBodyHtml}
                 </tbody>
             </table>
 
@@ -243,12 +236,7 @@ export const generateServiceTicketHtml = async (ticketData) => {
                        }</span>
                         <p><strong>Work Order – Complete</strong> – The buyer's signature serves as verification of the labor and materials detailed above...</p>
                     </div>
-                    <div class="acceptance-item">
-                       <span class="check-line">${
-                         ticketData.applySalesTax ? "&#10003;" : "&nbsp;"
-                       }</span>
-                        <p><strong>Apply Sales Tax</strong></p>
-                    </div>
+                  
                 </div>
             </div>
         </main>
