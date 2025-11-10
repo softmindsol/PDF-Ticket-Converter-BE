@@ -51,24 +51,28 @@ const ServiceTicketSchema = new mongoose.Schema(
     materials: [WorkOrderItemSchema], // Array of materials and quantities
 
     // Labor Information
-    technicianName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    technicianContactNumber: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    stHours: {
-      type: Number,
-      default: 0, // Default to 0 if not provided
-    },
-    otHours: {
-      type: Number,
-      default: 0, // Default to 0 if not provided
-    },
+    staff: [
+      {
+        technicianName: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        technicianContactNumber: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        stHours: {
+          type: Number,
+          default: 0, // Default to 0 if not provided
+        },
+        otHours: {
+          type: Number,
+          default: 0, // Default to 0 if not provided
+        },
+      },
+    ],
 
     // Status and Financials
     applySalesTax: {
@@ -93,14 +97,13 @@ const ServiceTicketSchema = new mongoose.Schema(
       type: String, // Often a URL to the signature image
       trim: true,
     },
-        ticket: { type: String, required: false, default: "" },
+    ticket: { type: String, required: false, default: "" },
 
-
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-                required: true,
-        },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     // Department Relationship
     // department: {
     //   type: mongoose.Schema.Types.ObjectId,
@@ -108,7 +111,7 @@ const ServiceTicketSchema = new mongoose.Schema(
     //   required: true,
     // },
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
 
 export default mongoose.model("ServiceTicket", ServiceTicketSchema);
