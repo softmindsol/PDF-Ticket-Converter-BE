@@ -25,7 +25,7 @@ const ServiceTicketSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-          serviceNumber: {
+          workorderNumber: {
       type: String,
       required: true,
       trim: true,

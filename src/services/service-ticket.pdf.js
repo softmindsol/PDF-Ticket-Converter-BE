@@ -184,11 +184,13 @@ export const generateServiceTicketHtml = async (ticketData) => {
                       ticketData.completionDate
                     )}</span></div>
                     <div class="data-field"><strong>SF Job Number:</strong><span>${val(
-                      ticketData._id
+                      ticketData.jobNumber
                     )}</span></div>
                 </div>
                 <div class="column" style="width: 48%;">
-                    <div class="data-field"><strong>Work Order/PO:</strong><span></span></div>
+                    <div class="data-field"><strong>Work Order/PO:</strong><span>${val(
+                      ticketData.workorderNumber
+                    )}</span></div>
                     <div class="data-field"><strong>Contact Name:</strong><span>${val(
                       ticketData.customerName
                     )}</span></div>
