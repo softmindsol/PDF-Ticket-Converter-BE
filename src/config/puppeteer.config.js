@@ -4,7 +4,12 @@ import "dotenv/config";
 
 import s3Client from "./aws.config.js";
 
-export const savePdfToFile = async (htmlContent, fileName, folderName) => {
+export const savePdfToFile = async (
+  htmlContent,
+  fileName,
+  folderName,
+  userFacingFileName="newTicket.pdf"
+) => {
   let browser;
   try {
     browser = await puppeteer.launch({
@@ -27,6 +32,8 @@ export const savePdfToFile = async (htmlContent, fileName, folderName) => {
       Key: s3Key,
       Body: pdfBuffer,
       ContentType: "application/pdf",
+      // This line sets the filename that users will see in the download/print prompt.
+      ContentDisposition: `attachment; filename="${userFacingFileName}"`,
     });
 
     await s3Client.send(command);

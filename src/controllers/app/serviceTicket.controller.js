@@ -26,7 +26,7 @@ const createServiceTicket = asyncHandler(async (req, res) => {
     const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newFileName = `${newServiceTicket._id}-${safeTimestamp}.pdf`;
 
-    const pdfData = await savePdfToFile(html, newFileName, "service-tickets");
+    const pdfData = await savePdfToFile(html, newFileName, "service-tickets", `${newServiceTicket.printName||newServiceTicket._id}.pdf`);
 
     newServiceTicket.ticket = pdfData?.url;
 

@@ -113,7 +113,7 @@ export const generateServiceTicketHtml = async (ticketData) => {
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Service Ticket - ${val(ticketData._id)}</title>
+        <title>${val(ticketData.printName)}</title>
         <style>
             body { font-family: Arial, sans-serif; font-size: 10pt; }
             .container { width: 8.5in; min-height: 11in; padding: 0.5in; margin: auto; background-color: #fff; box-sizing: border-box; }
