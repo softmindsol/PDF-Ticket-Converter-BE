@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const CommunicatorSchema = new mongoose.Schema({
   areaNumber: {
     type: Number,
-    required: true,
+    required: false,
   },
   zoneNumber: {
     type: Number,
-    required: true,
+    required: false,
   },
   zoneDescription: {
     type: String,
@@ -47,25 +47,24 @@ const AlarmSchema = new mongoose.Schema(
   {
     accountNumber: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
       index: true,
     },
     communicatorFormat: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     dealerName: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     dealerCode: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
-      index: true,
     },
     startDate: {
       type: Date,
@@ -73,27 +72,27 @@ const AlarmSchema = new mongoose.Schema(
     },
     subscriberName: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     installationAddress: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     city: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     state: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     zip: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     areas: [CommunicatorSchema],

@@ -211,11 +211,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
                                 <label><input type="checkbox" ${chk(
                                   testData.plans
                                     ?.installationConformsToAcceptedPlans
-                                )} disabled> Yes</label>
+                                )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
                                   !testData.plans
                                     ?.installationConformsToAcceptedPlans
-                                )} disabled> No</label>
+                                )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
@@ -223,10 +223,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
                              <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
                                   testData.plans?.equipmentUsedIsApproved
-                                )} disabled> Yes</label>
+                                )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
                                   !testData.plans?.equipmentUsedIsApproved
-                                )} disabled> No</label>
+                                )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
@@ -253,11 +253,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
                                 <label><input type="checkbox" ${chk(
                                   testData.instructions
                                     ?.personInChargeInstructed
-                                )} disabled> Yes</label>
+                                )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
                                   !testData.instructions
                                     ?.personInChargeInstructed
-                                )} disabled> No</label>
+                                )} > No</label>
                             </div>
                         </div>
                         <div class="content-row">
@@ -274,11 +274,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
                                 <label><input type="checkbox" ${chk(
                                   testData.instructions
                                     ?.instructionsAndCareChartsLeft
-                                )} disabled> Yes</label>
+                                )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
                                   !testData.instructions
                                     ?.instructionsAndCareChartsLeft
-                                )} disabled> No</label>
+                                )} > No</label>
                             </div>
                         </div>
                         <div class="content-row">
@@ -341,11 +341,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
                                 <label><input type="checkbox" ${chk(
                                   testData.undergroundPipesAndJoints
                                     ?.pipeStandardConform
-                                )} disabled> Yes</label>
+                                )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
                                   !testData.undergroundPipesAndJoints
                                     ?.pipeStandardConform
-                                )} disabled> No</label>
+                                )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
@@ -359,11 +359,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
                                 <label><input type="checkbox" ${chk(
                                   testData.undergroundPipesAndJoints
                                     ?.fittingStandardConform
-                                )} disabled> Yes</label>
+                                )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
                                   !testData.undergroundPipesAndJoints
                                     ?.fittingStandardConform
-                                )} disabled> No</label>
+                                )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
@@ -388,11 +388,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
                                 <label><input type="checkbox" ${chk(
                                   testData.undergroundPipesAndJoints
                                     ?.jointsStandardConform
-                                )} disabled> Yes</label>
+                                )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
                                   !testData.undergroundPipesAndJoints
                                     ?.jointsStandardConform
-                                )} disabled> No</label>
+                                )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
@@ -473,10 +473,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
                   testData.flushingTests?.undergroundPipingStandardConform
-                )} disabled> Yes</label>
+                )} > Yes</label>
                 <label><input type="checkbox" ${chk(
                   !testData.flushingTests?.undergroundPipingStandardConform
-                )} disabled> No</label>
+                )} > No</label>
             </div>
         </div>
         <div class="field-row">
@@ -495,23 +495,23 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <div><label><input type="radio" name="flushing_flow_group" ${chk(
                   testData.flushingTests?.flushingFlowObtained ===
                     "Public water"
-                )} disabled> Public water</label></div>
+                )} > Public water</label></div>
                 <div><label><input type="radio" name="flushing_flow_group" ${chk(
                   testData.flushingTests?.flushingFlowObtained ===
                     "Tank or reservoir"
-                )} disabled> Tank or reservoir</label></div>
+                )} > Tank or reservoir</label></div>
                 <div><label><input type="radio" name="flushing_flow_group" ${chk(
                   testData.flushingTests?.flushingFlowObtained === "Fire pump"
-                )} disabled> Fire pump</label></div>
+                )} > Fire pump</label></div>
             </div>
             <div class="column">
                 <strong>Through what type opening</strong>
                 <div><label><input type="radio" name="opening_type_group" ${chk(
                   testData.flushingTests?.openingType === "Hydrant butt"
-                )} disabled> Hydrant butt</label></div>
+                )} > Hydrant butt</label></div>
                 <div><label><input type="radio" name="opening_type_group" ${chk(
                   testData.flushingTests?.openingType === "Open pipe"
-                )} disabled> Open pipe</label></div>
+                )} > Open pipe</label></div>
             </div>
         </div>
 
@@ -530,10 +530,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
                   testData.leadsflushingTests?.undergroundPipingStandardConform
-                )} disabled> Yes</label>
+                )} > Yes</label>
                 <label><input type="checkbox" ${chk(
                   !testData.leadsflushingTests?.undergroundPipingStandardConform
-                )} disabled> No</label>
+                )} > No</label>
             </div>
         </div>
         <div class="field-row">
@@ -548,25 +548,25 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <div><label><input type="radio" name="lead_in_flow_group" ${chk(
                   testData.leadsflushingTests?.flushingFlowObtained ===
                     "Public water"
-                )} disabled> Public water</label></div>
+                )} > Public water</label></div>
                 <div><label><input type="radio" name="lead_in_flow_group" ${chk(
                   testData.leadsflushingTests?.flushingFlowObtained ===
                     "Tank or reservoir"
-                )} disabled> Tank or reservoir</label></div>
+                )} > Tank or reservoir</label></div>
                 <div><label><input type="radio" name="lead_in_flow_group" ${chk(
                   testData.leadsflushingTests?.flushingFlowObtained ===
                     "Fire pump"
-                )} disabled> Fire pump</label></div>
+                )} > Fire pump</label></div>
             </div>
             <div class="column">
                 <strong>Through what type opening</strong>
                 <div><label><input type="radio" name="lead_in_opening_group" ${chk(
                   testData.leadsflushingTests?.openingType ===
                     "Y connection to flange and spigot"
-                )} disabled> Y connection to flange and spigot</label></div>
+                )} > Y connection to flange and spigot</label></div>
                 <div><label><input type="radio" name="lead_in_opening_group" ${chk(
                   testData.leadsflushingTests?.openingType === "Open pipe"
-                )} disabled> Open pipe</label></div>
+                )} > Open pipe</label></div>
             </div>
         </div>
     </td>
@@ -596,10 +596,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <div class="checkbox-group">
                     <label><input type="checkbox" ${chk(
                       testData.hydrostaticTest?.jointsCovered
-                    )} disabled> Yes</label>
+                    )} > Yes</label>
                     <label><input type="checkbox" ${chk(
                       !testData.hydrostaticTest?.jointsCovered
-                    )} disabled> No</label>
+                    )} > No</label>
                 </div>
             </div>
         </div>
@@ -657,10 +657,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
                   testData.leakageTest?.forwardFlowTestPerformed
-                )} disabled> Yes</label>
+                )} > Yes</label>
                 <label><input type="checkbox" ${chk(
                   !testData.leakageTest?.forwardFlowTestPerformed
-                )} disabled> No</label>
+                )} > No</label>
             </div>
         </div>
     </td>
@@ -695,11 +695,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
                     <label><input type="checkbox" ${chk(
                       testData.hydrantsAndControlValves
                         ?.allOperateSatisfactorily
-                    )} disabled> Yes</label>
+                    )} > Yes</label>
                     <label><input type="checkbox" ${chk(
                       !testData.hydrantsAndControlValves
                         ?.allOperateSatisfactorily
-                    )} disabled> No</label>
+                    )} > No</label>
                 </div>
             </div>
         </div>
@@ -721,11 +721,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <label><input type="checkbox" ${chk(
                   testData.hydrantsAndControlValves
                     ?.waterControlValesLeftWideOpen
-                )} disabled> Yes</label>
+                )} > Yes</label>
                 <label><input type="checkbox" ${chk(
                   !testData.hydrantsAndControlValves
                     ?.waterControlValesLeftWideOpen
-                )} disabled> No</label>
+                )} > No</label>
             </div>
         </div>
         <div class="field-row">
@@ -741,10 +741,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
                   testData.hydrantsAndControlValves?.hoseThreadsInterchangeable
-                )} disabled> Yes</label>
+                )} > Yes</label>
                 <label><input type="checkbox" ${chk(
                   !testData.hydrantsAndControlValves?.hoseThreadsInterchangeable
-                )} disabled> No</label>
+                )} > No</label>
             </div>
         </div>
     </td>
