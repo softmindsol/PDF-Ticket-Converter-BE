@@ -784,54 +784,62 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <div class="signatures-title">Tests witnessed by</div>
         
         <!-- Property Owner Signature Block -->
-        <div class="field-row" style="margin-top: 15px;">
+        <div class="field-row" style="margin-top: 15px; align-items: flex-end;">
             <div style="flex-grow: 2;">
-              <div class="line">
-                  ${
-                    forPropertyOwnerSign
-                      ? `<img src="${forPropertyOwnerSign}" style="height: 140px; width: 140px; margin-top: 5px;">`
-                      : ""
-                  }
-              </div>
-              <div style="font-size: 8pt;">For property owner (signed)</div>
-          </div>
+                <div class="line" style="min-height: 50px;">
+                    ${
+                      forPropertyOwnerSign
+                        ? `<img src="${forPropertyOwnerSign}" style="height: 50px; width: auto; object-fit: contain;">`
+                        : ""
+                    }
+                </div>
+                <div style="border-top: 1px solid #000; padding-top: 2px; font-size: 8pt;">For property owner (signed)</div>
+            </div>
             <div style="flex-grow: 1; margin-left: 20px;">
-                <div class="line">${val(
-                  testData.signatures?.forPropertyOwner?.title
-                )}</div>
-                <div style="font-size: 8pt;">Title</div>
+                <div class="line" style=" padding-bottom: 2px;">
+                    <span style="font-size: 8pt; padding-right: 15px; font-style: normal;">Title</span>
+                    <span class="data-value" style="text-decoration: none;">${val(
+                      testData.signatures?.forPropertyOwner?.title
+                    )}</span>
+                </div>
             </div>
             <div style="width: 1.5in; margin-left: 20px;">
-                <div class="line">${formatDate(
-                  testData.signatures?.forPropertyOwner?.date
-                )}</div>
-                <div style="font-size: 8pt;">Date</div>
+                <div class="line" style=" padding-bottom: 2px;">
+                    <span style="font-size: 8pt; padding-right: 15px; font-style: normal;">Date</span>
+                    <span class="data-value" style="text-decoration: none;">${formatDate(
+                      testData.signatures?.forPropertyOwner?.date
+                    )}</span>
+                </div>
             </div>
         </div>
 
         <!-- Installing Contractor Signature Block -->
-        <div class="field-row" style="margin-top: 25px;">
+        <div class="field-row" style="margin-top: 25px; align-items: flex-end;">
             <div style="flex-grow: 2;">
-                <div class="line">
+                <div class="line" style="min-height: 50px;">
                     ${
                       forInstallingContractorign
-                        ? `<img src="${forInstallingContractorign}" style="height: 140px; width: 140px; margin-top: 5px;">`
+                        ? `<img src="${forInstallingContractorign}" style="height: 50px; width: auto; object-fit: contain;">`
                         : ""
                     }
                 </div>
-                <div style="font-size: 8pt;">For installing contractor (signed)</div>
+                <div style="border-top: 1px solid #000; padding-top: 2px; font-size: 8pt;">For installing contractor (signed)</div>
             </div>
             <div style="flex-grow: 1; margin-left: 20px;">
-                <div class="line">${val(
-                  testData.signatures?.forInstallingContractor?.title
-                )}</div>
-                <div style="font-size: 8pt;">Title</div>
+                <div class="line" style=" padding-bottom: 2px;">
+                    <span style="font-size: 8pt; padding-right: 15px; font-style: normal;">Title</span>
+                    <span class="data-value" style="text-decoration: none;">${val(
+                      testData.signatures?.forInstallingContractor?.title
+                    )}</span>
+                </div>
             </div>
             <div style="width: 1.5in; margin-left: 20px;">
-                <div class="line">${formatDate(
-                  testData.signatures?.forInstallingContractor?.date
-                )}</div>
-                <div style="font-size: 8pt;">Date</div>
+                <div class="line" style=" padding-bottom: 2px;">
+                    <span style="font-size: 8pt; padding-right: 15px; font-style: normal;">Date</span>
+                    <span class="data-value" style="text-decoration: none;">${formatDate(
+                      testData.signatures?.forInstallingContractor?.date
+                    )}</span>
+                </div>
             </div>
         </div>
     </td>
