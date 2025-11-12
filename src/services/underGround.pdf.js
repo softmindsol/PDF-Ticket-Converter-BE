@@ -64,7 +64,7 @@ export const generateUndergroundTestHtml = async (testData = {}) => {
             .content-cell { text-align: left; }
             .field-row { display: flex; align-items: baseline; margin-bottom: 5px; }
             .field-row .label { padding-right: 8px; white-space: nowrap; }
-            .field-row .line { flex-grow: 1; border-bottom: 1px solid #000; min-height: 1.2em; }
+            .field-row .line { flex-grow: 1;  min-height: 1.2em; }
             .checkbox-group { display: flex; gap: 15px; white-space: nowrap; }
             .checkbox-group label { display: flex; align-items: center; gap: 4px; }
             /* --- NEW, SIMPLIFIED CSS for the report-style layout --- */
@@ -77,7 +77,6 @@ export const generateUndergroundTestHtml = async (testData = {}) => {
             }
             .report-line u {
                 /* Styles the underlined data */
-                text-decoration: underline;
                 padding: 0 4px;
             }
             .checkbox-result {
@@ -844,15 +843,21 @@ workmanship, or failure to comply with approving authority’s requirements or l
         </div>
     </td>
 </tr>
-<!-- ROW 18: Additional Notes (as a table row) -->
-<tr>
-    <td colspan="2" class="content-cell">
-        <strong>Additional explanation and notes</strong>
-        <div class="notes-box">
-            ${val(testData.additionalNotes)}
-        </div>
-    </td>
-</tr>
+  </tbody>
+        </table>
+                <div class="page-break"></div>
+        <div class="page-header">Additional Explanation and Notes</div>
+
+                <table class="main-form-table">
+            <tbody>
+                <!-- ROW 18: Additional Notes -->
+                <tr>
+                    <td colspan="2" class="content-cell">
+                        <div class="notes-box" style="min-height: 4.5in;">
+                             ${val(testData.additionalNotes)}
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
