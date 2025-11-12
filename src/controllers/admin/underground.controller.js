@@ -176,9 +176,20 @@ const getUndergroundTestById = asyncHandler(async (req, res) => {
 const updateUndergroundTest = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
+  // --- START: ADD THIS LOGIC ---
+  const updateData = {};
+  // Loop over the request body and add only the fields that have a value
+  Object.keys(req.body).forEach((key) => {
+    // The check `!= null` conveniently handles both `null` and `undefined`
+    if (req.body[key] != null) {
+      updateData[key] = req.body[key];
+    }
+  });
+  // --- END: ADD THIS LOGIC ---
+
   const updatedUndergroundTest = await UnderGroundTest.findByIdAndUpdate(
     id,
-    { $set: req.body },
+    { $set: updateData }, // <-- Use the new 'updateData' object here
     { new: true, runValidators: true }
   );
 

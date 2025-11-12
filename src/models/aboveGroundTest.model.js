@@ -127,6 +127,7 @@ const aboveGroundTestSchema = new Schema(
         hasNFPA25: Boolean,
       },
     },
+    suppliesBuildingsNames: [String],
 
     systemComponents: {
       sprinklers: [sprinklerSchema],

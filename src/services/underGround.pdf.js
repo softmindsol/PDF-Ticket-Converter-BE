@@ -298,7 +298,6 @@ workmanship, or failure to comply with approving authority’s requirements or l
                     <!-- Right Content Cell -->
                     <td class="content-cell">
                         <div class="field-row">
-                            <span class="label">Supplies buildings</span>
                             <div class="line">${val(
                               testData.suppliesBuildingsNames?.join(", ")
                             )}</div>
@@ -785,10 +784,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <!-- Property Owner Signature Block -->
         <div class="field-row" style="margin-top: 15px; align-items: flex-end;">
             <div style="flex-grow: 2;">
-                <div class="line" style="min-height: 50px;">
+<div class="line" style="min-height: 60px; text-align: center;">
                     ${
                       forPropertyOwnerSign
-                        ? `<img src="${forPropertyOwnerSign}" style="height: 50px; width: auto; object-fit: contain;">`
+                        ? `<img src="${forPropertyOwnerSign}" style="height: 60px; width: auto; object-fit: contain;">`
                         : ""
                     }
                 </div>
@@ -815,10 +814,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <!-- Installing Contractor Signature Block -->
         <div class="field-row" style="margin-top: 25px; align-items: flex-end;">
             <div style="flex-grow: 2;">
-                <div class="line" style="min-height: 50px;">
+<div class="line" style="min-height: 60px; text-align: center;">
                     ${
                       forInstallingContractorign
-                        ? `<img src="${forInstallingContractorign}" style="height: 50px; width: auto; object-fit: contain;">`
+                        ? `<img src="${forInstallingContractorign}" style="height: 60px; width: auto; object-fit: contain;">`
                         : ""
                     }
                 </div>

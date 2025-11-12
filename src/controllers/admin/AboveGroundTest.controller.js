@@ -154,9 +154,20 @@ const getAboveGroundTestById = asyncHandler(async (req, res) => {
 const updateAboveGroundTest = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
+  // --- START: ADD THIS LOGIC ---
+  const updateData = {};
+  // Loop over the request body and add only the fields that have a value
+  Object.keys(req.body).forEach((key) => {
+    // This check handles both `null` and `undefined`
+    if (req.body[key] != null) {
+      updateData[key] = req.body[key];
+    }
+  });
+  // --- END: ADD THIS LOGIC ---
+
   const updatedAboveGroundTest = await AboveGroundTest.findByIdAndUpdate(
     id,
-    { $set: req.body },
+    { $set: updateData }, // <-- Use the filtered 'updateData' object here
     { new: true, runValidators: true }
   );
 
@@ -164,21 +175,37 @@ const updateAboveGroundTest = asyncHandler(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Above Ground Test not found.");
   }
 
-  const html = await generateAbovegroundTestHtml(updatedAboveGroundTest);
-  const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const newFileName = `${updatedAboveGroundTest?._id}-${safeTimestamp}.pdf`;
-  const fileName = await savePdfToFile(html, newFileName, "above-ground");
+  // The rest of your PDF generation logic remains the same...
+  try {
+    const html = await generateAbovegroundTestHtml(updatedAboveGroundTest);
+    const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const newFileName = `${updatedAboveGroundTest?._id}-${safeTimestamp}.pdf`;
+    const fileName = await savePdfToFile(html, newFileName, "above-ground");
 
-  updatedAboveGroundTest.ticket = fileName?.url;
+    updatedAboveGroundTest.ticket = fileName?.url;
 
-  const finalUpdatedTest = await updatedAboveGroundTest.save();
+    const finalUpdatedTest = await updatedAboveGroundTest.save();
 
-  return new ApiResponse(
-    res,
-    httpStatus.OK,
-    { aboveGroundTest: finalUpdatedTest },
-    "Above Ground Test details updated successfully."
-  );
+    return new ApiResponse(
+      res,
+      httpStatus.OK,
+      { aboveGroundTest: finalUpdatedTest },
+      "Above Ground Test details updated successfully."
+    );
+  } catch (pdfError) {
+    console.error("Failed to regenerate PDF for above ground test:", pdfError);
+    // You should also add error handling for the PDF generation, like in your other function
+    return new ApiResponse(
+      res,
+      httpStatus.OK,
+      {
+        aboveGroundTest: updatedAboveGroundTest,
+        warning:
+          "Above Ground Test was updated, but failed to regenerate the PDF.",
+      },
+      "Above Ground Test updated without a new PDF."
+    );
+  }
 });
 
 const deleteAboveGroundTest = asyncHandler(async (req, res) => {

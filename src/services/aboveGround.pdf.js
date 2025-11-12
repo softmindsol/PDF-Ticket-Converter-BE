@@ -3,6 +3,7 @@ import path from "path";
 import { generateSignedS3Url } from "../utils/s3.utils.js";
 
 export const generateAbovegroundTestHtml = async (testData = {}) => {
+  console.log("🚀 ~ generateAbovegroundTestHtml ~ testData:", testData);
   let sprinklerContractorSign = null;
   if (testData.remarksAndSignatures?.sprinklerContractor?.signature) {
     sprinklerContractorSign = await generateSignedS3Url(
@@ -477,12 +478,9 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                     <!-- Right Content Cell -->
                     <td class="content-cell">
                         <div>
-                            Supplies buildings
                             <span class="data-value">
                                 ${val(
-                                  testData.systemComponents?.suppliesBuildingsNames?.join(
-                                    ", "
-                                  )
+                                  testData.suppliesBuildingsNames?.join(", ")
                                 )}
                             </span>
                         </div>
@@ -1517,7 +1515,7 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <!-- Fire Marshal Signature -->
                         <div class="field-row" style="margin-top: 15px; align-items: flex-end;">
                             <div style="flex-grow: 2;">
-                                <div class="line" style="min-height: 50px;">
+<div class="line" style="min-height: 60px; text-align: center;">
                                     ${
                                       fireMarshalOrAHJSign
                                         ? `<img src="${fireMarshalOrAHJSign}" style="height: 60px; width: auto; object-fit: contain;">`
@@ -1549,7 +1547,7 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <!-- Sprinkler Contractor Signature -->
                         <div class="field-row" style="margin-top: 25px; align-items: flex-end;">
                             <div style="flex-grow: 2;">
-                                <div class="line" style="min-height: 50px;">
+<div class="line" style="min-height: 60px; text-align: center;">
                                     ${
                                       sprinklerContractorSign
                                         ? `<img src="${sprinklerContractorSign}" style="height: 60px; width: auto; object-fit: contain;">`
