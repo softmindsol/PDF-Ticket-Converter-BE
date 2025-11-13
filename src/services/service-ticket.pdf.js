@@ -194,7 +194,7 @@ export const generateServiceTicketHtml = async (ticketData) => {
                     <div class="data-field"><strong>Contact Name:</strong><span>${val(
                       ticketData.customerName
                     )}</span></div>
-                    <div class="data-field"><strong>Contacts Number:</strong><span>${val(
+                    <div class="data-field"><strong>Contact Number:</strong><span>${val(
                       ticketData.phoneNumber
                     )}</span></div>
                 </div>
