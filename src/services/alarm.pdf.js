@@ -1,7 +1,16 @@
 import fs from "fs/promises";
 import path from "path";
+import { generateSignedS3Url } from "../utils/s3.utils.js";
 
 export const generateAlarmProfileHtml = async (alarmData) => {
+  let monitorSign = null;
+  if (alarmData.monitorSign) {
+    monitorSign = await generateSignedS3Url(alarmData.monitorSign);
+  }
+  let dealerSign = null;
+  if (alarmData.dealerSign) {
+    dealerSign = await generateSignedS3Url(alarmData.dealerSign);
+  }
   if (!alarmData || !alarmData._id) {
     throw new Error("A valid alarm object with an _id must be provided.");
   }
@@ -63,38 +72,38 @@ export const generateAlarmProfileHtml = async (alarmData) => {
     <!-- ==== FORM FIELDS ==== -->
     <div class="field-row">
         <div class="field" style="flex-basis:25%"><span class="field-label">Account #</span><span class="field-value">${renderVal(
-          val(alarmData.accountNumber)
-        )}</span></div>
+    val(alarmData.accountNumber)
+  )}</span></div>
         <div class="field" style="flex-basis:40%"><span class="field-label">Dealer Name</span><span class="field-value">${renderVal(
-          val(alarmData.dealerName)
-        )}</span></div>
+    val(alarmData.dealerName)
+  )}</span></div>
         <div class="field" style="flex-basis:10%"><span class="field-label">Dealer Code</span><span class="field-value">${renderVal(
-          val(alarmData.dealerCode)
-        )}</span></div>
+    val(alarmData.dealerCode)
+  )}</span></div>
         <div class="field" style="flex-basis:25%"><span class="field-label">Start Date</span><span class="field-value">${renderVal(
-          formatDate(alarmData.startDate)
-        )}</span></div>
+    formatDate(alarmData.startDate)
+  )}</span></div>
     </div>
     <div class="field-row"><div class="field" style="flex-basis:100%"><span class="field-label">Subscriber Name</span><span class="field-value">${renderVal(
-      val(alarmData.subscriberName)
-    )}</span></div></div>
+    val(alarmData.subscriberName)
+  )}</span></div></div>
     <div class="field-row">
         <div class="field" style="flex-basis:60%"><span class="field-label">Installation Address</span><span class="field-value">${renderVal(
-          val(alarmData.installationAddress)
-        )}</span></div>
+    val(alarmData.installationAddress)
+  )}</span></div>
         <div class="field" style="flex-basis:15%"><span class="field-label">City</span><span class="field-value">${renderVal(
-          val(alarmData.city)
-        )}</span></div>
+    val(alarmData.city)
+  )}</span></div>
         <div class="field" style="flex-basis:13%"><span class="field-label">State</span><span class="field-value">${renderVal(
-          val(alarmData.state)
-        )}</span></div>
+    val(alarmData.state)
+  )}</span></div>
         <div class="field" style="flex-basis:12%"><span class="field-label">Zip</span><span class="field-value">${renderVal(
-          val(alarmData.zip)
-        )}</span></div>
+    val(alarmData.zip)
+  )}</span></div>
     </div>
     <div class="field-row"><div class="field" style="flex-basis:100%"><span class="field-label">Communicator Format</span><span class="field-value">${renderVal(
-      val(alarmData.communicatorFormat)
-    )}</span></div></div>
+    val(alarmData.communicatorFormat)
+  )}</span></div></div>
 
     <table class="alarm-table">
         <colgroup>
@@ -115,58 +124,58 @@ export const generateAlarmProfileHtml = async (alarmData) => {
         </thead>
         <tbody>
             ${(() => {
-              const minRows = 10;
-              let rows = "";
-              const areas = alarmData.areas || [];
-              for (let i = 0; i < areas.length; i++) {
-                const a = areas[i];
-                rows += `
+      const minRows = 10;
+      let rows = "";
+      const areas = alarmData.areas || [];
+      for (let i = 0; i < areas.length; i++) {
+        const a = areas[i];
+        rows += `
                 <tr>
                     <td>${renderVal(val(a.areaNumber))}</td>
                     <td>${renderVal(val(a.zoneNumber))}</td>
                     <td colspan="2">${renderVal(val(a.codeDescription))}</td>
                     <td colspan="4" class="zone-description">${renderVal(
-                      val(a.zoneDescription)
-                    )}</td>
+          val(a.zoneDescription)
+        )}</td>
                     <td class="instruction-cell">${renderVal(
-                      val(a.instruction1)
-                    )}</td>
+          val(a.instruction1)
+        )}</td>
                     <td class="instruction-cell">${renderVal(
-                      val(a.instruction2)
-                    )}</td>
+          val(a.instruction2)
+        )}</td>
                     <td class="instruction-cell">${renderVal(
-                      val(a.instruction3)
-                    )}</td>
+          val(a.instruction3)
+        )}</td>
                     <td class="instruction-cell">${renderVal(
-                      val(a.instruction4)
-                    )}</td>
+          val(a.instruction4)
+        )}</td>
                 </tr>`;
-              }
-              for (let i = areas.length; i < minRows; i++) {
-                rows += `<tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="2">&nbsp;</td><td colspan="4" class="zone-description">&nbsp;</td>
+      }
+      for (let i = areas.length; i < minRows; i++) {
+        rows += `<tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="2">&nbsp;</td><td colspan="4" class="zone-description">&nbsp;</td>
                          <td class="instruction-cell">&nbsp;</td><td class="instruction-cell">&nbsp;</td>
                          <td class="instruction-cell">&nbsp;</td><td class="instruction-cell">&nbsp;</td></tr>`;
-              }
-              return rows;
-            })()}
+      }
+      return rows;
+    })()}
 
             <!-- ==== PARTITION DESCRIPTIONS ==== -->
             ${(() => {
-              const unique =
-                alarmData.areas && Array.isArray(alarmData.areas)
-                  ? [
-                      ...new Set(
-                        alarmData.areas
-                          .map((a) => val(a.partitionAreaDescription))
-                          .filter((d) => d.trim())
-                      ),
-                    ]
-                  : [];
-              const numDesc = unique.length;
-              const dataRows = Math.ceil(numDesc / 2); // rows that hold the descriptions
-              const totalRows = dataRows + 1; // +1 for the title row
+      const unique =
+        alarmData.areas && Array.isArray(alarmData.areas)
+          ? [
+            ...new Set(
+              alarmData.areas
+                .map((a) => val(a.partitionAreaDescription))
+                .filter((d) => d.trim())
+            ),
+          ]
+          : [];
+      const numDesc = unique.length;
+      const dataRows = Math.ceil(numDesc / 2); // rows that hold the descriptions
+      const totalRows = dataRows + 1; // +1 for the title row
 
-              let title = `
+      let title = `
                 <tr style="border-top:2px solid #000;">
                     <td colspan="8" style="text-align:left;font-weight:bold;background:#f2f2f2;padding:6px;">
                         Partition/Area Descriptions (Complete an SIS for Each Partition)
@@ -181,36 +190,36 @@ export const generateAlarmProfileHtml = async (alarmData) => {
                     </td>
                 </tr>`;
 
-              let body = "";
-              let idx = 0;
-              for (let r = 0; r < dataRows; r++) {
-                body += `<tr>`;
+      let body = "";
+      let idx = 0;
+      for (let r = 0; r < dataRows; r++) {
+        body += `<tr>`;
 
-                // ---- LEFT side ----
-                if (idx < numDesc) {
-                  body += `<td class="partition-num">${idx + 1}.</td>
+        // ---- LEFT side ----
+        if (idx < numDesc) {
+          body += `<td class="partition-num">${idx + 1}.</td>
                            <td colspan="3" class="partition-desc zone-description">${renderVal(
-                             unique[idx]
-                           )}</td>`;
-                  idx++;
-                } else {
-                  body += `<td colspan="4">&nbsp;</td>`;
-                }
+            unique[idx]
+          )}</td>`;
+          idx++;
+        } else {
+          body += `<td colspan="4">&nbsp;</td>`;
+        }
 
-                // ---- RIGHT side (only when there is data) ----
-                if (idx < numDesc) {
-                  body += `<td class="partition-num">${idx + 1}.</td>
+        // ---- RIGHT side (only when there is data) ----
+        if (idx < numDesc) {
+          body += `<td class="partition-num">${idx + 1}.</td>
                            <td colspan="3" class="partition-desc zone-description">${renderVal(
-                             unique[idx]
-                           )}</td>`;
-                  idx++;
-                }
-                // no placeholder cells when nothing to show
+            unique[idx]
+          )}</td>`;
+          idx++;
+        }
+        // no placeholder cells when nothing to show
 
-                body += `</tr>`;
-              }
-              return title + body;
-            })()}
+        body += `</tr>`;
+      }
+      return title + body;
+    })()}
         </tbody>
     </table>
 
@@ -219,11 +228,21 @@ export const generateAlarmProfileHtml = async (alarmData) => {
             <div class="signature-block">
                 <div class="label">ALARM MONITORING SERVICES, INC.</div>
                 <div>BY:</div>
-                <div class="signature-line"></div>
+                <div class="signature-line" style="text-align: center; height: 50px; display: flex; align-items: flex-end; justify-content: center;">
+                    ${monitorSign
+      ? `<img src="${monitorSign}" style="max-height: 45px; max-width: 100%;" />`
+      : ""
+    }
+                </div>
             </div>
             <div class="signature-block">
                 <div class="label" style="text-align:left;">DEALER</div>
-                <div class="signature-line"></div>
+                <div class="signature-line" style="text-align: center; height: 50px; display: flex; align-items: flex-end; justify-content: center;">
+                    ${dealerSign
+      ? `<img src="${dealerSign}" style="max-height: 45px; max-width: 100%;" />`
+      : ""
+    }
+                </div>
             </div>
         </div>
     </div>
