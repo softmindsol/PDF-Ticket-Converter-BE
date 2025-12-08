@@ -35,7 +35,7 @@ export const generateServiceTicketHtml = async (ticketData) => {
     date ? new Date(date).toLocaleDateString() : "";
 
   // --- 2. Prepare Data for the Table (FULLY DYNAMIC LOGIC) ---
-  const minTotalRows = 25; // Total desired rows in the table body to maintain form height.
+  const minTotalRows = 22; // Total desired rows in the table body to maintain form height.
   const staffCount = ticketData.staff.length;
   const materialCount = ticketData.materials.length;
 
@@ -63,8 +63,8 @@ export const generateServiceTicketHtml = async (ticketData) => {
           <td colspan="3" rowspan="${workDescriptionRowSpan}" style="padding: 10px; vertical-align: top;">
               <strong>Work Description:</strong>
               <p style="white-space: pre-wrap; margin-top: 5px;">${val(
-                ticketData.workDescription
-              )}</p>
+        ticketData.workDescription
+      )}</p>
           </td>
           <td>${materialItem ? val(materialItem.quantity) : ""}</td>
           <td>${materialItem ? val(materialItem.material) : ""}</td>
@@ -93,6 +93,22 @@ export const generateServiceTicketHtml = async (ticketData) => {
     }
   }
 
+  // --- Add Cost Rows at the bottom ---
+  tableBodyHtml += `
+    <tr>
+        <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 10px;">Labor Cost:</td>
+        <td>${val(ticketData.laborCost)}</td>
+    </tr>
+    <tr>
+        <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 10px;">Material Cost:</td>
+        <td>${val(ticketData.materialCost)}</td>
+    </tr>
+    <tr>
+        <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 10px;">Total Cost:</td>
+        <td>${val(ticketData.totalCost)}</td>
+    </tr>
+  `;
+
   // A fallback for the rare case where no rows were generated but a description exists.
   if (tableBodyHtml === "" && ticketData.workDescription) {
     tableBodyHtml = `
@@ -100,8 +116,8 @@ export const generateServiceTicketHtml = async (ticketData) => {
             <td colspan="5" style="padding: 10px; vertical-align: top;">
                 <strong>Work Description:</strong>
                 <p style="white-space: pre-wrap; margin-top: 5px;">${val(
-                  ticketData.workDescription
-                )}</p>
+      ticketData.workDescription
+    )}</p>
             </td>
         </tr>
       `;
@@ -152,11 +168,10 @@ export const generateServiceTicketHtml = async (ticketData) => {
     <div class="container">
         <header class="header">
             <div class="logo-container">
-                ${
-                  logoDataUri
-                    ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
-                    : "<h1>SOUTHERN FIRE</h1>"
-                }
+                ${logoDataUri
+      ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
+      : "<h1>SOUTHERN FIRE</h1>"
+    }
             </div>
             <div class="address-group">
                  <div class="location"><p><strong>Hattiesburg</strong></p><p>77 Richburg Road</p><p>Purvis, MS 39475</p><p>P: 601.264.9729</p><p>F: 601.264.9730</p></div>
@@ -175,28 +190,28 @@ export const generateServiceTicketHtml = async (ticketData) => {
             <div class="job-details">
                 <div class="column" style="width: 48%;">
                     <div class="data-field"><strong>Job Name:</strong><span>${val(
-                      ticketData.jobName
-                    )}</span></div>
+      ticketData.jobName
+    )}</span></div>
                     <div class="data-field"><strong>Location:</strong><span>${val(
-                      ticketData.jobLocation
-                    )}</span></div>
+      ticketData.jobLocation
+    )}</span></div>
                     <div class="data-field"><strong>Date:</strong><span>${formatDate(
-                      ticketData.completionDate
-                    )}</span></div>
+      ticketData.completionDate
+    )}</span></div>
                     <div class="data-field"><strong>SF Job Number:</strong><span>${val(
-                      ticketData.jobNumber
-                    )}</span></div>
+      ticketData.jobNumber
+    )}</span></div>
                 </div>
                 <div class="column" style="width: 48%;">
                     <div class="data-field"><strong>Work Order/PO:</strong><span>${val(
-                      ticketData.workorderNumber
-                    )}</span></div>
+      ticketData.workorderNumber
+    )}</span></div>
                     <div class="data-field"><strong>Contact Name:</strong><span>${val(
-                      ticketData.customerName
-                    )}</span></div>
+      ticketData.customerName
+    )}</span></div>
                     <div class="data-field"><strong>Contact Number:</strong><span>${val(
-                      ticketData.phoneNumber
-                    )}</span></div>
+      ticketData.phoneNumber
+    )}</span></div>
                 </div>
             </div>
 
@@ -215,27 +230,24 @@ export const generateServiceTicketHtml = async (ticketData) => {
                 <div class="acceptance-title">Buyers Verification & Acceptance:</div>
                  <div class="acceptance-text">
                     <div class="acceptance-item">
-                        <span class="check-line">${
-                          ticketData.workOrderStatus === "Not Complete"
-                            ? "&#10003;"
-                            : "&nbsp;"
-                        }</span>
+                        <span class="check-line">${ticketData.workOrderStatus === "Not Complete"
+      ? "&#10003;"
+      : "&nbsp;"
+    }</span>
                         <p><strong>Work Order – Not complete</strong> – Buyer's signature is for verification of labor and material listed above.</p>
                     </div>
                     <div class="acceptance-item">
-                        <span class="check-line">${
-                          ticketData.workOrderStatus === "System Out of Order"
-                            ? "&#10003;"
-                            : "&nbsp;"
-                        }</span>
+                        <span class="check-line">${ticketData.workOrderStatus === "System Out of Order"
+      ? "&#10003;"
+      : "&nbsp;"
+    }</span>
                         <p><strong>System Out of Service</strong> – Buyer's signature acknowledges their awareness that the life safety system is currently out of service.</p>
                     </div>
                     <div class="acceptance-item">
-                       <span class="check-line">${
-                         ticketData.workOrderStatus === "Complete"
-                           ? "&#10003;"
-                           : "&nbsp;"
-                       }</span>
+                       <span class="check-line">${ticketData.workOrderStatus === "Complete"
+      ? "&#10003;"
+      : "&nbsp;"
+    }</span>
                         <p><strong>Work Order – Complete</strong> – The buyer's signature serves as verification of the labor and materials detailed above...</p>
                     </div>
                   
@@ -247,23 +259,22 @@ export const generateServiceTicketHtml = async (ticketData) => {
             <div class="signature-section">
                <div class="data-field" style="width: 60%;">
                   <strong>Signature:</strong>
-                  <span>${
-                    sign
-                      ? `<img src="${sign}" style="height: 140px; width: 140px; margin-top: 5px;"/>`
-                      : ""
-                  }</span>
+                  <span>${sign
+      ? `<img src="${sign}" style="height: 140px; width: 140px; margin-top: 5px;"/>`
+      : ""
+    }</span>
               </div>
                 <div class="data-field" style="width: 35%;">
                     <strong>Date:</strong><span>${formatDate(
-                      ticketData.completionDate
-                    )}</span>
+      ticketData.completionDate
+    )}</span>
                 </div>
             </div>
             <div class="signature-section" style="margin-top: 15px;">
                 <div class="data-field" style="width: 100%;">
                     <strong>Print Name:</strong><span>${val(
-                      ticketData.printName
-                    )}</span>
+      ticketData.printName
+    )}</span>
                 </div>
             </div>
         </footer>

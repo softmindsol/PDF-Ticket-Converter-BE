@@ -20,12 +20,27 @@ const ServiceTicketSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-      jobNumber: {
+    laborCost: {
       type: String,
       required: true,
       trim: true,
     },
-          workorderNumber: {
+    materialCost: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    totalCost: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    jobNumber: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    workorderNumber: {
       type: String,
       required: true,
       trim: true,

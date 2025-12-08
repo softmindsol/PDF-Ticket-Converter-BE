@@ -58,7 +58,7 @@ const WorkOrderSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       required: true,
-      enum: ["cash", "check", "credit"],
+      enum: ["cash", "check", "credit", 'n/a'],
     },
 
     materialList: [materialSchema],
