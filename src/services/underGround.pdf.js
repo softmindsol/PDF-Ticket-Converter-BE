@@ -128,11 +128,10 @@ export const generateUndergroundTestHtml = async (testData = {}) => {
     <div class="page-container">
         <!-- HEADER (Logo Only) -->
         <header class="header">
-            ${
-              logoDataUri
-                ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
-                : "<h1>SOUTHERN FIRE</h1>"
-            }
+            ${logoDataUri
+      ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
+      : "<h1>SOUTHERN FIRE</h1>"
+    }
         </header>
 
         <!-- MAIN FORM TABLE -->
@@ -164,12 +163,12 @@ workmanship, or failure to comply with approving authority’s requirements or l
                          <div class="field-row">
                             <span class="label">Property name</span>
                             <div class="line">${val(
-                              testData.propertyDetails?.propertyName
-                            )}</div>
+      testData.propertyDetails?.propertyName
+    )}</div>
                             <span class="label" style="margin-left: 20px;">Date</span>
                             <div class="line">${formatDate(
-                              testData.propertyDetails?.date
-                            )}</div>
+      testData.propertyDetails?.date
+    )}</div>
                         </div>
                     </td>
                 </tr>
@@ -180,8 +179,8 @@ workmanship, or failure to comply with approving authority’s requirements or l
                         <div class="field-row">
                             <span class="label">Property address</span>
                             <div class="line">${val(
-                              testData.propertyDetails?.propertyAddress
-                            )}</div>
+      testData.propertyDetails?.propertyAddress
+    )}</div>
                         </div>
                     </td>
                 </tr>
@@ -193,46 +192,46 @@ workmanship, or failure to comply with approving authority’s requirements or l
                         <div class="field-row">
                             <span class="label">Accepted by approving authorities (names)</span>
                             <div class="line">${val(
-                              testData.plans?.acceptedByApprovingAuthorities.join(
-                                ", "
-                              )
-                            )}</div>
+      testData.plans?.acceptedByApprovingAuthorities.join(
+        ", "
+      )
+    )}</div>
                         </div>
                         <div class="field-row">
                             <span class="label">Address</span>
                             <div class="line">${val(
-                              testData.plans?.address
-                            )}</div>
+      testData.plans?.address
+    )}</div>
                         </div>
                         <div class="field-row" style="margin-top: 10px;">
                             <span class="label" style="flex-grow: 1;">Installation conforms to accepted plans</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.plans
-                                    ?.installationConformsToAcceptedPlans
-                                )} > Yes</label>
+      testData.plans
+        ?.installationConformsToAcceptedPlans
+    )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.plans
-                                    ?.installationConformsToAcceptedPlans
-                                )} > No</label>
+      !testData.plans
+        ?.installationConformsToAcceptedPlans
+    )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
                             <span class="label" style="flex-grow: 1;">Equipment used is approved</span>
                              <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.plans?.equipmentUsedIsApproved
-                                )} > Yes</label>
+      testData.plans?.equipmentUsedIsApproved
+    )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.plans?.equipmentUsedIsApproved
-                                )} > No</label>
+      !testData.plans?.equipmentUsedIsApproved
+    )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
                             <span class="label">If no, state deviations</span>
                             <div class="line">${val(
-                              testData.plans?.deviationsExplanation
-                            )}</div>
+      testData.plans?.deviationsExplanation
+    )}</div>
                         </div>
                     </td>
                 </tr>
@@ -250,20 +249,20 @@ workmanship, or failure to comply with approving authority’s requirements or l
                             <span class="label">Has person in charge of fire equipment been instructed as to location of control valves and care and maintenance of this new equipment?</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.instructions
-                                    ?.personInChargeInstructed
-                                )} > Yes</label>
+      testData.instructions
+        ?.personInChargeInstructed
+    )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.instructions
-                                    ?.personInChargeInstructed
-                                )} > No</label>
+      !testData.instructions
+        ?.personInChargeInstructed
+    )} > No</label>
                             </div>
                         </div>
                         <div class="content-row">
                             <span class="label">If no, explain</span>
                             <div class="line">${val(
-                              testData.instructions?.instructionExplanation
-                            )}</div>
+      testData.instructions?.instructionExplanation
+    )}</div>
                         </div>
 
                         <!-- Question 2 -->
@@ -271,20 +270,20 @@ workmanship, or failure to comply with approving authority’s requirements or l
                             <span class="label">Have copies of appropriate instructions and care and maintenance charts been left on premises?</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.instructions
-                                    ?.instructionsAndCareChartsLeft
-                                )} > Yes</label>
+      testData.instructions
+        ?.instructionsAndCareChartsLeft
+    )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.instructions
-                                    ?.instructionsAndCareChartsLeft
-                                )} > No</label>
+      !testData.instructions
+        ?.instructionsAndCareChartsLeft
+    )} > No</label>
                             </div>
                         </div>
                         <div class="content-row">
                             <span class="label">If no, explain</span>
                             <div class="line">${val(
-                              testData.instructions?.chartsExplanation
-                            )}</div>
+      testData.instructions?.chartsExplanation
+    )}</div>
                         </div>
                     </td>
                 </tr>
@@ -299,8 +298,8 @@ workmanship, or failure to comply with approving authority’s requirements or l
                     <td class="content-cell">
                         <div class="field-row">
                             <div class="line">${val(
-                              testData.suppliesBuildingsNames?.join(", ")
-                            )}</div>
+      testData.suppliesBuildingsNames?.join(", ")
+    )}</div>
                         </div>
                     </td>
                 </tr>
@@ -317,13 +316,13 @@ workmanship, or failure to comply with approving authority’s requirements or l
                         <div class="field-row">
                             <span class="label">Pipe types and class</span>
                             <div class="line" style="flex-grow: 2;">${val(
-                              testData.undergroundPipesAndJoints
-                                ?.pipeTypesAndClass
-                            )}</div>
+      testData.undergroundPipesAndJoints
+        ?.pipeTypesAndClass
+    )}</div>
                             <span class="label" style="margin-left: 20px;">Type joint</span>
                             <div class="line">${val(
-                              testData.undergroundPipesAndJoints?.typeJoint
-                            )}</div>
+      testData.undergroundPipesAndJoints?.typeJoint
+    )}</div>
                         </div>
 
                         <hr style="border: none; border-top: 1px solid #000; margin: 15px 0;">
@@ -332,44 +331,44 @@ workmanship, or failure to comply with approving authority’s requirements or l
                         <div class="field-row">
                             <span class="label">Pipe conforms to</span>
                             <div class="line" style="width: 80px; flex-grow: 0;">${val(
-                              testData.undergroundPipesAndJoints?.pipeStandard
-                            )}</div>
+      testData.undergroundPipesAndJoints?.pipeStandard
+    )}</div>
                             <span class="label" style="flex-grow: 1;">standard</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.undergroundPipesAndJoints
-                                    ?.pipeStandardConform
-                                )} > Yes</label>
+      testData.undergroundPipesAndJoints
+        ?.pipeStandardConform
+    )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.undergroundPipesAndJoints
-                                    ?.pipeStandardConform
-                                )} > No</label>
+      !testData.undergroundPipesAndJoints
+        ?.pipeStandardConform
+    )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
                             <span class="label">Fittings conform to</span>
                             <div class="line" style="width: 80px; flex-grow: 0;">${val(
-                              testData.undergroundPipesAndJoints
-                                ?.fittingStandard
-                            )}</div>
+      testData.undergroundPipesAndJoints
+        ?.fittingStandard
+    )}</div>
                             <span class="label" style="flex-grow: 1;">standard</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.undergroundPipesAndJoints
-                                    ?.fittingStandardConform
-                                )} > Yes</label>
+      testData.undergroundPipesAndJoints
+        ?.fittingStandardConform
+    )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.undergroundPipesAndJoints
-                                    ?.fittingStandardConform
-                                )} > No</label>
+      !testData.undergroundPipesAndJoints
+        ?.fittingStandardConform
+    )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
                             <span class="label">If no, explain</span>
                             <div class="line">${val(
-                              testData.undergroundPipesAndJoints
-                                ?.fittingStandardExplanation
-                            )}</div>
+      testData.undergroundPipesAndJoints
+        ?.fittingStandardExplanation
+    )}</div>
                         </div>
 
                         <hr style="border: none; border-top: 1px solid #000; margin: 15px 0;">
@@ -378,27 +377,27 @@ workmanship, or failure to comply with approving authority’s requirements or l
                         <div class="field-row">
                             <span class="label" style="flex-grow: 1;">Joints needing anchorage clamped, strapped, or blocked in accordance with <br>
                                 <div class="line" style="width: 80px; display: inline-block;">${val(
-                                  testData.undergroundPipesAndJoints
-                                    ?.jointsStandard
-                                )}</div> standard
+      testData.undergroundPipesAndJoints
+        ?.jointsStandard
+    )}</div> standard
                             </span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.undergroundPipesAndJoints
-                                    ?.jointsStandardConform
-                                )} > Yes</label>
+      testData.undergroundPipesAndJoints
+        ?.jointsStandardConform
+    )} > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.undergroundPipesAndJoints
-                                    ?.jointsStandardConform
-                                )} > No</label>
+      !testData.undergroundPipesAndJoints
+        ?.jointsStandardConform
+    )} > No</label>
                             </div>
                         </div>
                         <div class="field-row">
                             <span class="label">If no, explain</span>
                             <div class="line">${val(
-                              testData.undergroundPipesAndJoints
-                                ?.jointsStandardExplanation
-                            )}</div>
+      testData.undergroundPipesAndJoints
+        ?.jointsStandardExplanation
+    )}</div>
                         </div>
                     </td>
                 </tr>
@@ -464,24 +463,24 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <span class="label">New underground piping flushed according to</span>
                 <!-- REMOVED style attribute from this div -->
                 <div class="line">${val(
-                  testData.flushingTests?.undergroundPipingStandard
-                )}</div>
+      testData.flushingTests?.undergroundPipingStandard
+    )}</div>
                 <span class="label">standard by (company)</span>
             </div>
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
-                  testData.flushingTests?.undergroundPipingStandardConform
-                )} > Yes</label>
+      testData.flushingTests?.undergroundPipingStandardConform
+    )} > Yes</label>
                 <label><input type="checkbox" ${chk(
-                  !testData.flushingTests?.undergroundPipingStandardConform
-                )} > No</label>
+      !testData.flushingTests?.undergroundPipingStandardConform
+    )} > No</label>
             </div>
         </div>
         <div class="field-row">
             <span class="label">If no, explain</span>
             <div class="line">${val(
-              testData.flushingTests?.undergroundPipingStandardExplanation
-            )}</div>
+      testData.flushingTests?.undergroundPipingStandardExplanation
+    )}</div>
         </div>
 
         <hr style="border: none; border-top: 1px solid #000; margin: 15px 0;">
@@ -491,25 +490,25 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div class="column">
                 <strong>How flushing flow was obtained</strong>
                 <div><label><input type="radio" name="flushing_flow_group" ${chk(
-                  testData.flushingTests?.flushingFlowObtained ===
-                    "Public water"
-                )} > Public water</label></div>
+      testData.flushingTests?.flushingFlowObtained ===
+      "Public water"
+    )} > Public water</label></div>
                 <div><label><input type="radio" name="flushing_flow_group" ${chk(
-                  testData.flushingTests?.flushingFlowObtained ===
-                    "Tank or reservoir"
-                )} > Tank or reservoir</label></div>
+      testData.flushingTests?.flushingFlowObtained ===
+      "Tank or reservoir"
+    )} > Tank or reservoir</label></div>
                 <div><label><input type="radio" name="flushing_flow_group" ${chk(
-                  testData.flushingTests?.flushingFlowObtained === "Fire pump"
-                )} > Fire pump</label></div>
+      testData.flushingTests?.flushingFlowObtained === "Fire pump"
+    )} > Fire pump</label></div>
             </div>
             <div class="column">
                 <strong>Through what type opening</strong>
                 <div><label><input type="radio" name="opening_type_group" ${chk(
-                  testData.flushingTests?.openingType === "Hydrant butt"
-                )} > Hydrant butt</label></div>
+      testData.flushingTests?.openingType === "Hydrant butt"
+    )} > Hydrant butt</label></div>
                 <div><label><input type="radio" name="opening_type_group" ${chk(
-                  testData.flushingTests?.openingType === "Open pipe"
-                )} > Open pipe</label></div>
+      testData.flushingTests?.openingType === "Open pipe"
+    )} > Open pipe</label></div>
             </div>
         </div>
 
@@ -521,50 +520,50 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <span class="label">Lead-ins flushed according to</span>
                 <!-- REMOVED style attribute from this div -->
                 <div class="line">${val(
-                  testData.leadsflushingTests?.undergroundPipingStandard
-                )}</div>
+      testData.leadsflushingTests?.undergroundPipingStandard
+    )}</div>
                 <span class="label">standard by (company)</span>
             </div>
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
-                  testData.leadsflushingTests?.undergroundPipingStandardConform
-                )} > Yes</label>
+      testData.leadsflushingTests?.undergroundPipingStandardConform
+    )} > Yes</label>
                 <label><input type="checkbox" ${chk(
-                  !testData.leadsflushingTests?.undergroundPipingStandardConform
-                )} > No</label>
+      !testData.leadsflushingTests?.undergroundPipingStandardConform
+    )} > No</label>
             </div>
         </div>
         <div class="field-row">
             <span class="label">If no, explain</span>
             <div class="line">${val(
-              testData.leadsflushingTests?.undergroundPipingStandardExplanation
-            )}</div>
+      testData.leadsflushingTests?.undergroundPipingStandardExplanation
+    )}</div>
         </div>
         <div class="nested-columns" style="margin-top: 10px;">
              <div class="column">
                 <strong>How flushing flow was obtained</strong>
                 <div><label><input type="radio" name="lead_in_flow_group" ${chk(
-                  testData.leadsflushingTests?.flushingFlowObtained ===
-                    "Public water"
-                )} > Public water</label></div>
+      testData.leadsflushingTests?.flushingFlowObtained ===
+      "Public water"
+    )} > Public water</label></div>
                 <div><label><input type="radio" name="lead_in_flow_group" ${chk(
-                  testData.leadsflushingTests?.flushingFlowObtained ===
-                    "Tank or reservoir"
-                )} > Tank or reservoir</label></div>
+      testData.leadsflushingTests?.flushingFlowObtained ===
+      "Tank or reservoir"
+    )} > Tank or reservoir</label></div>
                 <div><label><input type="radio" name="lead_in_flow_group" ${chk(
-                  testData.leadsflushingTests?.flushingFlowObtained ===
-                    "Fire pump"
-                )} > Fire pump</label></div>
+      testData.leadsflushingTests?.flushingFlowObtained ===
+      "Fire pump"
+    )} > Fire pump</label></div>
             </div>
             <div class="column">
                 <strong>Through what type opening</strong>
                 <div><label><input type="radio" name="lead_in_opening_group" ${chk(
-                  testData.leadsflushingTests?.openingType ===
-                    "Y connection to flange and spigot"
-                )} > Y connection to flange and spigot</label></div>
+      testData.leadsflushingTests?.openingType ===
+      "Y connection to flange and spigot"
+    )} > Y connection to flange and spigot</label></div>
                 <div><label><input type="radio" name="lead_in_opening_group" ${chk(
-                  testData.leadsflushingTests?.openingType === "Open pipe"
-                )} > Open pipe</label></div>
+      testData.leadsflushingTests?.openingType === "Open pipe"
+    )} > Open pipe</label></div>
             </div>
         </div>
     </td>
@@ -581,23 +580,23 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <div class="field-row">
             <span class="label">All new underground piping hydrostatically tested at</span>
             <div class="line" style="width: 80px; flex-grow: 0;">${val(
-              testData.hydrostaticTest?.testedAtPSI
-            )}</div>
+      testData.hydrostaticTest?.testedAtPSI
+    )}</div>
             <span class="label">psi for</span>
             <div class="line" style="width: 80px; flex-grow: 0;">${val(
-              testData.hydrostaticTest?.testedHours
-            )}</div>
+      testData.hydrostaticTest?.testedHours
+    )}</div>
             <span class="label">hours</span>
             
             <div class="vertical-group">
                 <span>Joints covered</span>
                 <div class="checkbox-group">
                     <label><input type="checkbox" ${chk(
-                      testData.hydrostaticTest?.jointsCovered
-                    )} > Yes</label>
+      testData.hydrostaticTest?.jointsCovered
+    )} > Yes</label>
                     <label><input type="checkbox" ${chk(
-                      !testData.hydrostaticTest?.jointsCovered
-                    )} > No</label>
+      !testData.hydrostaticTest?.jointsCovered
+    )} > No</label>
                 </div>
             </div>
         </div>
@@ -617,12 +616,12 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <strong>Total amount of leakage measured</strong>
             <div class="field-row" style="margin-top: 5px;">
                 <div class="line">${val(
-                  testData.leakageTest?.leakeageGallons
-                )}</div>
+      testData.leakageTest?.leakeageGallons
+    )}</div>
                 <span class="label">gallons</span>
                 <div class="line">${val(
-                  testData.leakageTest?.leakageHours
-                )}</div>
+      testData.leakageTest?.leakageHours
+    )}</div>
                 <span class="label">hours</span>
             </div>
         </div>
@@ -630,12 +629,12 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <strong>Allowable leakage</strong>
             <div class="field-row" style="margin-top: 5px;">
                 <div class="line">${val(
-                  testData.leakageTest?.allowableLeakageGallons
-                )}</div>
+      testData.leakageTest?.allowableLeakageGallons
+    )}</div>
                 <span class="label">gallons</span>
                 <div class="line">${val(
-                  testData.leakageTest?.allowableLeakageHours
-                )}</div>
+      testData.leakageTest?.allowableLeakageHours
+    )}</div>
                 <span class="label">hours</span>
             </div>
         </div>
@@ -654,11 +653,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <span class="label" style="flex-grow: 1;">Forward flow test performed in accordance with 6.10.2.5.2:</span>
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
-                  testData.leakageTest?.forwardFlowTestPerformed
-                )} > Yes</label>
+      testData.leakageTest?.forwardFlowTestPerformed
+    )} > Yes</label>
                 <label><input type="checkbox" ${chk(
-                  !testData.leakageTest?.forwardFlowTestPerformed
-                )} > No</label>
+      !testData.leakageTest?.forwardFlowTestPerformed
+    )} > No</label>
             </div>
         </div>
     </td>
@@ -677,27 +676,27 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <div class="field-row" style="flex-grow:1;">
                 <span class="label">Number installed</span>
                 <div class="line">${val(
-                  testData.hydrantsAndControlValves?.numberOfHydrants
-                )}</div>
+      testData.hydrantsAndControlValves?.numberOfHydrants
+    )}</div>
             </div>
             <div class="field-row" style="flex-grow:2; margin-left: 20px;">
                 <span class="label">Type and make</span>
                 <div class="line">${val(
-                  testData.hydrantsAndControlValves?.hydrantMakeAndType
-                )}</div>
+      testData.hydrantsAndControlValves?.hydrantMakeAndType
+    )}</div>
             </div>
             
             <div class="vertical-group">
                 <span>All operate satisfactorily</span>
                 <div class="checkbox-group">
                     <label><input type="checkbox" ${chk(
-                      testData.hydrantsAndControlValves
-                        ?.allOperateSatisfactorily
-                    )} > Yes</label>
+      testData.hydrantsAndControlValves
+        ?.allOperateSatisfactorily
+    )} > Yes</label>
                     <label><input type="checkbox" ${chk(
-                      !testData.hydrantsAndControlValves
-                        ?.allOperateSatisfactorily
-                    )} > No</label>
+      !testData.hydrantsAndControlValves
+        ?.allOperateSatisfactorily
+    )} > No</label>
                 </div>
             </div>
         </div>
@@ -717,20 +716,20 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <span class="label" style="flex-grow: 1;">Water control valves left wide open</span>
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
-                  testData.hydrantsAndControlValves
-                    ?.waterControlValesLeftWideOpen
-                )} > Yes</label>
+      testData.hydrantsAndControlValves
+        ?.waterControlValesLeftWideOpen
+    )} > Yes</label>
                 <label><input type="checkbox" ${chk(
-                  !testData.hydrantsAndControlValves
-                    ?.waterControlValesLeftWideOpen
-                )} > No</label>
+      !testData.hydrantsAndControlValves
+        ?.waterControlValesLeftWideOpen
+    )} > No</label>
             </div>
         </div>
         <div class="field-row">
             <span class="label">If no, state reason</span>
             <div class="line">${val(
-              testData.hydrantsAndControlValves?.valvesNotOpenExplanation
-            )}</div>
+      testData.hydrantsAndControlValves?.valvesNotOpenExplanation
+    )}</div>
         </div>
 
         <!-- Question 2 -->
@@ -738,11 +737,11 @@ workmanship, or failure to comply with approving authority’s requirements or l
             <span class="label" style="flex-grow: 1;">Hose threads of fire department connections and hydrants interchangeable with those of fire department answering alarm</span>
             <div class="checkbox-group">
                 <label><input type="checkbox" ${chk(
-                  testData.hydrantsAndControlValves?.hoseThreadsInterchangeable
-                )} > Yes</label>
+      testData.hydrantsAndControlValves?.hoseThreadsInterchangeable
+    )} > Yes</label>
                 <label><input type="checkbox" ${chk(
-                  !testData.hydrantsAndControlValves?.hoseThreadsInterchangeable
-                )} > No</label>
+      !testData.hydrantsAndControlValves?.hoseThreadsInterchangeable
+    )} > No</label>
             </div>
         </div>
     </td>
@@ -758,14 +757,14 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <div class="field-row">
             <span class="label">Date left in service</span>
             <div class="line">${formatDate(
-              testData.remarks?.dateLeftInService
-            )}</div>
+      testData.remarks?.dateLeftInService
+    )}</div>
         </div>
         <div class="field-row" style="margin-top: 10px;">
             <span class="label">Name of installing contractor</span>
             <div class="line">${val(
-              testData.remarks?.nameOfInstallingContractor
-            )}</div>
+      testData.remarks?.nameOfInstallingContractor
+    )}</div>
         </div>
     </td>
 </tr>
@@ -785,11 +784,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <div class="field-row" style="margin-top: 15px; align-items: flex-end;">
             <div style="flex-grow: 2;">
 <div class="line" style="min-height: 60px; text-align: center;">
-                    ${
-                      forPropertyOwnerSign
-                        ? `<img src="${forPropertyOwnerSign}" style="height: 60px; width: auto; object-fit: contain;">`
-                        : ""
-                    }
+                    ${forPropertyOwnerSign
+      ? `<img src="${forPropertyOwnerSign}" style="height: 60px; width: auto; object-fit: contain;">`
+      : ""
+    }
                 </div>
                 <div style="border-top: 1px solid #000; padding-top: 2px; font-size: 8pt;">For property owner (signed)</div>
             </div>
@@ -797,16 +795,16 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <div class="line" style=" padding-bottom: 2px;">
                     <span style="font-size: 8pt; padding-right: 15px; font-style: normal;">Title</span>
                     <span class="data-value" style="text-decoration: none;">${val(
-                      testData.signatures?.forPropertyOwner?.title
-                    )}</span>
+      testData.signatures?.forPropertyOwner?.title
+    )}</span>
                 </div>
             </div>
             <div style="width: 1.5in; margin-left: 20px;">
                 <div class="line" style=" padding-bottom: 2px;">
                     <span style="font-size: 8pt; padding-right: 15px; font-style: normal;">Date</span>
                     <span class="data-value" style="text-decoration: none;">${formatDate(
-                      testData.signatures?.forPropertyOwner?.date
-                    )}</span>
+      testData.signatures?.forPropertyOwner?.date
+    )}</span>
                 </div>
             </div>
         </div>
@@ -815,11 +813,10 @@ workmanship, or failure to comply with approving authority’s requirements or l
         <div class="field-row" style="margin-top: 25px; align-items: flex-end;">
             <div style="flex-grow: 2;">
 <div class="line" style="min-height: 60px; text-align: center;">
-                    ${
-                      forInstallingContractorign
-                        ? `<img src="${forInstallingContractorign}" style="height: 60px; width: auto; object-fit: contain;">`
-                        : ""
-                    }
+                    ${forInstallingContractorign
+      ? `<img src="${forInstallingContractorign}" style="height: 60px; width: auto; object-fit: contain;">`
+      : ""
+    }
                 </div>
                 <div style="border-top: 1px solid #000; padding-top: 2px; font-size: 8pt;">For installing contractor (signed)</div>
             </div>
@@ -827,16 +824,16 @@ workmanship, or failure to comply with approving authority’s requirements or l
                 <div class="line" style=" padding-bottom: 2px;">
                     <span style="font-size: 8pt; padding-right: 15px; font-style: normal;">Title</span>
                     <span class="data-value" style="text-decoration: none;">${val(
-                      testData.signatures?.forInstallingContractor?.title
-                    )}</span>
+      testData.signatures?.forInstallingContractor?.title
+    )}</span>
                 </div>
             </div>
             <div style="width: 1.5in; margin-left: 20px;">
                 <div class="line" style=" padding-bottom: 2px;">
                     <span style="font-size: 8pt; padding-right: 15px; font-style: normal;">Date</span>
                     <span class="data-value" style="text-decoration: none;">${formatDate(
-                      testData.signatures?.forInstallingContractor?.date
-                    )}</span>
+      testData.signatures?.forInstallingContractor?.date
+    )}</span>
                 </div>
             </div>
         </div>
@@ -844,8 +841,7 @@ workmanship, or failure to comply with approving authority’s requirements or l
 </tr>
   </tbody>
         </table>
-                <div class="page-break"></div>
-        <div class="page-header">Additional Explanation and Notes</div>
+        <div class="page-header" style="page-break-before: always;">Additional Explanation and Notes</div>
 
                 <table class="main-form-table">
             <tbody>
