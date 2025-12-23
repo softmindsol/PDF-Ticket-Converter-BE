@@ -12,7 +12,7 @@ import { generateSignedS3Url } from "../utils/s3.utils.js";
  * @returns {Promise<string>} A promise that resolves with the complete HTML content.
  */
 export const generateWorkOrderHtml = async (workOrderData) => {
-  let sign=null
+  let sign = null
   if (workOrderData?.customerSignature) {
     sign = await generateSignedS3Url(
       workOrderData?.customerSignature
@@ -29,7 +29,7 @@ export const generateWorkOrderHtml = async (workOrderData) => {
   try {
     const logoPath = path.join(process.cwd(), "public", "logo.jpg");
     const logoFile = await fs.readFile(logoPath, "base64");
-    logoDataUri = `data:mage/jpeg;base64,${logoFile}`;
+    logoDataUri = `data:image/jpeg;base64,${logoFile}`;
   } catch (error) {
     console.warn("Logo file not found. Proceeding without logo.");
   }
@@ -120,11 +120,10 @@ export const generateWorkOrderHtml = async (workOrderData) => {
         <div class="invoice-container">
             <header class="header">
                  <div class="logo-container">
-                    ${
-                      logoDataUri
-                        ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
-                        : "<h1>SOUTHERN FIRE</h1>"
-                    }
+                    ${logoDataUri
+      ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
+      : "<h1>SOUTHERN FIRE</h1>"
+    }
                 </div>
                 <div class="contact-info">
                     <div class="location"><p><strong>Hattiesburg</strong><br>77 Richburg Road<br>Purvis, MS 39475<br>P: 601.264.9729</p></div>
@@ -136,48 +135,44 @@ export const generateWorkOrderHtml = async (workOrderData) => {
             <section class="details-section">
                 <div class="column">
                     <div class="data-field"><strong>Customer Name:</strong><span>${val(
-                      workOrderData.customerName
-                    )}</span></div>
+      workOrderData.customerName
+    )}</span></div>
                     <div class="data-field"><strong>Contact Name:</strong><span>${val(
-                      workOrderData.contactName
-                    )}</span></div>
+      workOrderData.contactName
+    )}</span></div>
                     <div class="data-field"><strong>Contact Number:</strong><span>${val(
-                      workOrderData.contactNumber
-                    )}</span></div>
+      workOrderData.contactNumber
+    )}</span></div>
                     <div class="data-field"><strong>Contact Email:</strong><span>${val(
-                      workOrderData.emailAddress
-                    )}</span></div>
+      workOrderData.emailAddress
+    )}</span></div>
                 </div>
                 <div class="column">
                     <div class="data-field"><strong>Job Number #:</strong><span>${val(
-                      workOrderData.jobNumber
-                    )}</span></div>
+      workOrderData.jobNumber
+    )}</span></div>
                     <div class="data-field"><strong>Technician:</strong><span>${val(
-                      workOrderData.technicianName
-                    )}</span></div>
+      workOrderData.technicianName
+    )}</span></div>
                     <div class="payment-options">
                         <strong>Payment:</strong>
-                        <label><input type="checkbox" ${
-                          workOrderData.paymentMethod.toLowerCase() === "cash"
-                            ? "checked"
-                            : ""
-                        } disabled> Cash</label>
-                        <label><input type="checkbox" ${
-                          workOrderData.paymentMethod.toLowerCase() === "credit"
-                            ? "checked"
-                            : ""
-                        } disabled> Credit</label>
-                        <label><input type="checkbox" ${
-                          workOrderData.paymentMethod.toLowerCase() === "check"
-                            ? "checked"
-                            : ""
-                        } disabled> Check</label>
+                        <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "cash"
+      ? "checked"
+      : ""
+    } disabled> Cash</label>
+                        <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "credit"
+      ? "checked"
+      : ""
+    } disabled> Credit</label>
+                        <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "check"
+      ? "checked"
+      : ""
+    } disabled> Check</label>
                         <br/>
-                         <label><input type="checkbox" ${
-                          workOrderData.paymentMethod.toLowerCase() === "n/a"
-                            ? "checked"
-                            : ""
-                        } disabled> N/A</label>
+                         <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "n/a"
+      ? "checked"
+      : ""
+    } disabled> N/A</label>
                     </div>
                 </div>
             </section>
@@ -210,16 +205,15 @@ export const generateWorkOrderHtml = async (workOrderData) => {
 
             <footer class="signature-section">
                 <div class="signature-box">
-                      <strong>Customer Signature:</strong> ${
-                        workOrderData.customerSignature
-                          ? `<img src="${sign}" style="height: 140px; width: 140px; margin-top: 5px;">`
-                          : '<div class="line"></div>'
-                      }
+                      <strong>Customer Signature:</strong> ${workOrderData.customerSignature
+      ? `<img src="${sign}" style="height: 140px; width: 140px; margin-top: 5px;">`
+      : '<div class="line"></div>'
+    }
                   </div>
                 <div class="date-box data-field">
                     <strong>Date:</strong><span>${formatDate(
-                      workOrderData.date
-                    )}</span>
+      workOrderData.date
+    )}</span>
                 </div>
             </footer>
         </div>

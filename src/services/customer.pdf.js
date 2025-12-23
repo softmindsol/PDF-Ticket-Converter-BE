@@ -10,7 +10,7 @@ export const generateCustomerProfileHtml = async (customerData) => {
   try {
     const logoPath = path.join(process.cwd(), "public", "logo.jpg");
     const logoFile = await fs.readFile(logoPath, "base64");
-    logoDataUri = `data:mage/jpeg;base64,${logoFile}`;
+    logoDataUri = `data:image/jpeg;base64,${logoFile}`;
   } catch (error) {
     console.warn(
       "Logo file not found or could not be read. Proceeding without logo."
@@ -51,11 +51,10 @@ export const generateCustomerProfileHtml = async (customerData) => {
         <div class="form-container">
             <div class="header">
                 <div class="logo-container">
-                    ${
-                      logoDataUri
-                        ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
-                        : "<h1>SOUTHERN FIRE</h1>"
-                    }
+                    ${logoDataUri
+      ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
+      : "<h1>SOUTHERN FIRE</h1>"
+    }
                 </div>
                 <div class="contact-info">
                     <!-- Contact info columns -->
@@ -76,56 +75,56 @@ export const generateCustomerProfileHtml = async (customerData) => {
 
             <!-- Customer and Site Information -->
             <div class="data-field"><strong>Building Name:</strong> <span>${val(
-              customerData.buildingName
-            )}</span></div>
+      customerData.buildingName
+    )}</span></div>
             <div class="data-field"><strong>Customer Name:</strong> <span>${val(
-              customerData.customerName
-            )}</span></div>
+      customerData.customerName
+    )}</span></div>
             <div class="data-field"><strong>Customer Phone Number:</strong> <span>${val(
-              customerData.phoneNumber
-            )}</span></div>
+      customerData.phoneNumber
+    )}</span></div>
             <div class="data-field"><strong>On-Site Contact:</strong> <span>${val(
-              customerData.onSiteContactName
-            )}</span></div>
+      customerData.onSiteContactName
+    )}</span></div>
             <div class="data-field"><strong>On-Site Phone Number:</strong> <span>${val(
-              customerData.onSitePhoneNumber
-            )}</span></div>
+      customerData.onSitePhoneNumber
+    )}</span></div>
             <div class="data-field"><strong>On-Site Email Address:</strong> <span>${val(
-              customerData.onSiteEmailAddress
-            )}</span></div>
+      customerData.onSiteEmailAddress
+    )}</span></div>
             <div class="data-field"><strong>Email for Inspection Reports:</strong> <span>${val(
-              customerData.emailForInspectionReports
-            )}</span></div>
+      customerData.emailForInspectionReports
+    )}</span></div>
             <div class="data-field"><strong>Type of Site:</strong> <span>${val(
-              customerData.typeOfSite
-            )}</span></div>
+      customerData.typeOfSite
+    )}</span></div>
             <div class="data-field"><strong>Site Address:</strong> <span>${val(
-              customerData.siteAddress
-            )}</span></div>
+      customerData.siteAddress
+    )}</span></div>
             <div class="data-field"><strong>Billing Name:</strong> <span>${val(
-              customerData.billingName
-            )}</span></div>
+      customerData.billingName
+    )}</span></div>
             <div class="data-field"><strong>Billing Contact Number:</strong> <span>${val(
-              customerData.billingContactNumber
-            )}</span></div>
+      customerData.billingContactNumber
+    )}</span></div>
             <div class="data-field"><strong>Billing Email Address:</strong> <span>${val(
-              customerData.billingEmailAddress
-            )}</span></div>
+      customerData.billingEmailAddress
+    )}</span></div>
 
             <div class="required-section">
                 <p class="section-header">*****REQUIRED INFORMATION!*****</p>
                 <div class="data-field"><strong>Owner's Name:</strong> <span>${val(
-                  customerData.ownerName
-                )}</span></div>
+      customerData.ownerName
+    )}</span></div>
                 <div class="data-field"><strong>Owner's Phone Number:</strong> <span>${val(
-                  customerData.ownerContactNumber
-                )}</span></div>
+      customerData.ownerContactNumber
+    )}</span></div>
                 <div class="data-field"><strong>Owner's Address:</strong> <span>${val(
-                  customerData.ownerAddress
-                )}</span></div>
+      customerData.ownerAddress
+    )}</span></div>
                 <div class="data-field"><strong>Owner's Email:</strong> <span>${val(
-                  customerData.ownerEmailAddress
-                )}</span></div>
+      customerData.ownerEmailAddress
+    )}</span></div>
             </div>
 
             <div>
@@ -133,19 +132,17 @@ export const generateCustomerProfileHtml = async (customerData) => {
     <div class="data-field">
         <strong>Tax Exempt Certificate:</strong>
         <span>
-            ${
-              customerData.taxExemptCertificate === 'Yes' ? 'Yes' :
-              customerData.taxExemptCertificate === 'No' ? 'No' : 'N/A'
-            }
+            ${customerData.taxExemptCertificate === 'Yes' ? 'Yes' :
+      customerData.taxExemptCertificate === 'No' ? 'No' : 'N/A'
+    }
         </span>
     </div>
     <div class="data-field">
         <strong>Direct Pay Certificate:</strong>
         <span>
-            ${
-              customerData.directPayCertificate === 'Yes' ? 'Yes' :
-              customerData.directPayCertificate === 'No' ? 'No' : 'N/A'
-            }
+            ${customerData.directPayCertificate === 'Yes' ? 'Yes' :
+      customerData.directPayCertificate === 'No' ? 'No' : 'N/A'
+    }
         </span>
     </div>
 </div>

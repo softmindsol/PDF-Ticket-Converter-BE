@@ -201,11 +201,10 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
     <div class="page-container">
         <!-- HEADER (Logo Only) -->
         <header class="header">
-            ${
-              logoDataUri
-                ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
-                : "<h1>SOUTHERN FIRE</h1>"
-            }
+            ${logoDataUri
+      ? `<img src="${logoDataUri}" alt="Southern Fire Logo">`
+      : "<h1>SOUTHERN FIRE</h1>"
+    }
         </header>
 
         <!-- MAIN FORM TABLE -->
@@ -240,14 +239,14 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             <div style="padding: 8px; flex-grow: 1;">
                                 Property name
                                 <span class="data-value">${val(
-                                  testData.propertyDetails?.propertyName
-                                )}</span>
+      testData.propertyDetails?.propertyName
+    )}</span>
                             </div>
                             <div style="border-left: 1px solid #000; padding: 8px; width: 3in; flex-shrink: 0;">
                                 Date
                                 <span class="data-value">${formatDate(
-                                  testData.propertyDetails?.date
-                                )}</span>
+      testData.propertyDetails?.date
+    )}</span>
                             </div>
                         </div>
                     </td>
@@ -258,8 +257,8 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                     <td colspan="2" style="padding: 8px; text-align: left;">
                         Property address
                         <span class="data-value">${val(
-                          testData.propertyDetails?.propertyAddress
-                        )}</span>
+      testData.propertyDetails?.propertyAddress
+    )}</span>
                     </td>
                 </tr>
                 <!-- ROW 5: Installation/Modification Questions -->
@@ -269,11 +268,11 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             <span>New installation?</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.propertyDetails?.isNewInstallation
-                                )}  > Yes</label>
+      testData.propertyDetails?.isNewInstallation
+    )}  > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.propertyDetails?.isNewInstallation
-                                )}  > No</label>
+      testData.propertyDetails?.isNewInstallation === false
+    )}  > No</label>
                             </div>
                         </div>
 
@@ -281,11 +280,11 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             <span>Modification? If yes, complete applicable portions of the form.</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.propertyDetails?.isModification
-                                )}  > Yes</label>
+      testData.propertyDetails?.isModification
+    )}  > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.propertyDetails?.isModification
-                                )}  > No</label>
+      testData.propertyDetails?.isModification === false
+    )}  > No</label>
                             </div>
                         </div>
 
@@ -310,10 +309,10 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <span class="line-value">
                                     <span class="data-value">
                                         ${val(
-                                          testData.plansAndInstructions?.plans.acceptedByAuthorities.join(
-                                            ", "
-                                          )
-                                        )}
+      testData.plansAndInstructions?.plans.acceptedByAuthorities.join(
+        ", "
+      )
+    )}
                                     </span>
                                 </span>
                             </div>
@@ -322,9 +321,9 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <span class="line-value">
                                     <span class="data-value">
                                         ${val(
-                                          testData.plansAndInstructions?.plans
-                                            .address
-                                        )}
+      testData.plansAndInstructions?.plans
+        .address
+    )}
                                     </span>
                                 </span>
                             </div>
@@ -336,26 +335,26 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <span>Installation conforms to accepted plans</span>
                                 <div class="checkbox-group">
                                     <label><input type="checkbox" ${chk(
-                                      testData.plansAndInstructions?.plans
-                                        .conformsToAcceptedPlans
-                                    )}  > Yes</label>
+      testData.plansAndInstructions?.plans
+        .conformsToAcceptedPlans
+    )}  > Yes</label>
                                     <label><input type="checkbox" ${chk(
-                                      !testData.plansAndInstructions?.plans
-                                        .conformsToAcceptedPlans
-                                    )}  > No</label>
+      testData.plansAndInstructions?.plans
+        .conformsToAcceptedPlans === false
+    )}  > No</label>
                                 </div>
                             </div>
                             <div class="question-row">
                                 <span>Equipment used is approved</span>
                                 <div class="checkbox-group">
                                     <label><input type="checkbox" ${chk(
-                                      testData.plansAndInstructions?.plans
-                                        .equipmentIsApproved
-                                    )}  > Yes</label>
+      testData.plansAndInstructions?.plans
+        .equipmentIsApproved
+    )}  > Yes</label>
                                     <label><input type="checkbox" ${chk(
-                                      !testData.plansAndInstructions?.plans
-                                        .equipmentIsApproved
-                                    )}  > No</label>
+      testData.plansAndInstructions?.plans
+        .equipmentIsApproved === false
+    )}  > No</label>
                                 </div>
                             </div>
                             <div class="field-row" style="margin-top: 8px;">
@@ -363,9 +362,9 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <span class="line-value">
                                     <span class="data-value">
                                         ${val(
-                                          testData.plansAndInstructions?.plans
-                                            .deviationsExplanation
-                                        )}
+      testData.plansAndInstructions?.plans
+        .deviationsExplanation
+    )}
                                     </span>
                                 </span>
                             </div>
@@ -387,24 +386,24 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <span>Has person in charge of fire equipment been instructed as to location of control valves and care and maintenance of this new equipment?</span>
                                 <div class="checkbox-group">
                                     <label><input type="checkbox" ${chk(
-                                      testData.plansAndInstructions
-                                        ?.instructions
-                                        .isPersonInChargeInstructed
-                                    )}  > Yes</label>
+      testData.plansAndInstructions
+        ?.instructions
+        .isPersonInChargeInstructed
+    )}  > Yes</label>
                                     <label><input type="checkbox" ${chk(
-                                      !testData.plansAndInstructions
-                                        ?.instructions
-                                        .isPersonInChargeInstructed
-                                    )}  > No</label>
+      testData.plansAndInstructions
+        ?.instructions
+        .isPersonInChargeInstructed === false
+    )}  > No</label>
                                 </div>
                             </div>
                             <div class="field-row" style="margin-top: 8px;">
                                 <span class="label">If no, explain</span>
                                 <span class="line-value">
                                     <span class="data-value">${val(
-                                      testData.plansAndInstructions
-                                        ?.instructions.instructionExplanation
-                                    )}</span>
+      testData.plansAndInstructions
+        ?.instructions.instructionExplanation
+    )}</span>
                                 </span>
                             </div>
                         </div>
@@ -425,43 +424,43 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                     <span>1. System components instructions</span>
                                     <div class="checkbox-group">
                                         <label><input type="checkbox" ${chk(
-                                          testData.plansAndInstructions
-                                            ?.instructions
-                                            .hasSystemComponentsInstructions
-                                        )}  > Yes</label>
+      testData.plansAndInstructions
+        ?.instructions
+        .hasSystemComponentsInstructions
+    )}  > Yes</label>
                                         <label><input type="checkbox" ${chk(
-                                          !testData.plansAndInstructions
-                                            ?.instructions
-                                            .hasSystemComponentsInstructions
-                                        )}  > No</label>
+      testData.plansAndInstructions
+        ?.instructions
+        .hasSystemComponentsInstructions === false
+    )}  > No</label>
                                     </div>
                                 </div>
                                 <div class="question-row">
                                     <span>2. Care and maintenance instructions</span>
                                     <div class="checkbox-group">
                                         <label><input type="checkbox" ${chk(
-                                          testData.plansAndInstructions
-                                            ?.instructions
-                                            .hasCareAndMaintenanceInstructions
-                                        )}  > Yes</label>
+      testData.plansAndInstructions
+        ?.instructions
+        .hasCareAndMaintenanceInstructions
+    )}  > Yes</label>
                                         <label><input type="checkbox" ${chk(
-                                          !testData.plansAndInstructions
-                                            ?.instructions
-                                            .hasCareAndMaintenanceInstructions
-                                        )}  > No</label>
+      testData.plansAndInstructions
+        ?.instructions
+        .hasCareAndMaintenanceInstructions === false
+    )}  > No</label>
                                     </div>
                                 </div>
                                 <div class="question-row">
                                     <span>3. NFPA 25</span>
                                     <div class="checkbox-group">
                                         <label><input type="checkbox" ${chk(
-                                          testData.plansAndInstructions
-                                            ?.instructions.hasNFPA25
-                                        )}  > Yes</label>
+      testData.plansAndInstructions
+        ?.instructions.hasNFPA25
+    )}  > Yes</label>
                                         <label><input type="checkbox" ${chk(
-                                          !testData.plansAndInstructions
-                                            ?.instructions.hasNFPA25
-                                        )}  > No</label>
+      testData.plansAndInstructions
+        ?.instructions.hasNFPA25 === false
+    )}  > No</label>
                                     </div>
                                 </div>
                             </div>
@@ -480,8 +479,8 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div>
                             <span class="data-value">
                                 ${val(
-                                  testData.suppliesBuildingsNames?.join(", ")
-                                )}
+      testData.suppliesBuildingsNames?.join(", ")
+    )}
                             </span>
                         </div>
                     </td>
@@ -508,39 +507,39 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             </thead>
                             <tbody>
                 ${(() => {
-                  let rows = "";
-                  const sprinklers =
-                    testData.systemComponents?.sprinklers || [];
-                  const minRows = 5; // Set the minimum number of rows to display
-                  const rowCount = Math.max(sprinklers.length, minRows); // Loop for at least minRows, or more if data exists
+      let rows = "";
+      const sprinklers =
+        testData.systemComponents?.sprinklers || [];
+      const minRows = 5; // Set the minimum number of rows to display
+      const rowCount = Math.max(sprinklers.length, minRows); // Loop for at least minRows, or more if data exists
 
-                  for (let i = 0; i < rowCount; i++) {
-                    const sprinkler = sprinklers[i]; // Get data for the current row, if it exists
-                    rows += `
+      for (let i = 0; i < rowCount; i++) {
+        const sprinkler = sprinklers[i]; // Get data for the current row, if it exists
+        rows += `
                             <tr>
                                 <td class="data-cell"><span class="data-value">${val(
-                                  sprinkler?.make
-                                )}</span></td>
+          sprinkler?.make
+        )}</span></td>
                                 <td class="data-cell"><span class="data-value">${val(
-                                  sprinkler?.model
-                                )}</span></td>
+          sprinkler?.model
+        )}</span></td>
+                                <td class="data-cell"><input type="text" value="${val(
+          sprinkler?.yearOfMfg
+        )}" style="border: none; width: 100%; text-align: center; font-family: inherit; font-size: inherit; background: transparent;" /></td>
                                 <td class="data-cell"><span class="data-value">${val(
-                                  sprinkler?.yearOfMfg
-                                )}</span></td>
+          sprinkler?.orificeSize
+        )}</span></td>
                                 <td class="data-cell"><span class="data-value">${val(
-                                  sprinkler?.orificeSize
-                                )}</span></td>
+          sprinkler?.quantity
+        )}</span></td>
                                 <td class="data-cell"><span class="data-value">${val(
-                                  sprinkler?.quantity
-                                )}</span></td>
-                                <td class="data-cell"><span class="data-value">${val(
-                                  sprinkler?.tempRating
-                                )}</span></td>
+          sprinkler?.tempRating
+        )}</span></td>
                             </tr>
                         `;
-                  }
-                  return rows;
-                })()}
+      }
+      return rows;
+    })()}
             </tbody>
                         </table>
                     </td>
@@ -558,18 +557,18 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             Type of pipe
                             <span class="data-value">
                                 ${val(
-                                  testData.systemComponents?.pipeAndFittings
-                                    ?.pipeType
-                                )}
+      testData.systemComponents?.pipeAndFittings
+        ?.pipeType
+    )}
                             </span>
                         </div>
                         <div>
                             Type of fittings
                             <span class="data-value">
                                 ${val(
-                                  testData.systemComponents?.pipeAndFittings
-                                    ?.fittingsType
-                                )}
+      testData.systemComponents?.pipeAndFittings
+        ?.fittingsType
+    )}
                             </span>
                         </div>
                     </td>
@@ -599,40 +598,40 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             </thead>
                             <tbody>
                                 ${(() => {
-                                  let rows = "";
-                                  const alarms =
-                                    testData.alarmsAndValves
-                                      ?.alarmValvesOrFlowIndicators || [];
-                                  const minRows = 2; // The PDF shows 2 rows
-                                  const rowCount = Math.max(
-                                    alarms.length,
-                                    minRows
-                                  );
+      let rows = "";
+      const alarms =
+        testData.alarmsAndValves
+          ?.alarmValvesOrFlowIndicators || [];
+      const minRows = 2; // The PDF shows 2 rows
+      const rowCount = Math.max(
+        alarms.length,
+        minRows
+      );
 
-                                  for (let i = 0; i < rowCount; i++) {
-                                    const alarm = alarms[i];
-                                    rows += `
+      for (let i = 0; i < rowCount; i++) {
+        const alarm = alarms[i];
+        rows += `
                                             <tr>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  alarm?.type
-                                                )}</span></td>
+          alarm?.type
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  alarm?.make
-                                                )}</span></td>
+          alarm?.make
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  alarm?.model
-                                                )}</span></td>
+          alarm?.model
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  alarm?.maxOperationTime?.min
-                                                )}</span></td>
+          alarm?.maxOperationTime?.min
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  alarm?.maxOperationTime?.sec
-                                                )}</span></td>
+          alarm?.maxOperationTime?.sec
+        )}</span></td>
                                             </tr>
                                         `;
-                                  }
-                                  return rows;
-                                })()}
+      }
+      return rows;
+    })()}
                             </tbody>
                         </table>
                     </td>
@@ -647,21 +646,21 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                     <!-- Right Content Cell, containing the nested tables -->
                     <td class="content-cell">
                         ${(() => {
-                          let html = "";
-                          const tests =
-                            testData.alarmsAndValves?.dryPipeOperatingTests ||
-                            [];
+      let html = "";
+      const tests =
+        testData.alarmsAndValves?.dryPipeOperatingTests ||
+        [];
 
-                          // If there are no tests, render one empty block to match the form
-                          const testsToRender = tests.length > 0 ? tests : [{}];
+      // If there are no tests, render one empty block to match the form
+      const testsToRender = tests.length > 0 ? tests : [{}];
 
-                          testsToRender.forEach((test, index) => {
-                            // Add a separator between multiple test blocks
-                            if (index > 0) {
-                              html += `<hr style="border: none; border-top: 2px solid #000; margin: 20px 0;">`;
-                            }
+      testsToRender.forEach((test, index) => {
+        // Add a separator between multiple test blocks
+        if (index > 0) {
+          html += `<hr style="border: none; border-top: 2px solid #000; margin: 20px 0;">`;
+        }
 
-                            html += `
+        html += `
                                     <table class="nested-table">
                                         <thead>
                                             <tr>
@@ -678,28 +677,28 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                             <tr>
                                                 <td></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.dryValve?.make
-                                                )}</span></td>
+          test.dryValve?.make
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.dryValve?.model
-                                                )}</span></td>
+          test.dryValve?.model
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.dryValve?.serialNumber
-                                                )}</span></td>
+          test.dryValve?.serialNumber
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.qodValve?.make
-                                                )}</span></td>
+          test.qodValve?.make
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.qodValve?.model
-                                                )}</span></td>
+          test.qodValve?.model
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.qodValve?.serialNumber
-                                                )}</span></td>
+          test.qodValve?.serialNumber
+        )}</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
 
-                                    <table class="nested-table" style="margin-top: -1px;">
+                                    <table class="nested-table" style="margin-top: 7px; border-top: transparent;">
                                         <thead>
                                             <tr>
                                                 <td rowspan="2" class="sub-label-cell" style="border-top: none;"></td>
@@ -720,86 +719,85 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                             <tr>
                                                 <td class="sub-label-cell">Without<br>Q.O.D.</td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.timeToTripWithoutQOD?.min
-                                                )}</span></td>
+          test.timeToTripWithoutQOD?.min
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.timeToTripWithoutQOD?.sec
-                                                )}</span></td>
+          test.timeToTripWithoutQOD?.sec
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.waterPressureWithoutQOD
-                                                )}</span></td>
+          test.waterPressureWithoutQOD
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.airPressureWithoutQOD
-                                                )}</span></td>
+          test.airPressureWithoutQOD
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.tripPointAirPressureWithoutQOD
-                                                )}</span></td>
+          test.tripPointAirPressureWithoutQOD
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test
-                                                    .timeWaterReachedOutletWithoutQOD
-                                                    ?.min
-                                                )}</span></td>
+          test
+            .timeWaterReachedOutletWithoutQOD
+            ?.min
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test
-                                                    .timeWaterReachedOutletWithoutQOD
-                                                    ?.sec
-                                                )}</span></td>
+          test
+            .timeWaterReachedOutletWithoutQOD
+            ?.sec
+        )}</span></td>
                                                 <td class="data-cell"><input type="checkbox" ${chk(
-                                                  test.alarmOperatedProperlyWithoutQOD
-                                                )}  ></td>
+          test.alarmOperatedProperlyWithoutQOD
+        )}  ></td>
                                                 <td class="data-cell"><input type="checkbox" ${chk(
-                                                  !test.alarmOperatedProperlyWithoutQOD
-                                                )}  ></td>
+          test.alarmOperatedProperlyWithoutQOD === false
+        )}  ></td>
                                             </tr>
                                             <tr>
                                                 <td class="sub-label-cell">With<br>Q.O.D.</td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.timeToTripWithQOD?.min
-                                                )}</span></td>
+          test.timeToTripWithQOD?.min
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.timeToTripWithQOD?.sec
-                                                )}</span></td>
+          test.timeToTripWithQOD?.sec
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.waterPressureWithQOD
-                                                )}</span></td>
+          test.waterPressureWithQOD
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.airPressureWithQOD
-                                                )}</span></td>
+          test.airPressureWithQOD
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test.tripPointAirPressureWithQOD
-                                                )}</span></td>
+          test.tripPointAirPressureWithQOD
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test
-                                                    .timeWaterReachedOutletWithQOD
-                                                    ?.min
-                                                )}</span></td>
+          test
+            .timeWaterReachedOutletWithQOD
+            ?.min
+        )}</span></td>
                                                 <td class="data-cell"><span class="data-value">${val(
-                                                  test
-                                                    .timeWaterReachedOutletWithQOD
-                                                    ?.sec
-                                                )}</span></td>
+          test
+            .timeWaterReachedOutletWithQOD
+            ?.sec
+        )}</span></td>
                                                 <td class="data-cell"><input type="checkbox" ${chk(
-                                                  test.alarmOperatedProperlyWithQOD
-                                                )}  ></td>
+          test.alarmOperatedProperlyWithQOD
+        )}  ></td>
                                                 <td class="data-cell"><input type="checkbox" ${chk(
-                                                  !test.alarmOperatedProperlyWithQOD
-                                                )}  ></td>
+          test.alarmOperatedProperlyWithQOD === false
+        )}  ></td>
                                             </tr>
                                             <tr>
                                                 <td colspan="10" class="content-cell">
-                                                    If no, explain <span class="data-value">${
-                                                      val(
-                                                        test.explain
-                                                      ) /* Schema needs an explanation field here */
-                                                    }</span>
+                                                    If no, explain <span class="data-value">${val(
+          test.explain
+        ) /* Schema needs an explanation field here */
+          }</span>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 `;
-                          });
-                          return html;
-                        })()}
+      });
+      return html;
+    })()}
                         
                         <!-- Footnotes are placed once, after all the test blocks -->
                         <div class="footnote-cell" style="border: none; font-size: 8pt; padding: 10px 0;">
@@ -818,23 +816,23 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                     <!-- Right Content Cell -->
                     <td class="content-cell" style="padding: 0;">
                         ${(() => {
-                          let html = "";
-                          const valves =
-                            testData.alarmsAndValves
-                              ?.delugeAndPreActionValves || [];
-                          const valvesToRender =
-                            valves.length > 0 ? valves : [{}];
+      let html = "";
+      const valves =
+        testData.alarmsAndValves
+          ?.delugeAndPreActionValves || [];
+      const valvesToRender =
+        valves.length > 0 ? valves : [{}];
 
-                          valvesToRender.forEach((valve, index) => {
-                            console.log(
-                              "🚀 ~ generateAbovegroundTestHtml ~ valve:",
-                              valve
-                            );
-                            if (index > 0) {
-                              html += `<div style="border-top: 2px solid #000; margin: 0;"></div>`;
-                            }
+      valvesToRender.forEach((valve, index) => {
+        console.log(
+          "🚀 ~ generateAbovegroundTestHtml ~ valve:",
+          valve
+        );
+        if (index > 0) {
+          html += `<div style="border-top: 2px solid #000; margin: 0;"></div>`;
+        }
 
-                            html += `
+        html += `
                                 <table class="nested-table" style="margin:0;">
                                     <tbody>
                                         <!-- Row 1: Operation -->
@@ -843,14 +841,14 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                             <td colspan="4" style="border-right: none;">
                                                 <div class="checkbox-group" style="justify-content: space-around;">
                                                     <label><input type="radio" name="valve_op_${index}" ${chk(
-                              valve.operation === "pneumatic"
-                            )}  > Pneumatic</label>
+          valve.operation === "pneumatic"
+        )}  > Pneumatic</label>
                                                     <label><input type="radio" name="valve_op_${index}" ${chk(
-                              valve.operation === "electric"
-                            )}  > Electric</label>
+          valve.operation === "electric"
+        )}  > Electric</label>
                                                     <label><input type="radio" name="valve_op_${index}" ${chk(
-                              valve.operation === "hydraulic"
-                            )}  > Hydraulics</label>
+          valve.operation === "hydraulic"
+        )}  > Hydraulics</label>
                                                 </div>
                                             </td>
                                         </tr>
@@ -861,22 +859,22 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                             <td style="width: 25%;">
                                                 <div class="checkbox-group" style="justify-content: space-around;">
                                                     <label><input type="checkbox" ${chk(
-                                                      valve.isPipingSupervised
-                                                    )}  > Yes</label>
+          valve.isPipingSupervised
+        )}  > Yes</label>
                                                     <label><input type="checkbox" ${chk(
-                                                      !valve.isPipingSupervised
-                                                    )}  > No</label>
+          valve.isPipingSupervised === false
+        )}  > No</label>
                                                 </div>
                                             </td>
                                             <td style="width: 25%;">Detecting media supervised</td>
                                             <td colspan="2" style="border-right: none;">
                                                 <div class="checkbox-group" style="justify-content: space-around;">
                                                     <label><input type="checkbox" ${chk(
-                                                      valve.isDetectingMediaSupervised
-                                                    )}  > Yes</label>
+          valve.isDetectingMediaSupervised
+        )}  > Yes</label>
                                                     <label><input type="checkbox" ${chk(
-                                                      !valve.isDetectingMediaSupervised
-                                                    )}  > No</label>
+          valve.isDetectingMediaSupervised === false
+        )}  > No</label>
                                                 </div>
                                             </td>
                                         </tr>
@@ -887,11 +885,11 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                             <td style="border-right: none;">
                                                 <div class="checkbox-group" style="justify-content: space-around;">
                                                     <label><input type="checkbox" ${chk(
-                                                      valve.operatesFromManualOrRemote
-                                                    )}  > Yes</label>
+          valve.operatesFromManualOrRemote
+        )}  > Yes</label>
                                                     <label><input type="checkbox" ${chk(
-                                                      !valve.operatesFromManualOrRemote
-                                                    )}  > No</label>
+          valve.operatesFromManualOrRemote === false
+        )}  > No</label>
                                                 </div>
                                             </td>
                                         </tr>
@@ -902,18 +900,18 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                                 Is there an accessible facility in each circuit for testing?
                                                 <div class="checkbox-group" style="padding-top: 5px;">
                                                     <label><input type="checkbox" ${chk(
-                                                      valve.isAccessibleForTesting
-                                                    )}  > Yes</label>
+          valve.isAccessibleForTesting
+        )}  > Yes</label>
                                                     <label><input type="checkbox" ${chk(
-                                                      !valve.isAccessibleForTesting
-                                                    )}  > No</label>
+          valve.isAccessibleForTesting === false
+        )}  > No</label>
                                                 </div>
                                             </td>
                                             <td colspan="3" style="border-right: none;">
                                                 If no, explain
                                                 <div class="data-value" style="border-bottom: 1px solid #000; min-height: 1.2em;">${val(
-                                                  valve.explanation
-                                                )}</div>
+          valve.explanation
+        )}</div>
                                             </td>
                                         </tr>
 
@@ -939,33 +937,33 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                                     <tbody>
                                                         <tr>
                                                             <td class="data-cell"><span class="data-value">${val(
-                                                              valve.make
-                                                            )}</span></td>
+          valve.make
+        )}</span></td>
                                                             <td class="data-cell"><span class="data-value">${val(
-                                                              valve.model
-                                                            )}</span></td>
+          valve.model
+        )}</span></td>
                                                             <td class="data-cell"><input type="checkbox" ${chk(
-                                                              valve.doesSupervisionLossAlarmOperate
-                                                            )}  ></td>
+          valve.doesSupervisionLossAlarmOperate
+        )}  ></td>
                                                             <td class="data-cell"><input type="checkbox" ${chk(
-                                                              !valve.doesSupervisionLossAlarmOperate
-                                                            )}  ></td>
+          valve.doesSupervisionLossAlarmOperate === false
+        )}  ></td>
                                                             <td class="data-cell"><input type="checkbox" ${chk(
-                                                              valve.doesValveReleaseOperate
-                                                            )}  ></td>
+          valve.doesValveReleaseOperate
+        )}  ></td>
                                                             <td class="data-cell"><input type="checkbox" ${chk(
-                                                              !valve.doesValveReleaseOperate
-                                                            )}  ></td>
+          valve.doesValveReleaseOperate === false
+        )}  ></td>
                                                             <td class="data-cell"><span class="data-value">${val(
-                                                              valve
-                                                                .maxTimeToOperateRelease
-                                                                ?.min
-                                                            )}</span></td>
+          valve
+            .maxTimeToOperateRelease
+            ?.min
+        )}</span></td>
                                                             <td class="data-cell"><span class="data-value">${val(
-                                                              valve
-                                                                .maxTimeToOperateRelease
-                                                                ?.sec
-                                                            )}</span></td>
+          valve
+            .maxTimeToOperateRelease
+            ?.sec
+        )}</span></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -974,9 +972,9 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                     </tbody>
                                 </table>
                                 `;
-                          });
-                          return html;
-                        })()}
+      });
+      return html;
+    })()}
                     </td>
                 </tr>
                 <!-- ROW 14: Pressure-reducing valve test -->
@@ -989,18 +987,18 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                     <!-- Right Content Cell -->
                     <td class="content-cell" style="padding: 0;">
                         ${(() => {
-                          let html = "";
-                          const tests =
-                            testData.alarmsAndValves
-                              ?.pressureReducingValveTests || [];
-                          const testsToRender = tests.length > 0 ? tests : [{}]; // Render at least one empty block
+      let html = "";
+      const tests =
+        testData.alarmsAndValves
+          ?.pressureReducingValveTests || [];
+      const testsToRender = tests.length > 0 ? tests : [{}]; // Render at least one empty block
 
-                          testsToRender.forEach((test, index) => {
-                            if (index > 0) {
-                              html += `<div style="border-top: 2px solid #000; margin: 0;"></div>`;
-                            }
+      testsToRender.forEach((test, index) => {
+        if (index > 0) {
+          html += `<div style="border-top: 2px solid #000; margin: 0;"></div>`;
+        }
 
-                            html += `
+        html += `
                                 <table class="nested-table" style="margin: 0;">
                                     <thead>
                                         <tr>
@@ -1023,36 +1021,36 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                     <tbody>
                                         <tr>
                                             <td class="data-cell"><span class="data-value">${val(
-                                              test.locationAndFloor
-                                            )}</span></td>
+          test.locationAndFloor
+        )}</span></td>
                                             <td class="data-cell"><span class="data-value">${val(
-                                              test.makeAndModel
-                                            )}</span></td>
+          test.makeAndModel
+        )}</span></td>
                                             <td class="data-cell"><span class="data-value">${val(
-                                              test.setting
-                                            )}</span></td>
+          test.setting
+        )}</span></td>
                                             <td class="data-cell"><span class="data-value">${val(
-                                              test.staticPressure?.inlet
-                                            )}</span></td>
+          test.staticPressure?.inlet
+        )}</span></td>
                                             <td class="data-cell"><span class="data-value">${val(
-                                              test.staticPressure?.outlet
-                                            )}</span></td>
+          test.staticPressure?.outlet
+        )}</span></td>
                                             <td class="data-cell"><span class="data-value">${val(
-                                              test.residualPressure?.inlet
-                                            )}</span></td>
+          test.residualPressure?.inlet
+        )}</span></td>
                                             <td class="data-cell"><span class="data-value">${val(
-                                              test.residualPressure?.outlet
-                                            )}</span></td>
+          test.residualPressure?.outlet
+        )}</span></td>
                                             <td class="data-cell"><span class="data-value">${val(
-                                              test.flowRate
-                                            )}</span></td>
+          test.flowRate
+        )}</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 `;
-                          });
-                          return html;
-                        })()}
+      });
+      return html;
+    })()}
                     </td>
                 </tr>
 
@@ -1069,29 +1067,34 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             Indicate means used for forward flow test of backflow device:
                             <span class="data-value">
                                 ${val(
-                                  testData.testing?.backflowTest?.meansUsed
-                                )}
+      testData.testing?.backflowTest?.meansUsed
+    )}
                             </span>
                         </div>
                         <div class="question-row" style="margin-top: 10px;">
                             <span>When means to test device was opened, was system flow demand created?</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.testing?.backflowTest
-                                    ?.wasFlowDemandCreated === "Yes"
-                                )}  > Yes</label>
+      testData.testing?.backflowTest
+        ?.wasFlowDemandCreated === "Yes"
+    )}  > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  testData.testing?.backflowTest
-                                    ?.wasFlowDemandCreated === "No"
-                                )}  > No</label>
+      testData.testing?.backflowTest
+        ?.wasFlowDemandCreated === "No"
+    )}  > No</label>
                                 <label><input type="checkbox" ${chk(
-                                  testData.testing?.backflowTest
-                                    ?.wasFlowDemandCreated === "N/A"
-                                )}  > N/A</label>
+      testData.testing?.backflowTest
+        ?.wasFlowDemandCreated === "N/A"
+    )}  > N/A</label>
                             </div>
                         </div>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+        <div style="page-break-before: always;"></div>
+        <table class="main-form-table">
+            <tbody>
                 <!-- PAGE 2 - ROW 1: Test description -->
                 <tr>
                     <!-- Left Label Cell -->
@@ -1102,9 +1105,9 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                     <!-- Right Content Cell -->
                     <td class="content-cell">
                         <div class="test-description-content">
-                            <p>
-                                <u>Hydrostatic:</u> Hydrostatic tests shall be made at not less than 200 psi for 2 hours or 50 psi above static pressure in excess of 150 psi for 2 hours. Differential dry pipe valve clappers shall be left open during the test to prevent damage. All aboveground piping leakage shall be stopped.
-                            </p>
+                              <p>
+                                  <u>Hydrostatic:</u> Hydrostatic tests shall be made at not less than 200 psi for 2 hours or 50 psi above static pressure in excess of 150 psi for 2 hours. Differential dry pipe valve clappers shall be left open during the test to prevent damage. All aboveground piping leakage shall be stopped.
+                              </p>
                             <p>
                                 <u>Pneumatic:</u> Establish 40 psi air pressure and measure drop, which shall not exceed 1½ psi in 24 hours. Test pressure tanks at normal water level and air pressure and measure air pressure drop, which shall not exceed 1½ psi in 24 hours.
                             </p>
@@ -1127,45 +1130,45 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <div style="flex-grow: 2;">
                                     All piping hydrostatically tested at
                                     <span class="data-value">${val(
-                                      testData.testing?.hydrostaticTest
-                                        ?.pressurePsi
-                                    )}</span> psi for
+      testData.testing?.hydrostaticTest
+        ?.pressurePsi
+    )}</span> psi for
                                     <span class="data-value">${val(
-                                      testData.testing?.hydrostaticTest
-                                        ?.durationHrs
-                                    )}</span> hours
+      testData.testing?.hydrostaticTest
+        ?.durationHrs
+    )}</span> hours
                                 </div>
                                 <div style="flex-grow: 1; border-left: 1px solid #000; padding-left: 8px;">
                                     If no, state reason
                                     <div class="data-value" style="min-height: 1.2em;">${val(
-                                      testData.testing?.improperOperationReason
-                                    )}</div>
+      testData.testing?.improperOperationReason
+    )}</div>
                                 </div>
                             </div>
                             <div class="question-row">
                                 <span>Dry piping pneumatically tested</span>
                                 <div class="checkbox-group">
                                     <label><input type="checkbox" ${chk(
-                                      testData.testing
-                                        ?.isDryPipingPneumaticallyTested
-                                    )}  > Yes</label>
+      testData.testing
+        ?.isDryPipingPneumaticallyTested
+    )}  > Yes</label>
                                     <label><input type="checkbox" ${chk(
-                                      !testData.testing
-                                        ?.isDryPipingPneumaticallyTested
-                                    )}  > No</label>
+      testData.testing
+        ?.isDryPipingPneumaticallyTested === false
+    )}  > No</label>
                                 </div>
                             </div>
                             <div class="question-row">
                                 <span>Equipment operates properly</span>
                                 <div class="checkbox-group">
                                     <label><input type="checkbox" ${chk(
-                                      testData.testing
-                                        ?.doesEquipmentOperateProperly
-                                    )}  > Yes</label>
+      testData.testing
+        ?.doesEquipmentOperateProperly
+    )}  > Yes</label>
                                     <label><input type="checkbox" ${chk(
-                                      !testData.testing
-                                        ?.doesEquipmentOperateProperly
-                                    )}  > No</label>
+      testData.testing
+        ?.doesEquipmentOperateProperly === false
+    )}  > No</label>
                                 </div>
                             </div>
                         </div>
@@ -1175,13 +1178,13 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             <span style="flex-grow: 1;">Do you certify as the sprinkler contractor that additives and corrosive chemicals, sodium silicate or derivatives of sodium silicate, brine, or other corrosive chemicals were not used for testing systems or stopping leaks?</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.testing
-                                    ?.noCorrosiveChemicalsCertification
-                                )}  > Yes</label>
+      testData.testing
+        ?.noCorrosiveChemicalsCertification
+    )}  > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.testing
-                                    ?.noCorrosiveChemicalsCertification
-                                )}  > No</label>
+      testData.testing
+        ?.noCorrosiveChemicalsCertification === false
+    )}  > No</label>
                             </div>
                         </div>
 
@@ -1191,15 +1194,15 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             <div style="flex-grow: 1; margin-left: 15px;">
                                 Reading of gauge located near water supply test connection:
                                 <span class="data-value">${val(
-                                  testData.testing?.drainTest?.gaugeReadingPsi
-                                )}</span> psi 
+      testData.testing?.drainTest?.gaugeReadingPsi
+    )}</span> psi 
                             </div>
                             <div style="flex-grow: 1; border-left: 1px solid #000; padding-left: 8px;">
                                 Residual pressure with valve in test connection open wide:
                                 <span class="data-value">${val(
-                                  testData.testing?.drainTest
-                                    ?.residualPressurePsi
-                                )}</span> psi
+      testData.testing?.drainTest
+        ?.residualPressurePsi
+    )}</span> psi
                             </div>
                         </div>
 
@@ -1210,31 +1213,31 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <span>Verified by copy of the Contractor's Material and Test Certificate for Underground Piping.</span>
                                 <div class="checkbox-group">
                                     <label><input type="checkbox" ${chk(
-                                      testData.testing?.undergroundPiping
-                                        ?.isVerifiedByCertificate
-                                    )}  > Yes</label>
+      testData.testing?.undergroundPiping
+        ?.isVerifiedByCertificate
+    )}  > Yes</label>
                                     <label><input type="checkbox" ${chk(
-                                      !testData.testing?.undergroundPiping
-                                        ?.isVerifiedByCertificate
-                                    )}  > No</label>
+      testData.testing?.undergroundPiping
+        ?.isVerifiedByCertificate === false
+    )}  > No</label>
                                     <span style="margin-left: 15px;">Other</span>
                                     <span class="data-value" style="flex-grow:1; min-width: 50px;">${val(
-                                      testData.testing?.undergroundPiping
-                                        ?.explanation
-                                    )}</span>
+      testData.testing?.undergroundPiping
+        ?.explanation
+    )}</span>
                                 </div>
                             </div>
                             <div class="question-row">
                                 <span>Flushed by installer of underground sprinkler piping</span>
                                 <div class="checkbox-group">
                                     <label><input type="checkbox" ${chk(
-                                      testData.testing?.undergroundPiping
-                                        ?.wasFlushedByInstaller
-                                    )}  > Yes</label>
+      testData.testing?.undergroundPiping
+        ?.wasFlushedByInstaller
+    )}  > Yes</label>
                                     <label><input type="checkbox" ${chk(
-                                      !testData.testing?.undergroundPiping
-                                        ?.wasFlushedByInstaller
-                                    )}  > No</label>
+      testData.testing?.undergroundPiping
+        ?.wasFlushedByInstaller === false
+    )}  > No</label>
                                 </div>
                             </div>
                         </div>
@@ -1247,24 +1250,24 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                         <span>If powder-driven fasteners are used in concrete, has representative sample testing been satisfactorily completed?</span>
                                         <div class="checkbox-group">
                                             <label><input type="checkbox" ${chk(
-                                              testData.testing
-                                                ?.powderDrivenFasteners
-                                                ?.isTestingSatisfactory
-                                            )}  > Yes</label>
+      testData.testing
+        ?.powderDrivenFasteners
+        ?.isTestingSatisfactory
+    )}  > Yes</label>
                                             <label><input type="checkbox" ${chk(
-                                              !testData.testing
-                                                ?.powderDrivenFasteners
-                                                ?.isTestingSatisfactory
-                                            )}  > No</label>
+      testData.testing
+        ?.powderDrivenFasteners
+        ?.isTestingSatisfactory === false
+    )}  > No</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div style="flex-grow: 1; border-left: 1px solid #000; padding-left: 8px;">
                                     If no, explain
                                     <div class="data-value" style="min-height: 1.2em;">${val(
-                                      testData.testing?.powderDrivenFasteners
-                                        ?.explanation
-                                    )}</div>
+      testData.testing?.powderDrivenFasteners
+        ?.explanation
+    )}</div>
                                 </div>
                             </div>
                         </div>
@@ -1292,27 +1295,27 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                     <td class="data-cell">
                                         <span class="data-value">
                                             ${val(
-                                              testData.testing
-                                                ?.blankTestingGaskets
-                                                ?.numberUsed
-                                            )}
+      testData.testing
+        ?.blankTestingGaskets
+        ?.numberUsed
+    )}
                                         </span>
                                     </td>
                                     <td class="data-cell">
                                         <span class="data-value">
                                             ${val(
-                                              testData.testing
-                                                ?.blankTestingGaskets?.locations
-                                            )}
+      testData.testing
+        ?.blankTestingGaskets?.locations
+    )}
                                         </span>
                                     </td>
                                     <td class="data-cell">
                                         <span class="data-value">
                                             ${val(
-                                              testData.testing
-                                                ?.blankTestingGaskets
-                                                ?.numberRemoved
-                                            )}
+      testData.testing
+        ?.blankTestingGaskets
+        ?.numberRemoved
+    )}
                                         </span>
                                     </td>
                                 </tr>
@@ -1334,21 +1337,21 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <span>Welding piping</span>
                                 <div class="checkbox-group">
                                     <label><input type="checkbox" ${chk(
-                                      testData.weldingAndCutouts
-                                        ?.isWeldingPiping
-                                    )}  > Yes</label>
+      testData.weldingAndCutouts
+        ?.isWeldingPiping
+    )}  > Yes</label>
                                     <label><input type="checkbox" ${chk(
-                                      !testData.weldingAndCutouts
-                                        ?.isWeldingPiping
-                                    )}  > No</label>
+      testData.weldingAndCutouts
+        ?.isWeldingPiping === false
+    )}  > No</label>
                                 </div>
                             </div>
                         </div>
 
                         ${(() => {
-                          // Only show the certification questions if isWeldingPiping is true
-                          if (testData.weldingAndCutouts?.isWeldingPiping) {
-                            return `
+      // Only show the certification questions if isWeldingPiping is true
+      if (testData.weldingAndCutouts?.isWeldingPiping) {
+        return `
                                 <div style="padding-top: 8px;">
                                     <div style="text-align: center; font-style: italic; margin-bottom: 10px;">If yes ...</div>
                                     
@@ -1356,15 +1359,15 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                         <span style="font-size: 8pt;">Do you certify as the sprinkler contractor that welding procedures used complied with the minimum requirements of AWS B2.1, ASME Section IX <i>Welding and Brazing Qualifications</i>, or other applicable qualification standard as required by the AHJ?</span>
                                         <div class="checkbox-group">
                                             <label><input type="checkbox" ${chk(
-                                              testData.weldingAndCutouts
-                                                ?.certifications
-                                                ?.awsB21Compliant
-                                            )}  > Yes</label>
+          testData.weldingAndCutouts
+            ?.certifications
+            ?.awsB21Compliant
+        )}  > Yes</label>
                                             <label><input type="checkbox" ${chk(
-                                              !testData.weldingAndCutouts
-                                                ?.certifications
-                                                ?.awsB21Compliant
-                                            )}  > No</label>
+          testData.weldingAndCutouts
+            ?.certifications
+            ?.awsB21Compliant === false
+        )}  > No</label>
                                         </div>
                                     </div>
                                     
@@ -1372,15 +1375,15 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                         <span style="font-size: 8pt;">Do you certify that all welding was performed by welders or welding operators qualified in accordance with the minimum requirements of AWS B2.1, ASME Section IX <i>Welding and Brazing Qualifications</i>, or other applicable qualification standard as required by the AHJ?</span>
                                         <div class="checkbox-group">
                                             <label><input type="checkbox" ${chk(
-                                              testData.weldingAndCutouts
-                                                ?.certifications
-                                                ?.weldersQualified
-                                            )}  > Yes</label>
+          testData.weldingAndCutouts
+            ?.certifications
+            ?.weldersQualified
+        )}  > Yes</label>
                                             <label><input type="checkbox" ${chk(
-                                              !testData.weldingAndCutouts
-                                                ?.certifications
-                                                ?.weldersQualified
-                                            )}  > No</label>
+          testData.weldingAndCutouts
+            ?.certifications
+            ?.weldersQualified === false
+        )}  > No</label>
                                         </div>
                                     </div>
 
@@ -1388,22 +1391,22 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                         <span style="font-size: 8pt;">Do you certify that the welding was conducted in compliance with a documented quality control procedure to ensure that (1) all discs are retrieved; (2) that openings in piping are smooth, that slag and other welding residue are removed; (3) the internal diameters of piping are not penetrated; (4) completed welds are free from cracks, incomplete fusion, surface porosity greater than 1/16 in. (1.6 mm) diameter, undercut deeper than the lesser of 25% of the wall thickness or 1/32 in. (0.8 mm); and (5) completed circumferential butt weld reinforcement does not exceed 3/32 in. (2.4 mm)?</span>
                                         <div class="checkbox-group">
                                             <label><input type="checkbox" ${chk(
-                                              testData.weldingAndCutouts
-                                                ?.certifications
-                                                ?.qualityControlProcedureCompliant
-                                            )}  > Yes</label>
+          testData.weldingAndCutouts
+            ?.certifications
+            ?.qualityControlProcedureCompliant
+        )}  > Yes</label>
                                             <label><input type="checkbox" ${chk(
-                                              !testData.weldingAndCutouts
-                                                ?.certifications
-                                                ?.qualityControlProcedureCompliant
-                                            )}  > No</label>
+          testData.weldingAndCutouts
+            ?.certifications
+            ?.qualityControlProcedureCompliant === false
+        )}  > No</label>
                                         </div>
                                     </div>
                                 </div>
                                 `;
-                          }
-                          return ""; // Return empty string if isWeldingPiping is false
-                        })()}
+      }
+      return ""; // Return empty string if isWeldingPiping is false
+    })()}
                     </td>
                 </tr>
                 <!-- PAGE 3 - ROW 1: Cutouts (discs) -->
@@ -1419,13 +1422,13 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             <span>Do you certify that you have a control feature to ensure that all cutouts (discs) are retrieved?</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.weldingAndCutouts?.cutouts
-                                    ?.hasRetrievalControl
-                                )}  > Yes</label>
+      testData.weldingAndCutouts?.cutouts
+        ?.hasRetrievalControl
+    )}  > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.weldingAndCutouts?.cutouts
-                                    ?.hasRetrievalControl
-                                )}  > No</label>
+      testData.weldingAndCutouts?.cutouts
+        ?.hasRetrievalControl === false
+    )}  > No</label>
                             </div>
                         </div>
                     </td>
@@ -1445,21 +1448,21 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                     <span>Nameplate provided</span>
                                     <div class="checkbox-group">
                                         <label><input type="checkbox" ${chk(
-                                          testData.finalChecks
-                                            ?.hasHydraulicDataNameplate
-                                        )}  > Yes</label>
+      testData.finalChecks
+        ?.hasHydraulicDataNameplate
+    )}  > Yes</label>
                                         <label><input type="checkbox" ${chk(
-                                          !testData.finalChecks
-                                            ?.hasHydraulicDataNameplate
-                                        )}  > No</label>
+      testData.finalChecks
+        ?.hasHydraulicDataNameplate === false
+    )}  > No</label>
                                     </div>
                                 </div>
                             </div>
                             <div style="flex-grow: 1; border-left: 1px solid #000; padding-left: 8px;">
                                 If no, explain
                                 <div class="data-value" style="min-height: 1.2em;">${val(
-                                  testData.finalChecks?.nameplateExplanation
-                                )}</div>
+      testData.finalChecks?.nameplateExplanation
+    )}</div>
                             </div>
                         </div>
                     </td>
@@ -1472,11 +1475,11 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                             <span>Sprinkler contractor removed all caps and straps?</span>
                             <div class="checkbox-group">
                                 <label><input type="checkbox" ${chk(
-                                  testData.finalChecks?.areCapsAndStrapsRemoved
-                                )}  > Yes</label>
+      testData.finalChecks?.areCapsAndStrapsRemoved
+    )}  > Yes</label>
                                 <label><input type="checkbox" ${chk(
-                                  !testData.finalChecks?.areCapsAndStrapsRemoved
-                                )}  > No</label>
+      testData.finalChecks?.areCapsAndStrapsRemoved === false
+    )}  > No</label>
                             </div>
                         </div>
                     </td>
@@ -1491,15 +1494,15 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div>
                             Date left in service with all control valves open
                             <span class="data-value">${formatDate(
-                              testData.remarksAndSignatures?.dateLeftInService
-                            )}</span>
+      testData.remarksAndSignatures?.dateLeftInService
+    )}</span>
                         </div>
                         <div style="margin-top: 8px;">
                             Name of sprinkler contractor
                             <span class="data-value">${val(
-                              testData.remarksAndSignatures
-                                ?.sprinklerContractorName
-                            )}</span>
+      testData.remarksAndSignatures
+        ?.sprinklerContractorName
+    )}</span>
                         </div>
                     </td>
                 </tr>
@@ -1516,11 +1519,10 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div class="field-row" style="margin-top: 15px; align-items: flex-end;">
                             <div style="flex-grow: 2;">
 <div class="line" style="min-height: 60px; text-align: center;">
-                                    ${
-                                      fireMarshalOrAHJSign
-                                        ? `<img src="${fireMarshalOrAHJSign}" style="height: 60px; width: auto; object-fit: contain;">`
-                                        : ""
-                                    }
+                                    ${fireMarshalOrAHJSign
+      ? `<img src="${fireMarshalOrAHJSign}" style="height: 60px; width: auto; object-fit: contain;">`
+      : ""
+    }
                                 </div>
                                 <div style=" padding-top: 2px; font-size: 8pt;">Fire Marshal or AHJ (signed)</div>
                             </div>
@@ -1528,18 +1530,18 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <div class="line" style="padding-bottom: 2px;">
                                     <span style="font-size: 8pt;">Title</span>
                                     <span class="data-value" style="text-decoration: none;">${val(
-                                      testData.remarksAndSignatures
-                                        ?.fireMarshalOrAHJ?.title
-                                    )}</span>
+      testData.remarksAndSignatures
+        ?.fireMarshalOrAHJ?.title
+    )}</span>
                                 </div>
                             </div>
                             <div style="width: 1.5in; margin-left: 20px;">
                                 <div class="line" style=" padding-bottom: 2px;">
                                     <span style="font-size: 8pt;">Date</span>
                                     <span class="data-value" style="text-decoration: none;">${formatDate(
-                                      testData.remarksAndSignatures
-                                        ?.fireMarshalOrAHJ?.date
-                                    )}</span>
+      testData.remarksAndSignatures
+        ?.fireMarshalOrAHJ?.date
+    )}</span>
                                 </div>
                             </div>
                         </div>
@@ -1548,11 +1550,10 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div class="field-row" style="margin-top: 25px; align-items: flex-end;">
                             <div style="flex-grow: 2;">
 <div class="line" style="min-height: 60px; text-align: center;">
-                                    ${
-                                      sprinklerContractorSign
-                                        ? `<img src="${sprinklerContractorSign}" style="height: 60px; width: auto; object-fit: contain;">`
-                                        : ""
-                                    }
+                                    ${sprinklerContractorSign
+      ? `<img src="${sprinklerContractorSign}" style="height: 60px; width: auto; object-fit: contain;">`
+      : ""
+    }
                                 </div>
                                 <div style=" padding-top: 2px; font-size: 8pt;">For sprinkler contractor (signed)</div>
                             </div>
@@ -1560,31 +1561,36 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                                 <div class="line" style=" padding-bottom: 2px;">
                                     <span style="font-size: 8pt;">Title</span>
                                     <span class="data-value" style="text-decoration: none;">${val(
-                                      testData.remarksAndSignatures
-                                        ?.sprinklerContractor?.title
-                                    )}</span>
+      testData.remarksAndSignatures
+        ?.sprinklerContractor?.title
+    )}</span>
                                 </div>
                             </div>
                             <div style="width: 1.5in; margin-left: 20px;">
                                 <div class="line" style=" padding-bottom: 2px;">
                                     <span style="font-size: 8pt;">Date</span>
                                     <span class="data-value" style="text-decoration: none;">${formatDate(
-                                      testData.remarksAndSignatures
-                                        ?.sprinklerContractor?.date
-                                    )}</span>
+      testData.remarksAndSignatures
+        ?.sprinklerContractor?.date
+    )}</span>
                                 </div>
                             </div>
                         </div>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+        <div style="page-break-before: always;"></div>
+        <table class="main-form-table">
+            <tbody>
                 <!-- PAGE 3 - FINAL ROW: Additional explanations and notes -->
                 <tr>
                     <td colspan="2" class="content-cell">
                         <strong>Additional explanations and notes</strong>
                         <div class="notes-box">
                             <span class="data-value">${val(
-                              testData.notes
-                            )}</span>
+      testData.notes
+    )}</span>
                         </div>
                     </td>
                 </tr>

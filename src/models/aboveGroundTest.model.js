@@ -54,8 +54,8 @@ const dryPipeOperatingTestSchema = new Schema({
     min: Number,
     sec: Number,
   },
-  alarmOperatedProperlyWithoutQOD: Boolean,
-  alarmOperatedProperlyWithQOD: Boolean,
+  alarmOperatedProperlyWithoutQOD: Schema.Types.Mixed,
+  alarmOperatedProperlyWithQOD: Schema.Types.Mixed,
   explain: String,
 });
 
@@ -64,15 +64,15 @@ const delugePreActionValveSchema = new Schema({
     type: String,
     enum: ["pneumatic", "electric", "hydraulic"],
   },
-  isPipingSupervised: Boolean,
-  isDetectingMediaSupervised: Boolean,
-  operatesFromManualOrRemote: Boolean,
-  isAccessibleForTesting: Boolean,
+  isPipingSupervised: Schema.Types.Mixed,
+  isDetectingMediaSupervised: Schema.Types.Mixed,
+  operatesFromManualOrRemote: Schema.Types.Mixed,
+  isAccessibleForTesting: Schema.Types.Mixed,
   explanation: String,
   make: String,
   model: String,
-  doesSupervisionLossAlarmOperate: Boolean,
-  doesValveReleaseOperate: Boolean,
+  doesSupervisionLossAlarmOperate: Schema.Types.Mixed,
+  doesValveReleaseOperate: Schema.Types.Mixed,
   maxTimeToOperateRelease: {
     min: Number,
     sec: Number,
@@ -107,24 +107,24 @@ const aboveGroundTestSchema = new Schema(
       propertyName: { type: String, required: true },
       date: { type: Date, default: Date.now },
       propertyAddress: String,
-      isNewInstallation: Boolean,
-      isModification: Boolean,
+      isNewInstallation: Schema.Types.Mixed,
+      isModification: Schema.Types.Mixed,
     },
 
     plansAndInstructions: {
       plans: {
         acceptedByAuthorities: [String],
         address: String,
-        conformsToAcceptedPlans: Boolean,
-        equipmentIsApproved: Boolean,
+        conformsToAcceptedPlans: Schema.Types.Mixed,
+        equipmentIsApproved: Schema.Types.Mixed,
         deviationsExplanation: String,
       },
       instructions: {
-        isPersonInChargeInstructed: Boolean,
+        isPersonInChargeInstructed: Schema.Types.Mixed,
         instructionExplanation: String,
-        hasSystemComponentsInstructions: Boolean,
-        hasCareAndMaintenanceInstructions: Boolean,
-        hasNFPA25: Boolean,
+        hasSystemComponentsInstructions: Schema.Types.Mixed,
+        hasCareAndMaintenanceInstructions: Schema.Types.Mixed,
+        hasNFPA25: Schema.Types.Mixed,
       },
     },
     suppliesBuildingsNames: [String],
@@ -157,10 +157,10 @@ const aboveGroundTestSchema = new Schema(
         pressureBar: Number,
         durationHrs: Number,
       },
-      isDryPipingPneumaticallyTested: Boolean,
-      doesEquipmentOperateProperly: Boolean,
+      isDryPipingPneumaticallyTested: Schema.Types.Mixed,
+      doesEquipmentOperateProperly: Schema.Types.Mixed,
       improperOperationReason: String,
-      noCorrosiveChemicalsCertification: Boolean,
+      noCorrosiveChemicalsCertification: Schema.Types.Mixed,
       drainTest: {
         gaugeReadingPsi: Number,
         gaugeReadingBar: Number,
@@ -168,12 +168,12 @@ const aboveGroundTestSchema = new Schema(
         residualPressureBar: Number,
       },
       undergroundPiping: {
-        isVerifiedByCertificate: Boolean,
-        wasFlushedByInstaller: Boolean,
+        isVerifiedByCertificate: Schema.Types.Mixed,
+        wasFlushedByInstaller: Schema.Types.Mixed,
         explanation: String,
       },
       powderDrivenFasteners: {
-        isTestingSatisfactory: Boolean,
+        isTestingSatisfactory: Schema.Types.Mixed,
         explanation: String,
       },
       blankTestingGaskets: {
@@ -184,21 +184,21 @@ const aboveGroundTestSchema = new Schema(
     },
 
     weldingAndCutouts: {
-      isWeldingPiping: Boolean,
+      isWeldingPiping: Schema.Types.Mixed,
       certifications: {
-        awsB21Compliant: Boolean,
-        weldersQualified: Boolean,
-        qualityControlProcedureCompliant: Boolean,
+        awsB21Compliant: Schema.Types.Mixed,
+        weldersQualified: Schema.Types.Mixed,
+        qualityControlProcedureCompliant: Schema.Types.Mixed,
       },
       cutouts: {
-        hasRetrievalControl: Boolean,
+        hasRetrievalControl: Schema.Types.Mixed,
       },
     },
 
     finalChecks: {
-      hasHydraulicDataNameplate: Boolean,
+      hasHydraulicDataNameplate: Schema.Types.Mixed,
       nameplateExplanation: String,
-      areCapsAndStrapsRemoved: Boolean,
+      areCapsAndStrapsRemoved: Schema.Types.Mixed,
     },
 
     remarksAndSignatures: {
