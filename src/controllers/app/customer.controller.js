@@ -80,37 +80,7 @@ const createCustomer = asyncHandler(async (req, res) => {
       }
     }
 
-    // --- Send Email to the Customer ---
-    const customerEmailForReports = updatedCustomer.emailForInspectionReports;
-    if (customerEmailForReports && pdfData?.url) {
-      try {
-        const subject = `Your Customer Profile for ${updatedCustomer.customerName} Has Been Created!`;
-        const customerProfileLink = `${CLIENT_URL}/customer/${updatedCustomer._id}`; // Assuming a public-facing link if applicable
 
-        const htmlContent = `
-          <p>Dear ${updatedCustomer.customerName},</p>
-          <p>We are pleased to inform you that your customer profile has been successfully created!</p>
-          <p>The PDF version of your customer profile is attached to this email for your convenience.</p>
-          <p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>
-          <p>Thank you for choosing our services!</p>
-          <p>Sincerely,</p>
-          <p>The Southern Fire Team</p>
-        `;
-
-        await sendEmailWithS3Attachment(
-          [customerEmailForReports], // sendEmailWithS3Attachment expects an array of emails
-          subject,
-          htmlContent,
-          pdfData.url
-        );
-        console.log(`Customer profile email sent to ${customerEmailForReports}`);
-      } catch (customerEmailError) {
-        console.error(
-          `Failed to send customer profile email to ${customerEmailForReports}, but the customer was created successfully.`,
-          customerEmailError
-        );
-      }
-    }
 
 
     return new ApiResponse(
