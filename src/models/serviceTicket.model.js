@@ -22,17 +22,17 @@ const ServiceTicketSchema = new mongoose.Schema(
     },
     laborCost: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     materialCost: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     totalCost: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     jobNumber: {
