@@ -16,18 +16,16 @@
 | `description` | String | No | A brief description of the department. |
 | `status` | String | No | Status of the department. Enum: `["active", "inactive"]`. Default: `"active"`. |
 | `allowedForms` | Array<String> | No | List of forms this department can access. Allowed values: `"AboveGround"`, `"serviceTicket"`, `"underGround"`, `"workOrder"`, `"customer"`, `"alarm"`. |
-| `manager` | Array<ObjectId> | No | List of User IDs who will manage this department. |
 | `doc` | Array<String> | No | Optional array of document strings. **Can be skipped.** |
 
-### Example Payload (Skipping `doc`)
+### Example Payload
 
 ```json
 {
   "name": "Fire Safety Inspection",
   "description": "Department responsible for all fire safety checks and balances.",
   "status": "active",
-  "allowedForms": ["serviceTicket", "workOrder"],
-  "manager": ["60d5ecb8b392d7001f8e8e8e"]
+  "allowedForms": ["serviceTicket", "workOrder"]
 }
 ```
 
