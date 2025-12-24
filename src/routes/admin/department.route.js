@@ -3,6 +3,7 @@ import { auth } from "#middlewares/auth.js";
 import validate from "#middlewares/validate.js";
 import {
   getDepartments,
+  createDepartment,
   getDepartmentById,
   updateDepartment,
   deleteDepartment,
@@ -14,7 +15,10 @@ const router = express.Router();
 
 router.use(auth(["admin", "manager"]));
 
-router.route("/").get(getDepartments);
+router
+  .route("/")
+  .get(getDepartments)
+  .post(validate(departmentValidation.createDepartment), createDepartment);
 
 router.get("/forms", getForms);
 router

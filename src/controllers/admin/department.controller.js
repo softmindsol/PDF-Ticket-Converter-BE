@@ -26,6 +26,54 @@ const getDepartments = asyncHandler(async (req, res) => {
     "Departments retrieved successfully."
   );
 });
+const createDepartment = asyncHandler(async (req, res) => {
+  const { name, manager: managerIds } = req.body;
+
+  const existingDepartment = await departmentModel.findOne({ name });
+  if (existingDepartment) {
+    throw new ApiError(
+      httpStatus.CONFLICT,
+      "Department with this name already exists.",
+      [{ name: "Department name is already taken" }]
+    );
+  }
+
+  const session = await mongoose.startSession();
+  let newDepartment;
+
+  try {
+    await session.withTransaction(async () => {
+      newDepartment = await departmentModel.create([req.body], { session });
+      newDepartment = newDepartment[0]; // create returns an array when using session
+
+      // Update users to have 'manager' role if managers are assigned
+      if (managerIds && managerIds.length > 0) {
+        await userModel.updateMany(
+          { _id: { $in: managerIds } },
+          { $set: { role: "manager" } },
+          { session }
+        );
+      }
+    });
+  } catch (error) {
+    throw error;
+  } finally {
+    await session.endSession();
+  }
+
+  // Populate manager details for the response
+  const populatedDepartment = await departmentModel
+    .findById(newDepartment._id)
+    .populate("manager", "firstName lastName username");
+
+  return new ApiResponse(
+    res,
+    httpStatus.CREATED,
+    { department: populatedDepartment },
+    "Department created successfully."
+  );
+});
+
 const getForms = asyncHandler(async (req, res) => {
   return new ApiResponse(
     res,
@@ -79,8 +127,8 @@ const updateDepartment = asyncHandler(async (req, res) => {
   const newManagerIdsArray = Array.isArray(newManagerIds)
     ? newManagerIds
     : newManagerIds
-    ? [newManagerIds]
-    : [];
+      ? [newManagerIds]
+      : [];
 
   const managersToAdd = newManagerIdsArray.filter(
     (id) => !oldManagerIds.includes(id)
@@ -169,6 +217,7 @@ const deleteDepartment = asyncHandler(async (req, res) => {
 
 export {
   getDepartments,
+  createDepartment,
   getDepartmentById,
   updateDepartment,
   deleteDepartment,

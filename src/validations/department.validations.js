@@ -12,6 +12,57 @@ const departmentValidation = {
     }),
   },
 
+  createDepartment: {
+    body: Joi.object({
+      name: Joi.string().min(2).max(100).required().messages({
+        "string.base": "Name must be a string",
+        "string.min": "Name must be at least 2 characters long",
+        "string.max": "Name cannot be longer than 100 characters",
+        "any.required": "Name is a required field",
+      }),
+
+      description: Joi.string().max(500).optional().allow("").messages({
+        "string.base": "Description must be a string",
+        "string.max": "Description cannot be longer than 500 characters",
+      }),
+
+      status: Joi.string().valid("active", "inactive").default("active").messages({
+        "any.only": "Status must be either 'active' or 'inactive'",
+      }),
+
+      doc: Joi.array().items(Joi.string()).optional().default([]).messages({
+        "array.base": "doc must be an array of strings",
+      }),
+
+      allowedForms: Joi.array()
+        .items(
+          Joi.string().valid(
+            "AboveGround",
+            "serviceTicket",
+            "underGround",
+            "workOrder",
+            "customer",
+            "alarm"
+          )
+        )
+        .messages({
+          "array.base": "allowedForms must be an array",
+          "any.only":
+            "allowedForms can only include 'AboveGround', 'serviceTicket', 'underGround', 'workOrder', 'customer', 'alarm'",
+        }),
+
+      manager: Joi.array()
+        .items(
+          Joi.string().regex(objectIdRegex).messages({
+            "string.pattern.base":
+              "Each manager ID must be a valid MongoDB ObjectId.",
+          })
+        )
+        .optional()
+        .default([]),
+    }),
+  },
+
   updateDepartment: {
     params: Joi.object({
       id: Joi.string().required().regex(objectIdRegex).messages({
@@ -41,9 +92,8 @@ const departmentValidation = {
         "boolean.base": "'isDeleted' must be a boolean (true or false)",
       }),
 
-      doc: Joi.array().items(Joi.string().required()).messages({
+      doc: Joi.array().items(Joi.string()).optional().default([]).messages({
         "array.base": "doc must be an array of strings",
-        "any.required": "A string inside the doc array is required",
       }),
 
       allowedForms: Joi.array()

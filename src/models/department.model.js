@@ -6,12 +6,10 @@ const DepartmentSchema = new mongoose.Schema(
     name: { type: String, required: true },
     status: { type: String, enum: ["active", "inactive"], default: "active" },
     isDeleted: { type: Boolean, default: false },
-    doc: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    doc: {
+      type: [String],
+      default: [],
+    },
 
     allowedForms: {
       type: [String],
