@@ -28,6 +28,17 @@ const createUser = asyncHandler(async (req, res) => {
     );
   }
 
+  if (email) {
+    const existingEmail = await userModel.findOne({ email });
+    if (existingEmail) {
+      throw new ApiError(
+        httpStatus.CONFLICT,
+        "A user with this email already exists.",
+        [{ email: "Email is already taken" }]
+      );
+    }
+  }
+
   const hashedPassword = await hashPassword(password);
 
   const newUser = await userModel.create({
@@ -81,8 +92,8 @@ const getUsers = asyncHandler(async (req, res) => {
 });
 const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  if (req.user?.department?._id){
-    req.body.department=req.user?.department?._id
+  if (req.user?.department?._id) {
+    req.body.department = req.user?.department?._id
   }
   const {
     firstName,
@@ -104,6 +115,17 @@ const updateUser = asyncHandler(async (req, res) => {
         httpStatus.CONFLICT,
         "This username is already in use by another account.",
         [{ username: "Username is already taken" }]
+      );
+    }
+  }
+
+  if (email) {
+    const existingUserWithEmail = await userModel.findOne({ email });
+    if (existingUserWithEmail && existingUserWithEmail._id.toString() !== id) {
+      throw new ApiError(
+        httpStatus.CONFLICT,
+        "This email is already in use by another account.",
+        [{ email: "Email is already taken" }]
       );
     }
   }
