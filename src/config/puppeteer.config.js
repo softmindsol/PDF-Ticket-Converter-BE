@@ -8,15 +8,12 @@ export const savePdfToFile = async (
   htmlContent,
   fileName,
   folderName,
-  userFacingFileName="newTicket.pdf"
+  userFacingFileName = "newTicket.pdf"
 ) => {
-  let browser;
+  let page;
   try {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const page = await browser.newPage();
+    const browser = await getBrowser();
+    page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
     const pdfBuffer = await page.pdf({
       format: "A4",
@@ -50,8 +47,20 @@ export const savePdfToFile = async (
     console.error("Error generating or uploading PDF to S3:", error);
     throw new Error("Failed to create and upload the PDF.");
   } finally {
-    if (browser) {
-      await browser.close();
+    if (page) {
+      await page.close();
     }
   }
+};
+
+let browserInstance = null;
+
+const getBrowser = async () => {
+  if (!browserInstance || !browserInstance.isConnected()) {
+    browserInstance = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+  }
+  return browserInstance;
 };

@@ -412,10 +412,7 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         <div style="padding-top: 8px;">
                             <div class="question-row">
                                 <span>Have copies of the following been left on the premises?</span>
-                                <div class="checkbox-group">
-                                    <label><input type="checkbox"  > Yes</label>
-                                    <label><input type="checkbox"  > No</label>
-                                </div>
+                                
                             </div>
                             
                             <!-- Nested Checkbox List -->
@@ -1244,8 +1241,8 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         
                         <!-- Part 5: Powder-Driven Fasteners -->
                         <div style="padding-top: 8px;">
-                            <div class="field-row">
-                                <div style="flex-grow: 1;">
+                            <div class="field-row" style="align-items: stretch;">
+                                <div style="flex-grow: 3;">
                                     <div class="question-row">
                                         <span>If powder-driven fasteners are used in concrete, has representative sample testing been satisfactorily completed?</span>
                                         <div class="checkbox-group">
