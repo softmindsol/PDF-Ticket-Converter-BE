@@ -1241,31 +1241,27 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
                         
                         <!-- Part 5: Powder-Driven Fasteners -->
                         <div style="padding-top: 8px;">
-                            <div class="field-row" style="align-items: stretch;">
-                                <div style="flex-grow: 3;">
-                                    <div class="question-row">
-                                        <span>If powder-driven fasteners are used in concrete, has representative sample testing been satisfactorily completed?</span>
-                                        <div class="checkbox-group">
-                                            <label><input type="checkbox" ${chk(
+                            <div class="question-row">
+                                <span>If powder-driven fasteners are used in concrete, has representative sample testing been satisfactorily completed?</span>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" ${chk(
             testData.testing
                 ?.powderDrivenFasteners
                 ?.isTestingSatisfactory
         )}  > Yes</label>
-                                            <label><input type="checkbox" ${chk(
+                                    <label><input type="checkbox" ${chk(
             testData.testing
                 ?.powderDrivenFasteners
                 ?.isTestingSatisfactory === false
         )}  > No</label>
-                                        </div>
-                                    </div>
                                 </div>
-                                <div style="flex-grow: 1; border-left: 1px solid #000; padding-left: 8px;">
-                                    If no, explain
-                                    <div class="data-value" style="min-height: 1.2em;">${val(
+                            </div>
+                            <div style="margin-top: 5px;">
+                                If no, explain
+                                <div class="data-value" style="border-bottom: 1px solid #000; min-height: 1.2em;">${val(
             testData.testing?.powderDrivenFasteners
                 ?.explanation
         )}</div>
-                                </div>
                             </div>
                         </div>
                     </td>
@@ -1439,25 +1435,23 @@ export const generateAbovegroundTestHtml = async (testData = {}) => {
 
                     <!-- Right Content Cell -->
                     <td class="content-cell">
-                        <div class="field-row">
-                            <div style="flex-grow: 1;">
-                                <div class="question-row">
-                                    <span>Nameplate provided</span>
-                                    <div class="checkbox-group">
-                                        <label><input type="checkbox" ${chk(
+                        <div>
+                            <div class="question-row">
+                                <span>Nameplate provided</span>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" ${chk(
             testData.finalChecks
                 ?.hasHydraulicDataNameplate
         )}  > Yes</label>
-                                        <label><input type="checkbox" ${chk(
+                                    <label><input type="checkbox" ${chk(
             testData.finalChecks
                 ?.hasHydraulicDataNameplate === false
         )}  > No</label>
-                                    </div>
                                 </div>
                             </div>
-                            <div style="flex-grow: 1; border-left: 1px solid #000; padding-left: 8px;">
+                            <div style="margin-top: 5px;">
                                 If no, explain
-                                <div class="data-value" style="min-height: 1.2em;">${val(
+                                <div class="data-value" style="border-bottom: 1px solid #000; min-height: 1.2em;">${val(
             testData.finalChecks?.nameplateExplanation
         )}</div>
                             </div>
