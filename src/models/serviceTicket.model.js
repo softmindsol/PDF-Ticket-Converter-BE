@@ -37,12 +37,12 @@ const ServiceTicketSchema = new mongoose.Schema(
     },
     jobNumber: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     workorderNumber: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
 
