@@ -159,20 +159,20 @@ export const generateWorkOrderHtml = async (workOrderData) => {
                         <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "cash"
       ? "checked"
       : ""
-    } disabled> Cash</label>
+    }  Cash</label>
                         <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "credit"
       ? "checked"
       : ""
-    } disabled> Credit</label>
+    }  Credit</label>
                         <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "check"
       ? "checked"
       : ""
-    } disabled> Check</label>
+    }  Check</label>
                         <br/>
                          <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "n/a"
       ? "checked"
       : ""
-    } disabled> N/A</label>
+    }  N/A</label>
                     </div>
                 </div>
             </section>
