@@ -98,11 +98,31 @@ export const generateWorkOrderHtml = async (workOrderData) => {
             .items-table { width: 100%; border-collapse: collapse; }
             .items-table th, .items-table td { border: 1px solid #000; padding: 6px; }
             .items-table th { background-color: #f2f2f2; }
-            input[type="checkbox"]:disabled {
-                opacity: 1;
-                filter: brightness(0);
-                -webkit-print-color-adjust: exact;
-                cursor: default;
+            /* Custom Checkbox Styling for PDF */
+            input[type="checkbox"] {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 14px;
+                height: 14px;
+                border: 1px solid #000;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 4px;
+                position: relative;
+                background: #fff !important; /* Force white background */
+                opacity: 1 !important;
+            }
+            
+            input[type="checkbox"]:checked::after {
+                content: '';
+                position: absolute;
+                left: 4px;
+                top: 0px;
+                width: 4px;
+                height: 9px;
+                border: solid black;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
             }
             
             /* --- TOTALS SECTION CSS CHANGES --- */
