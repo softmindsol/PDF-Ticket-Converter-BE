@@ -98,6 +98,12 @@ export const generateWorkOrderHtml = async (workOrderData) => {
             .items-table { width: 100%; border-collapse: collapse; }
             .items-table th, .items-table td { border: 1px solid #000; padding: 6px; }
             .items-table th { background-color: #f2f2f2; }
+            input[type="checkbox"]:disabled {
+                opacity: 1;
+                filter: brightness(0);
+                -webkit-print-color-adjust: exact;
+                cursor: default;
+            }
             
             /* --- TOTALS SECTION CSS CHANGES --- */
             .items-table .totals-row .totals-label {
@@ -159,20 +165,20 @@ export const generateWorkOrderHtml = async (workOrderData) => {
                         <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "cash"
       ? "checked"
       : ""
-    }  Cash</label>
+    } disabled> Cash</label>
                         <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "credit"
       ? "checked"
       : ""
-    }  Credit</label>
+    } disabled> Credit</label>
                         <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "check"
       ? "checked"
       : ""
-    }  Check</label>
+    } disabled> Check</label>
                         <br/>
                          <label><input type="checkbox" ${workOrderData.paymentMethod.toLowerCase() === "n/a"
       ? "checked"
       : ""
-    }  N/A</label>
+    } disabled> N/A</label>
                     </div>
                 </div>
             </section>
