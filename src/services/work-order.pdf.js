@@ -209,6 +209,9 @@ export const generateWorkOrderHtml = async (workOrderData) => {
       ? `<img src="${sign}" style="height: 140px; width: 140px; margin-top: 5px;">`
       : '<div class="line"></div>'
     }
+                   <div style="margin-top: 10px; border-top: 1px dotted #333; padding-top: 5px;">
+                      <strong>Print Name:</strong> ${val(workOrderData.printName)}
+                   </div>
                   </div>
                 <div class="date-box data-field">
                     <strong>Date:</strong><span>${formatDate(

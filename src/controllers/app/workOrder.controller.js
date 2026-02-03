@@ -17,12 +17,14 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
   }
   const { jobNumber } = req.body;
 
-  const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
-  if (existingWorkOrder) {
-    throw new ApiError(
-      httpStatus.CONFLICT,
-      "A work order with this job number already exists."
-    );
+  if (jobNumber) {
+    const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
+    if (existingWorkOrder) {
+      throw new ApiError(
+        httpStatus.CONFLICT,
+        "A work order with this job number already exists."
+      );
+    }
   }
 
   const newWorkOrder = await WorkOrder.create({
@@ -57,14 +59,16 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
           .filter(Boolean);
 
         if (managerEmails.length > 0) {
-          const subject = `New Work Order Created: Job #${updatedWorkOrder.jobNumber}`;
+          const subjectSuffix = updatedWorkOrder.jobNumber ? `: Job #${updatedWorkOrder.jobNumber}` : "";
+          const subject = `New Work Order Created${subjectSuffix}`;
 
           // Construct the direct link to the work order
           const ticketUrl = `${CLIENT_URL}/work-order/${updatedWorkOrder._id}`;
 
+          const jobHtml = updatedWorkOrder.jobNumber ? ` for job <strong>#${updatedWorkOrder.jobNumber}</strong>` : "";
           const htmlContent = `
             <p>Hello,</p>
-            <p>A new Work Order for job <strong>#${updatedWorkOrder.jobNumber}</strong> has been created by ${req.user.firstName} ${req.user.lastName}.</p>
+            <p>A new Work Order${jobHtml} has been created by ${req.user.firstName} ${req.user.lastName}.</p>
             <p>You can view the work order directly here: <a href="${ticketUrl}">View Work Order</a>.</p>
             <p>The work order PDF is also attached for your review.</p>
             <p>Thank you.</p>

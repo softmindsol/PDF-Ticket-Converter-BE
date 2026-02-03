@@ -40,14 +40,15 @@ const WorkOrderSchema = new mongoose.Schema(
 
     jobNumber: {
       type: String,
-      required: true,
+      required: false,
       unique: true,
+      sparse: true,
     },
     technicianName: {
       type: String,
       required: true,
     },
-     contactName: {
+    contactName: {
       type: String,
       required: true,
     },
@@ -69,6 +70,9 @@ const WorkOrderSchema = new mongoose.Schema(
     },
 
     customerSignature: {
+      type: String,
+    },
+    printName: {
       type: String,
     },
 
