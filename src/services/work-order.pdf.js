@@ -205,16 +205,23 @@ export const generateWorkOrderHtml = async (workOrderData) => {
 
             <footer class="signature-section">
                 <div class="signature-box">
-                      <strong>Customer Signature:</strong> ${workOrderData.customerSignature
-      ? `<img src="${sign}" style="height: 140px; width: 140px; margin-top: 5px;">`
-      : '<div class="line"></div>'
+                    <div style="margin-bottom: 15px;">
+                        <strong>Customer Signature:</strong> 
+                        ${workOrderData.customerSignature
+      ? `<div style="margin-top: 5px;"><img src="${sign}" style="height: 80px; width: auto; display: block;"></div>`
+      : '<div class="line" style="margin-top: 30px;"></div>'
     }
-                      <strong>Print Name:</strong> ${val(workOrderData.printName)}
+                    </div>
+                    
+                    <div class="data-field">
+                        <strong>Print Name:</strong><span>${val(workOrderData.printName)}</span>
+                    </div>
                 </div>
-                <div class="date-box data-field">
-                    <strong>Date:</strong><span>${formatDate(
-      workOrderData.date
-    )}</span>
+
+                <div class="date-box">
+                    <div class="data-field">
+                        <strong>Date:</strong><span>${formatDate(workOrderData.date)}</span>
+                    </div>
                 </div>
             </footer>
         </div>
