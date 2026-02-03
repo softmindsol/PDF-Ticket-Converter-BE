@@ -19,15 +19,18 @@ const createWorkOrder = asyncHandler(async (req, res) => {
     materialList,
     date,
     customerSignature,
+    printName,
   } = req.body;
 
-  const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
-  if (existingWorkOrder) {
-    throw new ApiError(
-      httpStatus.CONFLICT,
-      "A work order with this job number already exists.",
-      [{ jobNumber: "Job number is already taken" }]
-    );
+  if (jobNumber) {
+    const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
+    if (existingWorkOrder) {
+      throw new ApiError(
+        httpStatus.CONFLICT,
+        "A work order with this job number already exists.",
+        [{ jobNumber: "Job number is already taken" }]
+      );
+    }
   }
 
   const newWorkOrder = await WorkOrder.create({
@@ -42,6 +45,7 @@ const createWorkOrder = asyncHandler(async (req, res) => {
     materialList,
     date,
     customerSignature,
+    printName,
     createdBy: req.user._id,
   });
 
@@ -284,7 +288,7 @@ const deleteWorkOrder = asyncHandler(async (req, res) => {
 const regenerateWorkOrderPdf = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  
+
   const workOrder = await WorkOrder.findById(id);
 
   if (!workOrder) {
@@ -292,23 +296,23 @@ const regenerateWorkOrderPdf = asyncHandler(async (req, res) => {
   }
 
   try {
-    
+
     const html = await generateWorkOrderHtml(workOrder);
 
-    
+
     const safeTimestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const newFileName = `${workOrder._id}-${safeTimestamp}.pdf`;
 
-    
+
     const pdfData = await savePdfToFile(html, newFileName, "work-order");
 
-    
+
     workOrder.ticket = pdfData?.url;
 
-    
+
     const updatedWorkOrder = await workOrder.save();
 
-    
+
     return new ApiResponse(
       res,
       httpStatus.OK,
@@ -318,7 +322,7 @@ const regenerateWorkOrderPdf = asyncHandler(async (req, res) => {
   } catch (pdfError) {
     console.error("Failed to regenerate PDF for work order:", pdfError);
 
-    
+
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       "Failed to regenerate the PDF ticket. Please try again."
