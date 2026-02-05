@@ -43,6 +43,7 @@ const WorkOrderSchema = new mongoose.Schema(
       required: false,
       unique: true,
       sparse: true,
+      set: (v) => (v === "" ? undefined : v),
     },
     technicianName: {
       type: String,
