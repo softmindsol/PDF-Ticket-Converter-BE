@@ -17,15 +17,7 @@ const WorkOrderTicket = asyncHandler(async (req, res) => {
   }
   const { jobNumber } = req.body;
 
-  if (jobNumber) {
-    const existingWorkOrder = await WorkOrder.findOne({ jobNumber });
-    if (existingWorkOrder) {
-      throw new ApiError(
-        httpStatus.CONFLICT,
-        "A work order with this job number already exists."
-      );
-    }
-  }
+
 
   const newWorkOrder = await WorkOrder.create({
     ...req.body,

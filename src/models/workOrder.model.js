@@ -41,9 +41,6 @@ const WorkOrderSchema = new mongoose.Schema(
     jobNumber: {
       type: String,
       required: false,
-      unique: true,
-      sparse: true,
-      set: (v) => (v === "" || v === null ? undefined : v),
     },
     technicianName: {
       type: String,
