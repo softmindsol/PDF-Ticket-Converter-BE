@@ -38,7 +38,15 @@ app.use(async (err, req, res, next) => {
     });
   } else {
     console.error("Server Error:", err);
-    res.status(err.code || 500).json({
+    // Ensure status code is a valid HTTP status (100-599)
+    const statusCode =
+      typeof err.statusCode === "number" &&
+        err.statusCode >= 100 &&
+        err.statusCode <= 599
+        ? err.statusCode
+        : 500;
+
+    res.status(statusCode).json({
       success: false,
       message: "Something went wrong",
     });
